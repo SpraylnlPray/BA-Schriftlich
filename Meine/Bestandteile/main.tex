@@ -1,0 +1,400 @@
+\chapter{Introduction}
+The idea for this project is to offer an online editor with CRUD-functionality for a network, consisting of components of software projects, as well as a first implementation of an algorithm that will in most cases create a nice looking layout on its own.
+
+\section{Purpose}
+There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" (https://www.pcwdld.com/top-10-network-diagram-topology-and-mapping-software) or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end. \\
+Furthermore the purpose of this project is to try out technologies. This software, or variations of it, might later be incorporated into a bigger project.  The experiences and impressions can be of help if someone thinks about building similar software.
+
+
+\chapter{Backend to Frontend}
+In this chapter we will look at the individual software components this application consists of. The order will be the same as they appeared in the development process.
+
+\section{The GRAND-stack}
+GRAND stands in this case for \textbf{G}raphQL, \textbf{R}eact, \textbf{A}pollo and \textbf{N}eo4j \textbf{D}atabase. (https://grandstack.io/docs/getting-started-neo4j-graphql) Neo4j is not necessarily designed to work well with the other 4, but combining the "neo4j-driver" and "apollo-server-express" packages makes it almost feel like it was.
+
+\section{Query Language - GraphQL}
+GraphQL is a data query language as well as specification. Its development was started by Facebook in 2012 and it was open sourced in 2015. (https://foundation.graphql.org/)\\
+After their application suffered from poor performance on mobile devices, they took a new implementation using natively implemented models and views. This required a new API for their news feed as it was previously delivered as HTML.\\
+After evaluating different common options like RESTful-APIs and FQL there were often the same problems:  The ratio of data actually used to the one fetched was very small, the amount of requests (https://www.youtube.com/watch?v=zvZP0PVAdR0) and the amount of code on both server and client side to prepare the data was big. (https://engineering.fb.com/core-data/graphql-a-data-query-language/)\\
+For example, for loading the start page of a single user, there would have been a lot of different requests necessary: (https://www.youtube.com/watch?v=zvZP0PVAdR0)
+\begin{itemize}
+\item \emph{https://facebook.com/user/id} - Get all user specific data
+\item \emph{https://facebook.com/user/id/events} - Get all possibly relevant events
+\item \emph{https://facebook.com/user/id/friends-suggestions} - Get all friend suggestions
+\item ...
+\end{itemize}
+
+GraphQL aims to do the opposite: Reduce the amount of data transferred, reduce the amount of requests and increase the developer productivity. (https://engineering.fb.com/core-data/graphql-a-data-query-language/) \\
+\\
+It allows developers to get a lot of different data from a single endpoint. This means that instead the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com}, with a query similar to:\\ (https://www.youtube.com/watch?v=zvZP0PVAdR0)
+\begin{exmp}
+\label{ex21}
+\begin{tabbing}
+\\
+que\=ry \{\\
+\> use\=r(id: 1) \{\\
+\> \> name\\
+\> \> eve\=nts \{\\
+\> \> \> count\\
+\> \> \}\\
+\> \> fri\=ends\_suggestions \{\\
+\> \> \> name\\
+\> \> \> mut\=ual\_friends \{\\
+\> \> \> \> count\\
+\> \> \> \}\\
+\> \> \}\\
+\> \}\\
+\}
+\end{tabbing}
+\end{exmp}
+
+\noindent
+Where the answer would be a JSON-string:
+\begin{exmp}
+\begin{tabbing}
+\\
+\{ \= \\
+\> "da\=ta": \{\\
+\> \> "us\=er": \{\\
+\> \> \> "name": "Brandon Minnick",\\
+\> \> \> "ev\=ents": \{\\
+\> \> \> \> "count": 4\\
+\> \> \> \},\\
+\> \> \> "fr\=iends\_suggestions": \{\\
+\> \> \> \> "name": "Seth Juarez",\\
+\> \> \> \> "mut\=ual\_friends": \{\\
+\> \> \> \> \> "count": 18 \\
+\> \> \> \> \}\\
+\> \> \> \}\\
+\> \> \}\\
+\> \}\\
+\}
+\end{tabbing}
+\end{exmp}
+
+\noindent
+The query can be as extensive as the developer needs it, it will return only the data requested and the answer string can be directly accessed like a JSON-object. By that GraphQL fulfills all its design goals.
+\\ \\
+The previously shown query then needs to be resolved by a server thats able to interpret GraphQL and resolve the query. All non primitive data types have to be defined following the GraphQL specification. An example for a user schema might be:
+\emph{
+\begin{tabbing}
+ty\=pe User \{ \\
+\> id: ID! \\
+\> name: String! \\
+\> events: [Event] \\
+\> friends: [Friend] \\
+\> friends\_suggestions: [Friend\_Suggestion] \\
+\}
+\end{tabbing}
+}
+\noindent
+where "Event", "Friend" and "Friend\_Suggestion" themselves are other types described in a similar manner. \\
+By putting a "!" behind one property the programmer marks it as required, meaning it can never be null or empty. The square brackets define that the property is a list of the type they surround. (http://spec.graphql.org/June2018/)
+\\
+To be able to run queries in the first place, one must first define a root type for all queries:
+\emph{
+\begin{tabbing}
+sc\=hema \{ \\
+\> query: Query \\
+\}
+\end{tabbing}
+}
+\noindent
+In this root type all possible queries must be described:
+\emph{
+\begin{tabbing}
+ty\=pe Query \{ \\ 
+\> user(id: ID!): User \\
+\}
+\end{tabbing}
+}
+\noindent
+Here we describe a query that can be executed as shown in \exref{ex21} by providing an ID to the query and the correct query name, together with a collection set telling the server which fields to fetch. In the parentheses any query arguments are listed, in this example id must be provided. After the double dot the return type is named. 
+\\
+The server will then make requests to the DB, fetch the requested data and return it to the user once all fields were filled with values.
+\\
+For further information about the extensive type system please see the official GraphQL specification. (http://spec.graphql.org/June2018)
+
+\section{Database - Neo4j}
+\subsubsection{General}
+Neo4j is a so called graph database. The idea of graph databases is, compared to traditional relational databases, a young concept and differs in a few concepts. At the moment Neo4j is the 22nd most popular database overall (https://db-engines.com/en/ranking) and the most popular graph database. (https://db-engines.com/en/ranking/graph+dbms)
+
+\begin{itemize}
+\item Unlike most relational databases, who store data through tables and joins, Neo4j stores data in the form of actual nodes and relationships between such (https://neo4j.com/developer/neo4j-database/). In other DBMS relations between items generally are achieved through join-/lookup-tables which have to be generated. (https://neo4j.com/developer/graph-db-vs-rdbms/)
+
+\item When running a query on a relation DB the server will run through a table and when it finds the searched item it might look for the ID of a related item and start indexing again. With a graph DB the server will index (https://skillsmatter.com/skillscasts/2968-neo4j-internals around 32:45) once to find the initial node and can then directly access all connected items as they are stored through their relation with the current one. (https://www.youtube.com/watch?v=REVkXVxvMQE) These are stored as memory pointers which makes following them extremely efficient.
+\item Neo4j uses Cypher as query language. The Cypher syntax was supposed to visually represent the shape of the data a user wants to retrieve instead of describing how to get data, as well as offer the power and functionality other languages offer. (https://neo4j.com/developer/cypher-query-language/) 
+\end{itemize}
+
+\subsubsection{Cypher}
+For matching all nodes connected to node A through a "Neighbor" relationship, we simply state
+\begin{exmp}
+\label{ex231}
+\emph{MATCH (n:Node \{label: "A"\})-[:Neighbor]-(n2:Node) RETURN n, n2 }
+\end{exmp}
+Parentheses represent a node, square brackets a relationship. The naming works after the following pattern: <name>:<type>. In this example n is the name for the first node and n2 the name of the list of connected nodes. We didn't specify a name for the relationship as we did not want to retrieve data from it. By using curly braces we can specify certain properties a node or relationship should have. The other way of doing so would be 
+\begin{exmp}
+\label{ex232}
+\emph{MATCH (n:Node)-[:Neighbor]-(n2:Node) WHERE n.label = "A" RETURN n, n2 }
+\end{exmp}
+which might look a bit cleaner. We could also return only specific values of n and n2 and give them names by stating \\
+\emph{ ...RETURN n.label AS Label1, n2.label AS Label2 }\\
+The following information about Neo4j internals is all from (https://skillsmatter.com/skillscasts/2968-neo4j-internals) and (https://www.slideshare.net/thobe/an-overview-of-neo4j-internals). Sadly, these sources are all old and probably outdated, yet there does not seem to be more updated information on the internet.
+\subsubsection{The Graph on Disk}
+Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. (Video be ca. 08:27) \\
+Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node. \\
+In addition to the first property, each node knows about its first relationship. If a it is the \emph{first} one, is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four others to other relationships, which are best explained in an example traversal in pseudo code:
+\begin{exmp}
+\label{ex233}
+\begin{tabbing}
+\\
+if \=node n has relationship pointer r: \\
+\> if \=n is start node of r: \\
+\> \> if \=r has StartNext pointer sn: \\
+\> \> \> set r = sn \\
+\> \> \> repeat from line 2 \\
+\> \> endif \\
+\> \> else  \\
+\> \> \> visited all relationships $ \rightarrow $ terminate \\
+\> \> endelse \\
+\> endif \\
+\> else \\
+\> \> if r has EndNext pointer en: \\
+\> \> \> set r = en \\
+\> \> \>  repeat from line 2 \\
+\> \> endif \\
+\> \> else \\
+\> \> \> visited all relationships $ \rightarrow $ terminate \\
+\> \> endelse \\
+\> endelse \\
+endif
+\end{tabbing}
+\end{exmp}
+
+\noindent
+We see that every relationship has two next pointers. Which one will be used for further traversal, depends on if the source node is start- or end-node in the current relationship. \\
+In addition to this, the same pointers exist into the other direction, meaning that there are also two pointers called StartPrevious and EndPrevious. The question for selecting which one will be chosen for further iteration stays the same.
+
+\subsubsection{The Graph in Memory}
+Upon start up these records are being loaded into the "FS Cache" (File System Cache). Neo4j will then partition these into equally sized regions and create a hit counter for each of them, to encounter high traffic regions that will be loaded into the "Node/Relationship Object Cache" which is more similar to an actual graph. \\
+Here each node holds a list of relationships that are grouped by the relationship type to allow for quick traversals, and relationships only hold their properties as well as start- and end-node and their type. Any references to other records are being done by its ID. 
+
+\subsubsection{Traversing}
+For finding a node to start traversing the graph, Neo4j uses traditional indexing. (https://skillsmatter.com/skillscasts/2968-neo4j-internals around 32:45) Once the start node is found, 2 concepts take over:
+\begin{enumerate}
+\item \textbf{RelationshipExpanders} which will for a node return all relevant relationships to continue traversing from that node
+\item \textbf{Evaluators} which return if traversing should continue on this branch ($ \rightarrow $ expand) or not and if this node should be included in the result set or not.
+\end{enumerate}
+When accessing a node the first thing the system will try to do is fetch it from the cache. If it shouldn't be there, the next place that will be checked is the FS Cache. Should the region that contains the node be apparent here, the access is quick but blocking, meaning that the entire region is getting locked. In the case that the region is out of the FS cache the operation is blocking and slower. \\
+The locking is necessary to make sure that no other transaction will evict that area from the memory while the current one reads the data.
+
+\subsubsection{Adding Cypher}
+As Cypher describes the shape of the searched data, a searched query will be converted into a representative pattern graph that matches the searched structure. \\
+When a query is run, the first thing that happens is that matching start-nodes are searched in the database (through indexing). When a node is found, traversing the database starts as described above. For Expanders and Evaluators to know what to return, they simply compare the pattern graph described through Cypher with the graph that was found so far and see if there is more data that matches. 
+
+\section{Server - ApolloServer}
+Apollo Server is a spec-compliant GraphQL server (https://www.apollographql.com/docs/apollo-server/). It can be embedded into Node.js middleware like Express or Fastify and will listen for connections on a defined port. \\
+When it receives one it will read the query and call the respective route, or resolvers as they are called. \\
+In addition to that the server will deliver, together with some more, a \emph{context} object to each route that contains a driver which connects to a database, which is Neo4j in our case. Using this object together with a specified Cypher query we can manipulate the DB. 
+
+\subsubsection{Example Resolver}
+A resolver to create a node might look like the following:
+\begin{exmp}
+\label{ex241}
+\begin{tabbing}
+\\
+asy\=nc CreateNode( \_, args, ctx ) \{ \\
+\> con\=st session = ctx.driver.session(); \\
+\> const query = ` \\
+\> \> CREATE (n:Node:\$\{ args.nodeType\} \{id: \$id, label: \$label, nodeType: \$nodeType\}) \\
+\> \> SET n += \$props \\
+\> \> RETURN n`; \\
+\> const results = await session.run(query, args); \\
+\> return results.records.map(record => record.get('n').properties)[0]; \\
+\}
+\end{tabbing}
+\end{exmp}
+Lets break down whats happening in this piece of code:
+\begin{itemize}
+\item Line 1 contains the function definition. "args" is an object that contains all data sent with the query from the frontend. "ctx" is the context object that contains the neo4j driver to communicate with the DB. The first argument "\_", which is a placeholder here as we do not need it, is the so called "parent" which is equal to the previous resolver in the resolver chain. (More about this later REMOVE THIS COMMENT)
+\item In line 2 we acquire a session to communicate with the database. (https://neo4j.com/docs/api/javascript-driver/4.1/class/src/driver.js~Driver.html) Over this object we can send parameters that get executed right away.
+\item Lines 3 to 6 define a Cypher query which is similar to the ones shown in \exref{ex231} and \exref{ex232}. 
+\item In line 4 we make use of the args object and embed the nodeType directly into the query string by using template strings. This is necessary because at this position of a cypher query we can't make use of query variables the same way we do in the rest of the query. Later in that line we can see that by using \$<variableName> we can access query variables we pass along.
+\item Line 5 demonstrates the usage of an object we can pass as query variable. This object can't only contain simple datatypes, but its really useful to set various values at once.
+\item Finally, in line 7 we send the specified query string together with the args object (that must contain all referenced variables) to the database. By using the ES6 await keyword we make sure that code execution doesn't continue until the results are returned.
+\item In the last line we iterate over the record set and retrieve any properties by the in the query specified name. Using only the first element of the array is specific to this case, as CreateNode is defined to return a single node, not an array of such.
+\end{itemize}
+
+\subsubsection{Resolver Chain}
+To explain the resolver chain we will take a look at the following example GraphQL query: 
+%(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
+\begin{exmp}
+\label{ex242}
+\begin{tabbing}
+\\
+que\=ry GetBooksByLibrary \{ \\
+\> lib\=raries \{ \\
+\> \> branch \\
+\> \> boo\=ks \{ \\
+\> \> \> title \\
+\> \> \> aut\=hor \{ \\
+\> \> \> \> name \\
+\> \> \> \} \\
+\> \> \} \\
+\> \} \\
+\}
+\end{tabbing}
+\end{exmp}
+\noindent
+which will be executed on this schema 
+%(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
+\begin{exmp}
+\label{ex243}
+\begin{tabbing}
+\\
+\# A \=library has a branch and books \\
+type Library \{ \\
+\> branch: String! \\
+\> books: [Book!] \\
+\} \\
+
+\# A book has a title and author \\
+type Book \{ \\
+\> title: String! \\
+\> author: Author! \\
+\> branch: String! \\
+\} \\
+
+\# An author has a name \\
+type Author \{ \\
+\> name: String! \\
+\} \\
+
+type Query \{ \\
+\> libraries: [Library] \\
+\} \\
+\end{tabbing}
+\end{exmp}
+
+\noindent
+To resolve the query we need 4 resolvers:
+\begin{itemize}
+\item A root resolver which defines the entry point for the query
+\item One resolver each for "Library", "Book" and "Author"
+\end{itemize}
+
+\noindent
+Assuming we have static arrays called "libraries", "books" and "authors" that are filled with data, the resolvers might look like the following: 
+%(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
+\begin{exmp}
+\label{ex244}
+\begin{tabbing}
+\\
+con\=st resolvers = \{ \\
+\> Que\=ry: \{ \\
+\> \> lib\=raries() \{ \\
+\> \> \> ret\=urn libraries; \\
+\> \> \} \\
+\> \}, \\
+\> Library: \{ \\
+\> \> branch(parent) \{ \\
+\> \> \> return parent.branch; \\
+\> \> \} \\
+\> \> books(parent) \{ \\
+\> \> \> return books.filter(book => book.branch === parent.branch); \\
+\> \> \} \\
+\> \}, \\
+\> Book: \{ \\
+\> \> title(parent) \{ \\
+\> \> \> return parent.title; \\
+\> \> \} \\
+\> \> author(parent) \{ \\
+\> \> \> return authors.find(author => author.name === parent.author.name); \\
+\> \> \} \\
+\> \}, \\
+\> Author: \{ \\
+\> \> name(parent) \{ \\
+\> \> \> return parent.name; \\
+\> \> \} \\
+\> \} \\
+\};
+\end{tabbing}
+\end{exmp}
+
+First, the Query resolver is hit and it will search for a defined key that is similar to the name mentioned in the highest level of the query object in \exref{ex242}, in this case "libraries". In the GraphQL schema under \exref{ex243} we defined that this query will return an array of Library objects. \\
+Knowing this, the server will now go through each object of this array and look for resolvers of the in the query specified fields. This object is passed as \emph{parent} into the next resolver in the resolver chain. \\
+For each library we want the branch and an array of books. As branch is a primitive type it does not need to be further resolved. Books however, returns an array of non-primitive types. To find out which books we need to return we can access the value \emph{parent.branch} and compare it to the branch of each book in the books array and return those who match. \\
+books is again an array of a non primitive type and has to be further resolved by iterating through the array and accessing the requested values title and author. Title is just a string, whereas author will get resolved further etc.
+
+\subsubsection{Cypher in GraphQL}
+Using GraphQL directives we can "annotate" our schema and specify precisely certain actions or checks the server should perform when accessing a field. \\
+We could create the following schema: 
+%(https://www.graphql-tools.com/docs/schema-directives/#implementing-schema-directives)
+\begin{exmp}
+\label{ex245}
+\begin{tabbing}
+\\
+dir\=ective @deprecated( \\
+\>  reason: String = "No longer supported" \\
+) on FIELD\_DEFINITION | ENUM\_VALUE \\
+\\
+type ExampleType \{ \\
+\>  newField: String \\
+\>  oldField: String @deprecated(reason: "Use `newField`.") \\
+\}
+\end{tabbing}
+\end{exmp}
+
+Directives can be distinguished by the @-symbol and are placed after a field definition to annotate one. When querying \emph{oldField} on \emph{ExampleType} the server might only respond with "Use 'newField'" and not send any data. The exact behavior depends on how directive behavior is defined in the server. \\
+The use cases range from formatting strings, enforcing access permissions to value checking when the client sends data and many more. For information about how directives can be implemented please refer to
+%(https://www.graphql-tools.com/docs/schema-directives/#implementing-schema-directives)
+\\
+In the GRAND-stack we can use a pre-defined directive called "@cypher" and through that use cypher statements directly in the schema definition file. A great and short example is getting all connected nodes for a specific node:
+\begin{exmp}
+\label{ex246}
+\begin{tabbing}
+\\
+typ\=e Node \{ \\
+\> ... \\
+\> connectedTo: [Node] @cypher(statement: "MATCH (this)--(:Link)--(n:Node) return n")) \\
+\> ...\\
+\}
+\end{tabbing}
+\end{exmp}
+The node that is currently being iterated over in the resolver chain is passed as \emph{this} to Neo4j. Then it'll look for other nodes that are connected through any relationship of type \emph{Link} and return these. In addition to this, ApolloServer can generate default resolvers for queries and mutations meaning we do not have to write a resolver for \emph{Node} on our own. This combination makes writing query resolvers a rare occasion when using the GRAND-stack.
+
+\section{Frontend - React}
+
+\section{Client - ApolloClient}
+
+\chapter{Deployment}
+\section{AWS}
+\subsection{AWS-EC2}
+\subsection{AWS-ECS}
+\subsection{AWS-Amplify}
+\section{Docker}
+
+\chapter{Development}
+\section{Getting started with Neo4j}
+\section{Manipulating the DB through ApolloServer and GraphQL-Playground}
+\section{Making ApolloServer and ApolloClient communicate through GraphQL}
+\section{Building the UI}
+\subsection{Components}
+\section{Problems}
+\subsection{Keeping the data consistent when saving changes}
+\subsection{AWS-Healthcheck}
+\subsection{Apollo Error-Codes}
+\subsection{Apollo Chrome Dev-Tools}
+\subsection{Graph-Layout}
+\subsubsection{Tree-Layout}
+\subsubsection{Flower-Layout}
+\section{Behavior Decisions}
+\section{Avoiding data corruption through multiple editors at once}
+\section{Detect multiple connections between two nodes}
+\section{CORS-problems}
+
+\chapter{Looking back}
+
+\chapter{Documentation}
+
+\chapter{Ideas for the Future}
