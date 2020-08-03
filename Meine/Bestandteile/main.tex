@@ -193,6 +193,7 @@ As Cypher describes the shape of the searched data, a searched query will be con
 When a query is run, the first thing that happens is that matching start-nodes are searched in the database (through indexing). When a node is found, traversing the database starts as described above. For Expanders and Evaluators to know what to return, they simply compare the pattern graph described through Cypher with the graph that was found so far and see if there is more data that matches. 
 
 \section{Server - ApolloServer}
+%maybe some general information about Apollo?
 Apollo Server is a spec-compliant GraphQL server (https://www.apollographql.com/docs/apollo-server/). It can be embedded into Node.js middleware like Express or Fastify and will listen for connections on a defined port. \\
 When it receives one it will read the query and call the respective route, or resolvers as they are called. \\
 In addition to that the server will deliver, together with some more, a \emph{context} object to each route that contains a driver which connects to a database, which is Neo4j in our case. Using this object together with a specified Cypher query we can manipulate the DB. 
@@ -364,6 +365,88 @@ typ\=e Node \{ \\
 The node that is currently being iterated over in the resolver chain is passed as \emph{this} to Neo4j. Then it'll look for other nodes that are connected through any relationship of type \emph{Link} and return these. In addition to this, ApolloServer can generate default resolvers for queries and mutations meaning we do not have to write a resolver for \emph{Node} on our own. This combination makes writing query resolvers a rare occasion when using the GRAND-stack.
 
 \section{Frontend - React}
+React is a JavaScript-Framework to create component-based user interfaces. Each component has to define a \emph{render} method which describes what appears on the screen. In this method the programmer writes basic HTML or can embed other react components. \\
+The standard \emph{index.html} is pretty short when using react. The only code a programmer writes there is normally in the header area to include CDNs or other resources. The body contains only one element: \\
+\emph{<div> id="root"></div>} \\
+In \emph{index.js} this root div will be referenced by the react-internal render method and recursively build the basic html out of the defined react components:
+\begin{exmp}
+\label{ex251}
+\begin{tabbing}
+\\
+ind\=ex.html: \\
+<!DOCTYPE html> \\
+<html> \\
+\>  <he\=ad> \\
+\>\>    <title>Intro-App</title> \\
+\>  </head> \\
+\>  <body> \\
+\>\>  <div id="root"></div> \\
+\>  </body> \\
+</html> \\
+ \\
+index.js: \\
+ReactDOM.render( \\
+\>	<App/>, \\
+\>	document.getElementById( 'root' ), \\
+); \\
+\\
+App.js: \\
+function App() \{ \\
+\>  ret\=urn ( \\
+\>\>    <d\=iv> \\
+\>\>\>     Hello World! \\
+\>\>   </div> \\
+\>  ); \\
+\}
+\end{tabbing}
+\end{exmp}
+When we start the react app, open it in the browser and select inspect we will see the following in the "Elements" tab:
+\begin{exmp}
+\label{ex252}
+\begin{tabbing}
+\\
+<ht\=ml> \\
+<head> \\
+\> <title>Intro-App</title> \\
+</head> \\
+<body> \\
+\> <di\=v id="root"> \\
+\> \> <di\=v> \\
+\> \> \> Hello World! \\
+\> \> </div> \\
+\> </div> \\
+</body> \\
+</html>
+\end{tabbing}
+\end{exmp}
+Traversing starts at whatever component is put into the \emph{ReactDOM.render} method and happens for each component until primitive html elements that can be rendered directly are reached. \\
+Every react components can receive values from its parent element, by passing them like normal html properties. In the child they can be accessed through a variable called \emph{props} and using JSX we can embed the value of variables directly in the component:
+
+\begin{exmp}
+\label{ex253}
+\begin{tabbing}
+\\
+ind\=ex.js: \\
+ReactDOM.render( \\
+\>	<App \textbf{text=\{'Hello World'\}}/>, \\
+\>	document.getElementById( 'root' ), \\
+); \\
+\\
+App.js: \\
+function App(\textbf{props}) \{ \\
+\>  ret\=urn ( \\
+\>\>    <d\=iv> \\
+\>\>\>     \textbf{\{ props.text \}}\\
+\>\>   </div> \\
+\>  ); \\
+\}
+\end{tabbing}
+\end{exmp}
+React components also have a state which can be managed to handle user actions on a component. A component update will be triggered whenever its state or props change. For more information on the state please refer to the official react documentation.
+
+\subsubsection{Two Phases}
+React is known for its good performance (https://dev.to/spukas/react-work-phases-4eaj) even in large applications. To understand better how it achieves this, we will look a bit at the internal process of rendering and updating the components. \\
+On the initial render react will create a component from which it'll then build the DOM the browser then parses and paints on the screen. When the props or 
 
 \section{Client - ApolloClient}
 
