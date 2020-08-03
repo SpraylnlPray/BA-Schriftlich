@@ -15,35 +15,35 @@
 \contentsline {subsubsection}{\nonumberline Example Resolver}{7}{section*.8}%
 \contentsline {subsubsection}{\nonumberline Resolver Chain}{8}{section*.9}%
 \contentsline {subsubsection}{\nonumberline Cypher in GraphQL}{10}{section*.10}%
-\contentsline {section}{\numberline {2.5}Frontend - React}{10}{section.2.5}%
+\contentsline {section}{\numberline {2.5}Frontend - React}{11}{section.2.5}%
 \contentsline {subsubsection}{\nonumberline Two Phases}{12}{section*.11}%
-\contentsline {section}{\numberline {2.6}Client - ApolloClient}{12}{section.2.6}%
-\contentsline {chapter}{\numberline {3}Deployment}{13}{chapter.3}%
-\contentsline {section}{\numberline {3.1}AWS}{13}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}AWS-EC2}{13}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}AWS-ECS}{13}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}AWS-Amplify}{13}{subsection.3.1.3}%
-\contentsline {section}{\numberline {3.2}Docker}{13}{section.3.2}%
-\contentsline {chapter}{\numberline {4}Development}{14}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Getting started with Neo4j}{14}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Manipulating the DB through ApolloServer and GraphQL-Playground}{14}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Making ApolloServer and ApolloClient communicate through GraphQL}{14}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Building the UI}{14}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Components}{14}{subsection.4.4.1}%
-\contentsline {section}{\numberline {4.5}Problems}{14}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Keeping the data consistent when saving changes}{14}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}AWS-Healthcheck}{14}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}Apollo Error-Codes}{14}{subsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.5.4}Apollo Chrome Dev-Tools}{14}{subsection.4.5.4}%
-\contentsline {subsection}{\numberline {4.5.5}Graph-Layout}{14}{subsection.4.5.5}%
-\contentsline {subsubsection}{\nonumberline Tree-Layout}{14}{section*.12}%
-\contentsline {subsubsection}{\nonumberline Flower-Layout}{14}{section*.13}%
-\contentsline {section}{\numberline {4.6}Behavior Decisions}{14}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Avoiding data corruption through multiple editors at once}{14}{section.4.7}%
-\contentsline {section}{\numberline {4.8}Detect multiple connections between two nodes}{14}{section.4.8}%
-\contentsline {section}{\numberline {4.9}CORS-problems}{14}{section.4.9}%
-\contentsline {chapter}{\numberline {5}Looking back}{15}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Documentation}{16}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Ideas for the Future}{17}{chapter.7}%
-\contentsline {chapter}{\nonumberline List of Figures}{18}{chapter*.14}%
-\contentsline {chapter}{\nonumberline List of Tables}{19}{chapter*.15}%
+\contentsline {section}{\numberline {2.6}Client - ApolloClient}{14}{section.2.6}%
+\contentsline {chapter}{\numberline {3}Deployment}{15}{chapter.3}%
+\contentsline {section}{\numberline {3.1}AWS}{15}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}AWS-EC2}{15}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}AWS-ECS}{15}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}AWS-Amplify}{15}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Docker}{15}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Development}{16}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Getting started with Neo4j}{16}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Manipulating the DB through ApolloServer and GraphQL-Playground}{16}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Making ApolloServer and ApolloClient communicate through GraphQL}{16}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Building the UI}{16}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Components}{16}{subsection.4.4.1}%
+\contentsline {section}{\numberline {4.5}Problems}{16}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Keeping the data consistent when saving changes}{16}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}AWS-Healthcheck}{16}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Apollo Error-Codes}{16}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Apollo Chrome Dev-Tools}{16}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.5.5}Graph-Layout}{16}{subsection.4.5.5}%
+\contentsline {subsubsection}{\nonumberline Tree-Layout}{16}{section*.12}%
+\contentsline {subsubsection}{\nonumberline Flower-Layout}{16}{section*.13}%
+\contentsline {section}{\numberline {4.6}Behavior Decisions}{16}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Avoiding data corruption through multiple editors at once}{16}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Detect multiple connections between two nodes}{16}{section.4.8}%
+\contentsline {section}{\numberline {4.9}CORS-problems}{16}{section.4.9}%
+\contentsline {chapter}{\numberline {5}Looking back}{17}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Documentation}{18}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Ideas for the Future}{19}{chapter.7}%
+\contentsline {chapter}{\nonumberline List of Figures}{20}{chapter*.14}%
+\contentsline {chapter}{\nonumberline List of Tables}{21}{chapter*.15}%
