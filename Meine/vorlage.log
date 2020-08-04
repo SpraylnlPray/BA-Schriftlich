@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  3 AUG 2020 12:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  4 AUG 2020 18:15
 entering extended mode
 **./vorlage.tex
 (vorlage.tex
@@ -865,51 +865,105 @@ Overfull \hbox (91.2825pt too wide) in paragraph at lines 207--208
 tabase. (https://neo4j.com/docs/api/javascript-
  []
 
-[7] [8] [9] [10] [11]
+[7] [8] [9] [10]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 412.
- [12] [13] [14]
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 362.
+ [11] [12] [13]
+Overfull \hbox (178.28069pt too wide) in paragraph at lines 503--505
+\T1/lmr/m/n/12 (maybe when com-ing back to this check https://reactjs.org/docs/
+faq-internals.html https://reactjs.org/docs/reconciliation.html
+ []
+
+
+Overfull \hbox (152.24069pt too wide) in paragraph at lines 503--505
+\T1/lmr/m/n/12 and https://github.com/acdlite/react-fiber-architecture and THIS
+:: https://www.youtube.com/watch?v=RquK3TImY9U
+ []
+
+
+Overfull \hbox (158.762pt too wide) in paragraph at lines 506--507
+[]\T1/lmr/m/n/12 The \T1/lmr/m/it/12 set-State \T1/lmr/m/n/12 func-tion will ma
+rk the com-po-nent and all its chil-dren as dirty. (https://medium.com/@gethylg
+eorge/how-
+ []
+
+[14]
+Overfull \hbox (92.90999pt too wide) in paragraph at lines 533--534
+\T1/lmr/m/n/12 Which is a lot shorter and has an-other big ad-van-tage: It pro-
+tects from lazi-ness. (https://hackernoon.com/react-
+ []
+
+
+Overfull \hbox (5.22649pt too wide) in paragraph at lines 533--534
+\T1/lmr/m/n/12 stateless-functional-components-nine-wins-you-might-have-overloo
+ked-997b0d933dbc) As this
+ []
+
+
+Overfull \hbox (88.53494pt too wide) in paragraph at lines 538--539
+\T1/lmr/m/n/12 gether with au-to-matic UI up-dates upon events from the server.
+ (https://www.apollographql.com/docs/react/) 
+ []
+
+
+Overfull \hbox (104.415pt too wide) in paragraph at lines 541--542
+\T1/lmr/m/n/12 since Re-act 16.8 and were in-tro-duced to im-prove state-less f
+unc-tional com-po-nents (https://reactjs.org/docs/hooks-
+ []
+
+[15]
+Overfull \hbox (88.8781pt too wide) in paragraph at lines 559--560
+[]\T1/lmr/m/n/12 For the rest of the ar-gu-ments please re-fer to (https://www.
+apollographql.com/docs/react/api/react/hooks/) 
+ []
+
+[16] [17]
+Underfull \hbox (badness 10000) in paragraph at lines 632--634
+
+ []
+
+[18]
 chapter 3.
-[15
+[19
 
 
 ]
 chapter 4.
-[16
+[20
 
 
 ]
 chapter 5.
-[17
+[21
 
 
 ]
 chapter 6.
-[18
+[22
 
 
 ]
 chapter 7.
-) [19
+) [23
 
 
 ] (vorlage.lof)
 \tf@lof=\write5
 \openout5 = `vorlage.lof'.
 
- [20
+ [24
 
 
 ] (vorlage.lot)
 \tf@lot=\write6
 \openout6 = `vorlage.lot'.
 
- [21
+ [25
 
 
 
 ] (vorlage.bbl)
-(Bestandteile/erklaerung.tex [22
+(Bestandteile/erklaerung.tex [26
 
 
 
@@ -927,7 +981,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 25--26
 
 )
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 108.
- [23]
+ [27]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 108.
  (vorlage.aux (Bestandteile/titel.aux)
 (Bestandteile/kurzzusammenfassung.aux))
@@ -942,13 +996,13 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 108.
  ) 
 Here is how much of TeX's memory you used:
- 15073 strings out of 480756
- 287244 string characters out of 2893314
- 728820 words of memory out of 3000000
- 30480 multiletter control sequences out of 15000+200000
- 584929 words of font info for 53 fonts, out of 3000000 for 9000
+ 15204 strings out of 480756
+ 289081 string characters out of 2893314
+ 741840 words of memory out of 3000000
+ 30513 multiletter control sequences out of 15000+200000
+ 587917 words of font info for 54 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 54i,20n,76p,10104b,1991s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 54i,20n,77p,10104b,1987s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.e
 nc}{C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mat
 hsy.enc}{C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/l
@@ -956,16 +1010,17 @@ m-ts1.enc}<C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
 /lm/lmbx12.pfb><C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/p
 ublic/lm/lmcsc10.pfb><C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/t
 ype1/public/lm/lmr12.pfb><C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fon
-ts/type1/public/lm/lmri12.pfb><C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.
-9/fonts/type1/public/lm/lmro12.pfb><C:/Users/Daniel/AppData/Local/Programs/MiKT
-eX 2.9/fonts/type1/public/lm/lmssbx10.pfb><C:/Users/Daniel/AppData/Local/Progra
-ms/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Daniel/AppData/Local/P
-rograms/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/Users/Daniel/AppData/Lo
-cal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Daniel/AppDa
-ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt12.pfb>
-Output written on vorlage.pdf (26 pages, 415436 bytes).
+ts/type1/public/lm/lmr6.pfb><C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/
+fonts/type1/public/lm/lmri12.pfb><C:/Users/Daniel/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/type1/public/lm/lmro12.pfb><C:/Users/Daniel/AppData/Local/Programs/M
+iKTeX 2.9/fonts/type1/public/lm/lmssbx10.pfb><C:/Users/Daniel/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Daniel/AppData/Loca
+l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/Users/Daniel/AppData
+/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Daniel/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt12.pfb>
+Output written on vorlage.pdf (30 pages, 477197 bytes).
 PDF statistics:
- 718 PDF objects out of 1000 (max. 8388607)
- 357 named destinations out of 1000 (max. 500000)
+ 857 PDF objects out of 1000 (max. 8388607)
+ 454 named destinations out of 1000 (max. 500000)
  294 words of extra memory for PDF output out of 10000 (max. 10000000)
 

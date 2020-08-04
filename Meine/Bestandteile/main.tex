@@ -309,7 +309,7 @@ We could create the following schema:
 \begin{lstlisting}[caption={Example Directive Declaration}]
 directive @deprecated( 
 	reason: String = "No longer supported" 
-) on FIELD\_DEFINITION | ENUM\_VALUE 
+) on FIELD_DEFINITION | ENUM_VALUE 
 
 type ExampleType { 
 	newField: String 
@@ -326,7 +326,7 @@ In the GRAND-stack we can use a pre-defined directive called "@cypher" and throu
 \begin{lstlisting}[caption={Cypher in GraphQL}]
 type Node { 
 	... 
-	connectedTo: [Node] @cypher(statement: "MATCH (this)--(:Link)--(n:Node) return n")) 
+	connectedTo: [Node] @cypher(statement: "MATCH (this)--(:Link)--(n:Node) return n") 
 	...
 }
 \end{lstlisting}
@@ -336,10 +336,12 @@ The node that is currently being iterated over in the resolver chain is passed a
 \section{Frontend - React}
 React is a JavaScript-Framework to create component-based user interfaces. Each component has to define a \emph{render} method which describes what appears on the screen. In this method the programmer writes basic HTML or can embed other react components. \\
 The standard \emph{index.html} is pretty short when using react. The only code a programmer writes there is normally in the header area to include CDNs or other resources. The body contains only one element: \\
-\emph{<div> id="root"></div>} \\
+\emph{<div> id="root"></div>} 
+
+\subsubsection{Components}
 In \emph{index.js} this root div will be referenced by the react-internal render method and recursively build the basic html out of the defined react components:
 
-\begin{lstlisting}[caption={Hello World in React}]
+\begin{lstlisting}[caption={Hello World in React},label={ex251}]
 // index.html:
 <!DOCTYPE html>
 <html>
@@ -357,19 +359,27 @@ ReactDOM.render(
 	document.getElementById( 'root' ),
 );
 // App.js:
-function App() \{
-	return (
-		<div>
-			Hello World!
-	 </div>
-	);
+import React from 'react';
+
+class App extends React.Component {
+	render() {
+		return (
+			<div>
+				Hello World
+			</div>
+		);
+	}
 }
+
+export default App;
 \end{lstlisting}
 
-When we start the react app, open it in the browser and select inspect we will see the following in the "Elements" tab:
+We define a class component by extending from \emph{React.Component}. Each class component must at least have a \emph{render()} method. React will use the return values of these methods to build the DOM.
+
+When we start the react app, open it in the browser and select inspect we will see the following in the "Elements" tab (ignoring a script for live updates in the head):
 
 \begin{lstlisting}
-<ht\=ml> 
+<html> 
 <head>
 	<title>Intro-App</title>
 </head>
@@ -383,10 +393,11 @@ When we start the react app, open it in the browser and select inspect we will s
 </html>
 \end{lstlisting}
 
-Traversing starts at whatever component is put into the \emph{ReactDOM.render} method and happens for each component until primitive html elements that can be rendered directly are reached. \\
-Every react components can receive values from its parent element, by passing them like normal html properties. In the child they can be accessed through a variable called \emph{props} and using JSX we can embed the value of variables directly in the component:
+React starts traversing at whatever component is put into the \emph{ReactDOM.render} method and repeats the process for each component until primitive html elements that can be rendered directly are reached.
 
-\begin{lstlisting}
+Every react class components can receive values from its parent element, by passing them like normal html properties (e.g. line 3 below). In the child they can be accessed through a variable called \emph{props} and using JSX we can embed the value of variables directly in the component (e.g. line 14 below):
+
+\begin{lstlisting}[caption={Using Props},label={ex252}]
 // index.js:
 ReactDOM.render(
 	<App text={ 'Hello World' },
@@ -394,19 +405,26 @@ ReactDOM.render(
 );
 
 // App.js:
-function App(\textbf{props}) \{
-return (
-    <div>
-    	{ props.text }
-    </div>
-  );
-}
-\end{lstlisting}
-React components also have a state which can be managed to handle user actions on a component. A component update will be triggered whenever its state or props change. For more information on the state please refer to the official react documentation.
+import React from 'react';
 
-\subsubsection{Two Phases}
-React is known for its good performance (https://dev.to/spukas/react-work-phases-4eaj) even in large applications. To understand better how it achieves this, we will look a bit at the internal process of rendering and updating the components. \\
-On the initial render react will create a component from which it'll then build the DOM the browser then parses and paints on the screen. To show how react determines which part of the DOM it has to update, we'll enhance the previously shown application by a counter functionality:
+class App extends React.Component {
+	render() {
+		return (
+			<div>
+				{ this.props.text }
+			</div>
+		);
+	}
+}
+export default App;
+\end{lstlisting}
+Both \textbf{\ref{ex251}} and \textbf{\ref{ex252}} will produce the exact same output.
+
+\subsubsection{State}
+React class components have a state which can be used to manage user actions on a component, as well as general application data. \emph{state} is a simple JavaScript object but should be treated as immutable and only be updated through the \emph{setState()} method. Modifying the state directly can lead to bugs and/or unexpected behavior of the application.
+
+To demonstrate this, we'll add a \emph{Counter} component to the application:
+
 \begin{lstlisting}
 // index.js
 import React from 'react';
@@ -419,16 +437,15 @@ ReactDOM.render(
 );
 
 // App.js
-import React from 'react';
-import Counter from './Counter';
-
-function App( props ) {
-	return (
-		<div>
-			{ props.text }
-			<Counter/>
-		</div>
-	);
+class App extends React.Component {
+	render() {
+		return (
+			<div>
+				{ this.props.text }
+				<Counter/>
+			</div>
+		);
+	}
 }
 export default App;
 
@@ -460,7 +477,7 @@ class Counter extends React.Component {
 	render() {
 		return (
 			<div>
-				Current score: { this.state.val }
+				<p>Current score: { this.state.val }</p>
 				<button onClick={ this.increase }>+</button>
 				<button onClick={ this.decrease }>-</button>
 			</div>
@@ -468,11 +485,155 @@ class Counter extends React.Component {
 	}
 }
 export default Counter;
-
 \end{lstlisting}
 
+When defining a custom constructor for a class component it is necessary to call \emph{super( props )} first. To define an initial state of the component we can set \emph{this.state = \{ val: 0 \}}. This is the only place where state should modified directly. In comparison to that in lines 43 and 50 we first create a copy of the value we want to modify by using Object Destructuring and then use \emph{this.setState( \{ val \} )} to update it. By doing so we do not modify the state object directly.
+
+In lines 31 and 32 we bind the this keyword on the increase and decrease functions. By leaving this step, accessing \emph{this.setState()} in any of the methods would crash the application as \emph{this} would be the global window object which doesn't have a \emph{setState} method defined.
+
+The render method defines the output of the component. We'll render a paragraph telling the current score by accessing the state together with two buttons and their respective click handlers.
+
+\subsubsection{Updating Components}
+React is known for its good performance (https://dev.to/spukas/react-work-phases-4eaj) even in large applications. To understand better how it achieves this, we will look a bit at the internal process of rendering and updating the components.
+
+On the initial render React will create a component tree from which it'll then build the DOM that the browser converts into displayable objects and paints them on the screen. To show how react determines which part of the DOM it has to update, we'll quickly walk through the previous example:
+
+When clicking the increase or decrease button in the previous example we update the components state which will automatically trigger a re-render. In such a small component it wouldn't really matter if React simply rendered the whole component. In a component containing hundreds of lines and probably many other sub-components the decision to render all of just because, would take a long time and be fatal for performance especially if really all we'd have to do is re-render line 52.
+
+\subsubsection{Finding The Differences} (maybe when coming back to this check https://reactjs.org/docs/faq-internals.html https://reactjs.org/docs/reconciliation.html and https://github.com/acdlite/react-fiber-architecture  and THIS:: https://www.youtube.com/watch?v=RquK3TImY9U )
+To know which lines to update, React performs a few steps: 
+\begin{itemize}
+\item The \emph{setState} function will mark the component and all its children as dirty. (https://medium.com/@gethylgeorge/how-virtual-dom-and-diffing-works-in-react-6fc805f9f84e großes Bild)
+\item It'll recursively walk through all components marked as dirty, building them in the virtual DOM
+\item For each built element it compares it to the value in the actual DOM. If they differ it'll deduce if the item should be replaced, removed or updated and does so accordingly. 
+%https://overreacted.io/react-as-a-ui-runtime/#reconciliation
+\end{itemize}
+By doing so, instead of re-rendering the whole \emph{Counter} component it only re-renders
+\begin{lstlisting}
+<p>Current score: { this.state.val } </p>
+\end{lstlisting}
+
+\subsubsection{Stateless Functional Components}
+It is also possible to create stateless functional components. In their pure form they do not contain state and normally only show either static data or data they get passed through props. If we look at the \emph{App} component in the above examples we'll find that it does exactly that. Knowing this, we could re-write it:
+\begin{lstlisting}
+// App.js
+import React from 'react';
+import Counter from './Counter';
+
+function App( props ) {
+	return (
+		<div>
+			{ props.text }
+			<Counter/>
+		</div>
+	);
+}
+export default App;
+\end{lstlisting}
+Which is a lot shorter and has another big advantage: It protects from laziness. (https://hackernoon.com/react-stateless-functional-components-nine-wins-you-might-have-overlooked-997b0d933dbc) As this component doesn't support local state it is not too tempting to quickly hack something new into it. Rather the programmer gets encouraged to think about the structure and create a proper component for a new feature together with its own state object that only that component needs.
+
+And of course visually the result is equal to the one in \textbf{\ref{ex251}} and \textbf{\ref{ex252}}.
 
 \section{Client - ApolloClient}
+ApolloClient is a state management library for JavaScript that manages data with GraphQL. It offers an all in one solution for fetching, caching and modifying application data and together with automatic UI updates upon events from the server. (https://www.apollographql.com/docs/react/)
+
+\subsubsection{Hooks}
+ApolloClient 3 offers this by providing custom \textbf{hooks}. Hooks are a new addition to React since React 16.8 and were introduced to improve stateless functional components (https://reactjs.org/docs/hooks-intro.html) and can only be used in such (https://reactjs.org/docs/hooks-overview.html). There were a few reasons that led to the introduction of hooks like the appearance of complex class components that couldn't be split into smaller ones, not re-usable stateful logic and classes being not ideal for future optimization. (https://reactjs.org/docs/hooks-intro.html) Hooks allow for example the usage of state in functional components.
+
+\subsubsection{Apollo Hooks}
+In addition to some built-in Hooks provided by React it is also possible to create them. Apollo implemented many own hooks, we will focus on \emph{useQuery}, \emph{useLazyQuery} and \emph{useMutation}.
+The first argument to all of these is a GraphQL string. A query for the first two, a mutation for the last one.
+
+The second argument is the options object. By adding properties to this the execution behavior can be influenced. Probably the most important argument is \emph{variables}. This is an object containing key-pair values that equal to the ones used in a GraphQL query as shown in \textbf{\ref{ex211}}. In addition to that there are \emph{onError} and \emph{onCompleted}. These are two callback functions that allow for executing actions upon completion or handling of possible errors. Imagine \emph{GET\_DATA} being a valid GraphQL query string:
+\begin{lstlisting}
+function Test() {
+	useQuery( GET_DATA, {
+		variables: { id: 1 },
+		onCompleted: data => console.log( data );
+		onError: error => console.log( error.message );
+	} );
+	...
+}
+\end{lstlisting}
+
+For the rest of the arguments please refer to (https://www.apollographql.com/docs/react/api/react/hooks/)
+
+To be able to use returned data and inform the user about the current status, all of these three hooks return a few other objects, the most important being \emph{data}, \emph{loading} and \emph{error}. These are boolean values and allow for conditional rendering inside a component, depending on their values: 
+\begin{lstlisting}
+function Test() {
+	const { data, loading, error } = useQuery( GET_DATA, {
+		...	
+	} );
+	
+	if ( loading ) return 'Fetching data.';
+	if ( error ) return 'Error when fetching data.';
+	return 'Success!';
+}
+\end{lstlisting}
+
+In comparison to \emph{useQuery} the other two also return a function object that can be called when we wish to execute the query or mutation (see example below).
+
+The \emph{useMutation} hook is the only one of the three allowing for an \emph{update} argument in the options object. In this we can access the local cache and have access to the results returned from the mutation. This can be useful if we need to update internal data depending on the result of a server operation:
+\begin{lstlisting}[caption={Creating a Mutation}]
+function Mutate() {
+	const [ runMutation, { data, loading, error } ] = useMutation( DO_THING, {
+		update: ( cache, { data } ) => {
+			// update cache with return data from mutation
+		}	
+	} );
+}
+\end{lstlisting}
+This approach works well and is more or less the only way of handling return results from external mutations. 
+
+\subsubsection{Local Resolvers}
+We could do the same for local state changes, but as these functions can become long it might clutter the component with a lot of code that is not actually for it. To get rid of this problem we can define local resolvers in the client instance:
+\begin{lstlisting}[caption={Local Resolvers},label={ex253}]
+const client = new ApolloClient({
+	...,
+	resolvers: {
+		Mutation: {
+			setData: ( _, variables, { cache } ) => {
+				// manage state update			
+			},
+			...		
+		},	
+	},
+	...,
+});
+\end{lstlisting}
+
+Just like on the server side we set up resolvers and can access query variables to it. To call it, we also define a GraphQL query like so:
+\begin{lstlisting}
+const SET_DATA = gql`
+	mutation SetData($data: [String]!) {
+		setData(data: $data) @client	
+	}
+`;
+\end{lstlisting}
+The name in line 3 has to match with the one defined in the resolver in \textbf{\ref{ex253}} in line 5. But whats even more important is the \emph{@client} directive in the end of line 3. This tells Apollo to not contact the server, but rather resolve the mutation locally. We can then call the above defined mutation like this:
+\begin{lstlisting}
+const Test() {
+	const [ runSetData ] = useMutation( SET_DATA );
+	
+	const handleClick = e => {
+		e.stopPropagation();
+		runSetData(	{ variables: { x: 'test' } } );
+	}
+	
+	return (
+		<button onClick={ handleClick }>Click me</button>
+	);
+}
+\end{lstlisting}
+
+\subsubsection{The Apollo Cache}
+A unique feature of Apollo is its smart cache. Once a query to the server has been executed, the results are saved in the cache and should the exact same query be executed again, the cache will first check if it has results for this query saved locally. If so, it'll return them from there, reducing network traffic and improving performance of the whole application. 
+
+Of course in some cases it might be necessary to always have the newest data from the cache. The exact behavior can be specified through the \emph{options} object passed to a query or mutation.
+\\
+
+The setup time for working with Apollo Client is very short as it offers great default settings that will get any application going quickly. We just looked at the absolute basics of it, it offers features like pagination, subscriptions, optimistic UI and much more.
+Further it allows the programmer to define all its behavior precisely when he wants to and by that its a great tool to work with.
 
 \chapter{Deployment}
 \section{AWS}
