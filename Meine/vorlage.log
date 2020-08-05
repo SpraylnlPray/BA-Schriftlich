@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  4 AUG 2020 18:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  5 AUG 2020 18:15
 entering extended mode
 **./vorlage.tex
 (vorlage.tex
@@ -400,6 +400,60 @@ ty"
 Package: enumerate 2015/07/23 v3.00 enumerate extensions (DPC)
 \@enLab=\toks19
 )
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\caption.s
+ty"
+Package: caption 2020/05/30 v3.4k Customizing captions (AR)
+
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\caption3.
+sty"
+Package: caption3 2020/05/30 v1.12 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 61.
+\captionmargin=\dimen144
+\captionmargin@=\dimen145
+\captionwidth=\dimen146
+\caption@tempdima=\dimen147
+\caption@indent=\dimen148
+\caption@parindent=\dimen149
+\caption@hangindent=\dimen150
+Package caption Info: KOMA-Script document class detected.
+)
+Package caption Info: KOMA-Script document class.
+\c@caption@flags=\count197
+\c@continuedfloat=\count198
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+)
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\subcaptio
+n.sty"
+Package: subcaption 2020/01/22 v1.3d Sub-captions (AR)
+\c@subfigure=\count199
+\c@subtable=\count266
+)
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\graphicx
+.sty"
+Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\graphics
+.sty"
+Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\trig.sty
+"
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics-cfg\grap
+hics.cfg"
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 105.
+
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics-def\pdft
+ex.def"
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen151
+\Gin@req@width=\dimen152
+)
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/koma-script\scrla
 yer-scrpage.sty"
 Package: scrlayer-scrpage 2020/04/19 v3.30 KOMA-Script package (end user interf
@@ -432,17 +486,17 @@ Package: geometry 2020/01/02 v5.9 Page Geometry
 y"
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-\Gm@cnth=\count197
-\Gm@cntv=\count198
-\c@Gm@tempcnt=\count199
-\Gm@bindingoffset=\dimen144
-\Gm@wd@mp=\dimen145
-\Gm@odd@mp=\dimen146
-\Gm@even@mp=\dimen147
-\Gm@layoutwidth=\dimen148
-\Gm@layoutheight=\dimen149
-\Gm@layouthoffset=\dimen150
-\Gm@layoutvoffset=\dimen151
+\Gm@cnth=\count267
+\Gm@cntv=\count268
+\c@Gm@tempcnt=\count269
+\Gm@bindingoffset=\dimen153
+\Gm@wd@mp=\dimen154
+\Gm@odd@mp=\dimen155
+\Gm@even@mp=\dimen156
+\Gm@layoutwidth=\dimen157
+\Gm@layoutheight=\dimen158
+\Gm@layouthoffset=\dimen159
+\Gm@layoutvoffset=\dimen160
 \Gm@dimlist=\toks20
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/geometry\geometry
@@ -453,53 +507,28 @@ Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip65
 \bibsep=\skip66
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count266
-)
-("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\graphicx
-.sty"
-Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
-
-("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\graphics
-.sty"
-Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
-
-("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics\trig.sty
-"
-Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
-)
-("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics-cfg\grap
-hics.cfg"
-File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
-)
-Package graphics Info: Driver file: pdftex.def on input line 105.
-
-("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/graphics-def\pdft
-ex.def"
-File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
-))
-\Gin@req@height=\dimen152
-\Gin@req@width=\dimen153
+\c@NAT@ctr=\count270
 )
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/booktabs\booktabs
 .sty"
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen154
-\lightrulewidth=\dimen155
-\cmidrulewidth=\dimen156
-\belowrulesep=\dimen157
-\belowbottomsep=\dimen158
-\aboverulesep=\dimen159
-\abovetopsep=\dimen160
-\cmidrulesep=\dimen161
-\cmidrulekern=\dimen162
-\defaultaddspace=\dimen163
-\@cmidla=\count267
-\@cmidlb=\count268
-\@aboverulesep=\dimen164
-\@belowrulesep=\dimen165
-\@thisruleclass=\count269
-\@lastruleclass=\count270
-\@thisrulewidth=\dimen166
+\heavyrulewidth=\dimen161
+\lightrulewidth=\dimen162
+\cmidrulewidth=\dimen163
+\belowrulesep=\dimen164
+\belowbottomsep=\dimen165
+\aboverulesep=\dimen166
+\abovetopsep=\dimen167
+\cmidrulesep=\dimen168
+\cmidrulekern=\dimen169
+\defaultaddspace=\dimen170
+\@cmidla=\count271
+\@cmidlb=\count272
+\@aboverulesep=\dimen171
+\@belowrulesep=\dimen172
+\@thisruleclass=\count273
+\@lastruleclass=\count274
+\@thisrulewidth=\dimen173
 )
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/tools\longtable.s
 ty"
@@ -508,19 +537,19 @@ Package: longtable 2020/01/07 v4.13 Multi-page Table package (DPC)
 \LTright=\skip68
 \LTpre=\skip69
 \LTpost=\skip70
-\LTchunksize=\count271
-\LTcapwidth=\dimen167
+\LTchunksize=\count275
+\LTcapwidth=\dimen174
 \LT@head=\box49
 \LT@firsthead=\box50
 \LT@foot=\box51
 \LT@lastfoot=\box52
-\LT@cols=\count272
-\LT@rows=\count273
-\c@LT@tables=\count274
-\c@LT@chunks=\count275
+\LT@cols=\count276
+\LT@rows=\count277
+\c@LT@tables=\count278
+\c@LT@chunks=\count279
 \LT@p@ftn=\toks21
 )
-Class scrbook Info: longtable captions redefined on input line 37.
+Class scrbook Info: longtable captions redefined on input line 40.
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/koma-script\scrha
 ck.sty"
@@ -535,7 +564,7 @@ Package: expl3 2020-06-18 L3 programming layer (loader)
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/l3backend\l3backe
 nd-pdfmode.def"
 File: l3backend-pdfmode.def 2020-06-29 L3 backend support: PDF mode
-\l__kernel_color_stack_int=\count276
+\l__kernel_color_stack_int=\count280
 \l__pdf_internal_box=\box53
 ))
 Package: xpatch 2020/03/25 v0.3a Extending etoolbox patching commands
@@ -546,15 +575,15 @@ Package: xparse 2020-05-15 L3 Experimental document command parser
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/l3packages/xparse
 \xparse-generic.tex"
-\l__xparse_current_arg_int=\count277
-\g__xparse_grabber_int=\count278
-\l__xparse_m_args_int=\count279
-\l__xparse_v_nesting_int=\count280
+\l__xparse_current_arg_int=\count281
+\g__xparse_grabber_int=\count282
+\l__xparse_m_args_int=\count283
+\l__xparse_v_nesting_int=\count284
 ))
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/etoolbox\etoolbox
 .sty"
 Package: etoolbox 2019/09/21 v2.5h e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count281
+\etb@tempcnta=\count285
 ))
 Package scrhack Info: hyperref hack deactivated because of
 (scrhack)             detection of hyperref version, that doesn't
@@ -585,33 +614,33 @@ LaTeX Warning: Label `ex241' multiply defined.
 )
 \openout1 = `vorlage.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 81
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 84
 .
  ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmr.fd"
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Package scrbase Info: activating english \contentsname on input line 81.
-Package scrbase Info: activating english \listfigurename on input line 81.
-Package scrbase Info: activating english \listtablename on input line 81.
-\c@lstlisting=\count282
+Package scrbase Info: activating english \contentsname on input line 84.
+Package scrbase Info: activating english \listfigurename on input line 84.
+Package scrbase Info: activating english \listtablename on input line 84.
+\c@lstlisting=\count286
 \AtBeginShipoutBox=\box54
-Package hyperref Info: Link coloring OFF on input line 81.
+Package hyperref Info: Link coloring OFF on input line 84.
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/hyperref\nameref.
 sty"
@@ -625,11 +654,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 gettitlestring.sty"
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count283
+\c@section@level=\count287
 )
-LaTeX Info: Redefining \ref on input line 81.
-LaTeX Info: Redefining \pageref on input line 81.
-LaTeX Info: Redefining \nameref on input line 81.
+LaTeX Info: Redefining \ref on input line 84.
+LaTeX Info: Redefining \pageref on input line 84.
+LaTeX Info: Redefining \nameref on input line 84.
  (vorlage.out) (vorlage.out)
 \@outlinefile=\write3
 \openout3 = `vorlage.out'.
@@ -641,7 +670,7 @@ Class scrbook Info: loading recommended package `bookmark'.
 (scrbook)           `bookmarkpackage=false' before \begin{document} and
 (scrbook)           you can avoid this message adding:
 (scrbook)             \usepackage{bookmark}
-(scrbook)           before \begin{document} on input line 81.
+(scrbook)           before \begin{document} on input line 84.
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/bookmark\bookmark
 .sty"
@@ -653,8 +682,38 @@ File: bkm-pdftex.def 2019/12/03 v1.28 bookmark driver for pdfTeX (HO)
 Package auxhook Info: \AddLineBeginMainAux comes a little late,
 (auxhook)             because the main .aux file is already opened on input lin
 e 168.
-\BKM@id=\count284
+\BKM@id=\count288
 ))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: longtable package is loaded.
+
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/caption\ltcaption
+.sty"
+Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
+)
+Package caption Info: End \AtBeginDocument code.
+
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/context/base/mkii\supp-
+pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count289
+\scratchdimen=\dimen175
+\scratchbox=\box55
+\nofMPsegments=\count290
+\nofMParguments=\count291
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count292
+\MPscratchDim=\dimen176
+\MPnumerator=\count293
+\makeMPintoPDFobject=\count294
+\everyMPtoPDFconversion=\toks23
+)
+("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/epstopdf-pkg\epst
+opdf-base.sty"
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+)
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -689,33 +748,11 @@ e 168.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-
-("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/context/base/mkii\supp-
-pdf.mkii"
-[Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count285
-\scratchdimen=\dimen168
-\scratchbox=\box55
-\nofMPsegments=\count286
-\nofMParguments=\count287
-\everyMPshowfont=\toks22
-\MPscratchCnt=\count288
-\MPscratchDim=\dimen169
-\MPnumerator=\count289
-\makeMPintoPDFobject=\count290
-\everyMPtoPDFconversion=\toks23
-)
-("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/epstopdf-pkg\epst
-opdf-base.sty"
-Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
-Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
-85.
-)
-Package scrhack Info: undefining \float@addtolists on input line 81.
-\c@exmp=\count291
+Package scrhack Info: undefining \float@addtolists on input line 84.
+\c@exmp=\count295
 \openout2 = `./Bestandteile/titel.aux'.
 
- (Bestandteile/titel.tex
+(Bestandteile/titel.tex
 <Bilder/LogoHS.png, id=3, 302.0886pt x 113.7048pt>
 File: Bilder/LogoHS.png Graphic file (type png)
 <use Bilder/LogoHS.png>
@@ -764,8 +801,8 @@ ogoHS.png>]
 
 
 ]
-LaTeX Font Info:    Trying to load font information for T1+lmss on input line 8
-9.
+LaTeX Font Info:    Trying to load font information for T1+lmss on input line 9
+2.
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmss.fd"
 File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -865,105 +902,115 @@ Overfull \hbox (91.2825pt too wide) in paragraph at lines 207--208
 tabase. (https://neo4j.com/docs/api/javascript-
  []
 
-[7] [8] [9] [10]
+[7] [8] [9]
+Underfull \hbox (badness 10000) in paragraph at lines 334--335
+
+ []
+
+[10]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 362.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 364.
  [11] [12] [13]
-Overfull \hbox (178.28069pt too wide) in paragraph at lines 503--505
+Overfull \hbox (178.28069pt too wide) in paragraph at lines 505--507
 \T1/lmr/m/n/12 (maybe when com-ing back to this check https://reactjs.org/docs/
 faq-internals.html https://reactjs.org/docs/reconciliation.html
  []
 
 
-Overfull \hbox (152.24069pt too wide) in paragraph at lines 503--505
+Overfull \hbox (152.24069pt too wide) in paragraph at lines 505--507
 \T1/lmr/m/n/12 and https://github.com/acdlite/react-fiber-architecture and THIS
 :: https://www.youtube.com/watch?v=RquK3TImY9U
  []
 
 
-Overfull \hbox (158.762pt too wide) in paragraph at lines 506--507
+Overfull \hbox (158.762pt too wide) in paragraph at lines 508--509
 []\T1/lmr/m/n/12 The \T1/lmr/m/it/12 set-State \T1/lmr/m/n/12 func-tion will ma
 rk the com-po-nent and all its chil-dren as dirty. (https://medium.com/@gethylg
 eorge/how-
  []
 
 [14]
-Overfull \hbox (92.90999pt too wide) in paragraph at lines 533--534
+Overfull \hbox (92.90999pt too wide) in paragraph at lines 535--536
 \T1/lmr/m/n/12 Which is a lot shorter and has an-other big ad-van-tage: It pro-
 tects from lazi-ness. (https://hackernoon.com/react-
  []
 
 
-Overfull \hbox (5.22649pt too wide) in paragraph at lines 533--534
+Overfull \hbox (5.22649pt too wide) in paragraph at lines 535--536
 \T1/lmr/m/n/12 stateless-functional-components-nine-wins-you-might-have-overloo
 ked-997b0d933dbc) As this
  []
 
 
-Overfull \hbox (88.53494pt too wide) in paragraph at lines 538--539
+Overfull \hbox (88.53494pt too wide) in paragraph at lines 540--541
 \T1/lmr/m/n/12 gether with au-to-matic UI up-dates upon events from the server.
  (https://www.apollographql.com/docs/react/) 
  []
 
 
-Overfull \hbox (104.415pt too wide) in paragraph at lines 541--542
+Overfull \hbox (104.415pt too wide) in paragraph at lines 543--544
 \T1/lmr/m/n/12 since Re-act 16.8 and were in-tro-duced to im-prove state-less f
 unc-tional com-po-nents (https://reactjs.org/docs/hooks-
  []
 
 [15]
-Overfull \hbox (88.8781pt too wide) in paragraph at lines 559--560
+Overfull \hbox (88.8781pt too wide) in paragraph at lines 561--562
 []\T1/lmr/m/n/12 For the rest of the ar-gu-ments please re-fer to (https://www.
 apollographql.com/docs/react/api/react/hooks/) 
  []
 
 [16] [17]
-Underfull \hbox (badness 10000) in paragraph at lines 632--634
+Underfull \hbox (badness 10000) in paragraph at lines 634--636
 
  []
 
 [18]
 chapter 3.
+
+Underfull \hbox (badness 10000) in paragraph at lines 643--644
+
+ []
+
 [19
 
 
-]
+] [20]
 chapter 4.
-[20
-
-
-]
-chapter 5.
 [21
 
 
 ]
-chapter 6.
+chapter 5.
 [22
 
 
 ]
+chapter 6.
+[23
+
+
+]
 chapter 7.
-) [23
+) [24
 
 
 ] (vorlage.lof)
 \tf@lof=\write5
 \openout5 = `vorlage.lof'.
 
- [24
+ [25
 
 
 ] (vorlage.lot)
 \tf@lot=\write6
 \openout6 = `vorlage.lot'.
 
- [25
+ [26
 
 
 
 ] (vorlage.bbl)
-(Bestandteile/erklaerung.tex [26
+(Bestandteile/erklaerung.tex [27
 
 
 
@@ -980,29 +1027,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 25--26
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 108.
- [27]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 108.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 111.
+ [28]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 111.
  (vorlage.aux (Bestandteile/titel.aux)
 (Bestandteile/kurzzusammenfassung.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 108.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 108.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 111.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 111.
 Package rerunfilecheck Info: File `vorlage.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 108.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 111.
  ) 
 Here is how much of TeX's memory you used:
- 15204 strings out of 480756
- 289081 string characters out of 2893314
- 741840 words of memory out of 3000000
- 30513 multiletter control sequences out of 15000+200000
+ 16393 strings out of 480756
+ 311524 string characters out of 2893314
+ 763562 words of memory out of 3000000
+ 31690 multiletter control sequences out of 15000+200000
  587917 words of font info for 54 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 54i,20n,77p,10104b,1987s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 54i,20n,77p,10104b,1977s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.e
 nc}{C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mat
 hsy.enc}{C:/Users/Daniel/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/l
@@ -1018,9 +1065,9 @@ grams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Daniel/AppData/Loca
 l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/Users/Daniel/AppData
 /Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Daniel/Ap
 pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt12.pfb>
-Output written on vorlage.pdf (30 pages, 477197 bytes).
+Output written on vorlage.pdf (31 pages, 482307 bytes).
 PDF statistics:
- 857 PDF objects out of 1000 (max. 8388607)
- 454 named destinations out of 1000 (max. 500000)
+ 862 PDF objects out of 1000 (max. 8388607)
+ 455 named destinations out of 1000 (max. 500000)
  294 words of extra memory for PDF output out of 10000 (max. 10000000)
 

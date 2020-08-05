@@ -331,7 +331,9 @@ type Node {
 }
 \end{lstlisting}
 
-The node that is currently being iterated over in the resolver chain is passed as \emph{this} to Neo4j. Then it'll look for other nodes that are connected through any relationship of type \emph{Link} and return these. In addition to this, ApolloServer can generate default resolvers for queries and mutations meaning we do not have to write a resolver for \emph{Node} on our own. This combination makes writing query resolvers a rare occasion when using the GRAND-stack.
+The node that is currently being iterated over in the resolver chain is passed as \emph{this} to Neo4j. Then it'll look for other nodes that are connected through any relationship of type \emph{Link} and return these. In addition to this, ApolloServer can generate default resolvers for queries and mutations meaning we do not have to write a resolver for \emph{Node} on our own. This combination makes writing query resolvers a rare occasion when using the GRAND-stack. \\
+
+Please note that this feature is only available when \emph{APOC} is enabled on this Neo4j instance (more information about this in the end of chapter 3 and chapter 4).
 
 \section{Frontend - React}
 React is a JavaScript-Framework to create component-based user interfaces. Each component has to define a \emph{render} method which describes what appears on the screen. In this method the programmer writes basic HTML or can embed other react components. \\
@@ -636,9 +638,32 @@ The setup time for working with Apollo Client is very short as it offers great d
 Further it allows the programmer to define all its behavior precisely when he wants to and by that its a great tool to work with.
 
 \chapter{Deployment}
+While developing in a local environment it is also important to test the application in a production environment as early as possible. Many frameworks make optimizations to improve performance. This might lead to errors that can't be seen in a local setup. Often they also change error behavior. While during development an error might only lead to a warning message, in production the same error might cause the application to crash.
+
+Another reason to go for early deployment is to allow other people to see, use and test the application. Someone who sees the app for the first time or at least doesn't know how things were thought to work will make completely different use of it than a programmer. New issues with the workflow can be discovered and problems that a developer would never have thought of be reported. Further the layout will be tested on different screens, browsers and devices, unveiling unknown layout troubles. Issues discovered early are much easier to fix than those who are integrated deeply into the codebase. \\
+
+In this chapter we will talk about the tools that were used to deploy the application to a publicly available domain.
+
 \section{AWS}
+AWS is a cloud platform from Amazon that offers over 175 different services in 24 different geographic regions around the world to allow for high availability all around the world. (https://aws.amazon.com/what-is-aws/) \\
+AWS was launched in 2002 only offering SOAP (a messaging protocol used in distributed systems to exchange information) and XML interfaces. (https://mediatemple.net/blog/cloud-hosting/brief-history-aws/) In 2003 the idea of a big system offering services and tools was born as the leadership realized that one of the company's strengths was building and running effective, reliable and scalable data centers. (https://techcrunch.com/2016/07/02/andy-jassys-brief-history-of-the-genesis-of-aws/) After developing a more precise idea of how this strengths could be used to fulfill a lot of companies' needs the first public launch was in 2006 with \emph{Simple Storage Service} (S3), the \emph{Elastic Compute Cloud} (EC2) and a \emph{Simple Queue Service} (SQS) following shortly after. 
+%(https://mediatemple.net/blog/cloud-hosting/brief-history-aws/)
+
+Since then the services offered by AWS keep growing and other companies like Google, Microsoft or IBM started to compete in the business. In a 2019 research from Gartner AWS was found as one of the leading cloud Infrastructure as a Service providers world wide (IaaS) 
+%(https://www.gartner.com/doc/reprints?id=1-1CMAPXNO&ct=190709&st=sb) 
+regarding \emph{Completeness of Vision} and \emph{Ability to execute}. 
+
 \subsection{AWS-EC2}
+EC2 is a service that allows the creation of virtual machines with over 300 different variations of computational capacities like the number of CPUs, Memory, Storage and Network Performance.
+%(https://aws.amazon.com/ec2/?nc1=h_ls) 
+Available configurations that can run on an instance are called Amazon Machine Images (AMIs) and include various Linux based distributions like Ubuntu, Debian or fedora as well as Windows. In addition to empty operating systems Amazon and different communities also provides images with certain pre-installed software making sure that instances can be set up quickly. \\
+Basically, an EC2 instance is a virtual machine that runs on an Amazon server. (https://www.quora.com/Is-EC2-a-virtual-machine)
+
+%In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
+
 \subsection{AWS-ECS}
+
+
 \subsection{AWS-Amplify}
 \section{Docker}
 
