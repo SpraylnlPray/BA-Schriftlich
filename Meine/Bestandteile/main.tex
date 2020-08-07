@@ -662,10 +662,39 @@ Basically, an EC2 instance is a virtual machine that runs on an Amazon server. (
 %In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
 
 \subsection{AWS-ECS}
+ECS is a service to run automatically managed containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. 
+%(https://aws.amazon.com/ecs/?nc1=h_ls)
+These are the most important terms when talking about AWS ECS: \\
 
+A \textbf{definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. (https://www.freecodecamp.org/news/amazon-ecs-terms-and-architecture-807d8c4960fd/)
+
+A \textbf{task} is an instance that is created following the specifications in the task definition. A task can run various Docker containers at once. A task is where an application actually gets executed.
+
+A \textbf{service} is used to manage tasks. It is possible to specify a minimum and maximum number of running tasks and when to start new or stop running tasks to make sure the necessary calculation power is always necessary. A service can make use of a load balancer which will distribute network traffic equally over all running tasks in the service.
+
+A \textbf{Cluster} is a logical grouping of services. \\
+
+These components can be visually put together as shown in figure \textbf{\ref{ex311}}. (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.85]{Bilder/overview-fargate.png}
+\captionof{figure}{Strucute of AWS ECS}
+\label{ex311}
+\end{figure}
+
+The orange square symbolizes ECS inside the big AWS infrastructure. We will ignore the square denoted with "VPC" as it is not relevant for further understanding.\\
+A task can be created from a task definition and be placed in a service. The services are here shown as light blue squares labeled \emph{Fargate}. Fargate is a computation engine from Amazon which calculates which virtual machine to use according to the task definition and creates and starts it and then runs the docker image from a specified container registry automatically. (https://aws.amazon.com/fargate/) The orange square with dots and dashes is a cluster. This cluster contains 2 services, reach running 3 tasks. 
+
+The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of a geological region.
 
 \subsection{AWS-Amplify}
+Amplify is a services that aims to make the deployment as well as the development of applications as easy as possible. It comes with many advanced features that help setting up an app quickly. Some examples are: Authentication, API creation, Analytics, Push Notifications and many more (https://aws.amazon.com/amplify/). It creates a certificate for any deployed application, allowing for HTTPS connections. Further it is able to scan a connected GitHub repository and provide a template configuration based on the framework used.
+
+Another really nice feature is the easy deployment flow: For each application it is possible to connect various branches. Each branch will have its unique URL and once a developer pushes to a connected branch, Amplify will build the newest status of the application. This is a great feature for testing new features in a production environment without having to deploy to a master server directly.
+
 \section{Docker}
+Docker is a platform that provides the ability to a developer to create any environment in which he wants to execute code in. While it is similar to a virtual machine, there are certain differences between them: \\(https://geekflare.com/docker-vs-virtual-machine/)
+\textbf{Operating System}: 
 
 \chapter{Development}
 \section{Getting started with Neo4j}
