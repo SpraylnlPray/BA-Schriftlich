@@ -1,21 +1,21 @@
 \chapter{Introduction}
-The idea for this project is to offer an online editor with CRUD-functionality for a network, consisting of components of software projects, as well as a first implementation of an algorithm that will in most cases create a nice looking layout on its own.
+There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" (https://www.pcwdld.com/top-10-network-diagram-topology-and-mapping-software) or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end.
+
+The idea for this project is to offer an online editor with CRUD-functionality for a network, consisting of components of software projects, as well as a first implementation of an algorithm that will, in most cases, create a nice looking layout on its own.
 
 \section{Purpose}
-There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" (https://www.pcwdld.com/top-10-network-diagram-topology-and-mapping-software) or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end. \\
-Furthermore the purpose of this project is to try out technologies. This software, or variations of it, might later be incorporated into a bigger project.  The experiences and impressions can be of help if someone thinks about building similar software.
-
+The purpose is to try out and test a combination of technologies. This software, or variations of it, might later be incorporated into a bigger project or adapted to fit another use case. The experiences and impressions during development can be of help when thinking about what technology stack to use, which is why a big part of this paper is dedicated to documenting this process.
 
 \chapter{Backend to Frontend}
-In this chapter we will look at the individual software components this application consists of. The order will be the same as they appeared in the development process.
+In this chapter we will introduce the individual components, tools and frameworks this application is built with. For some of them we will give some more insights on how they work internally, the others are big enough on their own. The order will be the same as they appeared in the development process.
 
 \section{The GRAND-stack}
-GRAND stands in this case for \textbf{G}raphQL, \textbf{R}eact, \textbf{A}pollo and \textbf{N}eo4j \textbf{D}atabase. (https://grandstack.io/docs/getting-started-neo4j-graphql) Neo4j is not necessarily designed to work well with the other 4, but combining the "neo4j-driver" and "apollo-server-express" packages makes it almost feel like it was.
+GRAND stands in this case for \textbf{G}raphQL, \textbf{R}eact, \textbf{A}pollo and \textbf{N}eo4j \textbf{D}atabase. (https://grandstack.io/docs/getting-started-neo4j-graphql) React is a frontend framework, Apollo is used for statemanagement on the client side and communicating to the database on the server side. GraphQL will be used for fetching and mutating data. Neo4j is a graph database and the server will communicate with it through a JavaScript driver provided by the Neo4j community. More details can be found in the Development and Documentation section.
 
 \section{Query Language - GraphQL}
 GraphQL is a data query language as well as specification. Its development was started by Facebook in 2012 and it was open sourced in 2015. (https://foundation.graphql.org/)\\
-After their application suffered from poor performance on mobile devices, they took a new implementation using natively implemented models and views. This required a new API for their news feed as it was previously delivered as HTML.\\
-After evaluating different common options like RESTful-APIs and FQL there were often the same problems:  The ratio of data actually used to the one fetched was very small, the amount of requests (https://www.youtube.com/watch?v=zvZP0PVAdR0) and the amount of code on both server and client side to prepare the data was big. (https://engineering.fb.com/core-data/graphql-a-data-query-language/)\\
+After their application suffered from poor performance on mobile devices, they took a new implementation using natively implemented models and views. This required a new API for their news feed as it was previously delivered as pure HTML.\\
+After evaluating different common options like RESTful-APIs and FQL they often saw the same problems:  The ratio of data actually used compared to the one fetched was very small, the number of requests (https://www.youtube.com/watch?v=zvZP0PVAdR0) and the amount of code on both server and client side to prepare the data was big. (https://engineering.fb.com/core-data/graphql-a-data-query-language/)\\
 For example, for loading the start page of a single user, there would have been a lot of different requests necessary: (https://www.youtube.com/watch?v=zvZP0PVAdR0)
 \begin{itemize}
 \item \emph{https://facebook.com/user/id} - Get all user specific data
@@ -24,8 +24,8 @@ For example, for loading the start page of a single user, there would have been 
 \item ...
 \end{itemize}
 
-GraphQL aims to do the opposite: Reduce the amount of data transferred, reduce the amount of requests and increase the developer productivity. (https://engineering.fb.com/core-data/graphql-a-data-query-language/) \\
-\\
+GraphQL aims to resolve all these issues: Reduce the amount of unnecessary data transferred, reduce the number of requests and increase the developer productivity by making it easier to use fetched data. (https://engineering.fb.com/core-data/graphql-a-data-query-language/)
+
 It allows developers to get a lot of different data from a single endpoint. This means that instead the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com}, with a query similar to:\\ (https://www.youtube.com/watch?v=zvZP0PVAdR0) (todo: define graphql styles)
 \newpage
 \begin{lstlisting}[caption={A GraphQL Query},label={ex211}]
@@ -65,7 +65,6 @@ Where the answer would be a JSON-string: (todo: define JSON style)
 }
 \end{lstlisting}
 
-\noindent
 The query can be as extensive as the developer needs it, it will return only the data requested and the answer string can be directly accessed like a JSON-object. By that GraphQL fulfills all its design goals.
 \\ \\
 The previously shown query then needs to be resolved by a server thats able to interpret GraphQL and resolve the query. All non primitive data types have to be defined following the GraphQL specification. An example for a user schema might be:
@@ -80,9 +79,10 @@ type User {
 }
 \end{lstlisting}
 
+\noindent
+where "Event", "Friend" and "Friend\_Suggestion" themselves are other types described in a similar manner.
 
-where "Event", "Friend" and "Friend\_Suggestion" themselves are other types described in a similar manner. \\
-By putting a "!" behind one property the programmer marks it as required, meaning it can never be null or empty. The square brackets define that the property is a list of the type they surround. (http://spec.graphql.org/June2018/)
+By putting a "!" behind a property the programmer marks it as required, meaning it can never be null or empty. The square brackets define that the property is a list of the type they surround. (http://spec.graphql.org/June2018/)
 \\
 To be able to run queries in the first place, one must first define a root type for all queries:
 
@@ -675,7 +675,7 @@ A \textbf{service} is used to manage tasks. It is possible to specify a minimum 
 A \textbf{Cluster} is a logical grouping of services. \\
 
 These components can be visually put together as shown in figure \textbf{\ref{ex311}}. (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=.85]{Bilder/overview-fargate.png}
 \captionof{figure}{Strucute of AWS ECS}
