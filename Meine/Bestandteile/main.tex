@@ -674,7 +674,11 @@ A \textbf{service} is used to manage tasks. It is possible to specify a minimum 
 
 A \textbf{Cluster} is a logical grouping of services. \\
 
+<<<<<<< HEAD
 These components can be visually put together as shown in figure \textbf{\ref{ex311}}. (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
+=======
+These components can be visually put together as shown in the figure below. (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
+>>>>>>> 4d6893b6d823151844e816054fcf2ceb16956cf6
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.85]{Bilder/overview-fargate.png}
@@ -693,8 +697,27 @@ Amplify is a services that aims to make the deployment as well as the developmen
 Another really nice feature is the easy deployment flow: For each application it is possible to connect various branches. Each branch will have its unique URL and once a developer pushes to a connected branch, Amplify will build the newest status of the application. This is a great feature for testing new features in a production environment without having to deploy to a master server directly.
 
 \section{Docker}
-Docker is a platform that provides the ability to a developer to create any environment in which he wants to execute code in. While it is similar to a virtual machine, there are certain differences between them: \\(https://geekflare.com/docker-vs-virtual-machine/)
-\textbf{Operating System}: 
+Docker is a platform that provides the ability to a developer to create any environment in which he wants to execute code in.
+Before comparing it to a virtual machine we'll take a look at the basic terminology:
+
+A \emph{Docker File} is a text file containing instructions that tell the Docker Engine how to build a \emph{Docker Image}. (https://nickjanetakis.com/blog/differences-between-a-dockerfile-docker-image-and-docker-container)
+
+This \emph{Docker Image} is a file containing necessary data to execute a given program. The in the docker file specified libraries are saved, folders from the local machine are copied, environment variables are set etc.. 
+
+When running the image, we will get a \emph{Docker Container}. It will execute specified commands and by that for example download node modules. This container is an instance executed by the \emph{Docker Engine} which runs on top of the Host OS of an actual machine.
+\\
+
+While it is similar to a virtual machine, there are certain differences between them: (https://geekflare.com/docker-vs-virtual-machine/)\\
+\textbf{Operating System} Every VM comes with its own operating system, making it heavy in terms of memory and processing power they require. Docker containers in turn all share the hosts operating system and only require the docker engine to be installed on the machine: (inspired by https://geekflare.com/docker-vs-virtual-machine/)
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.8]{Bilder/DockerVsVM.png}
+\captionof{figure}{Docker vs VM}
+\label{ex312}
+\end{figure}
+\noindent
+\textbf{Security} Following the previous point, every VM has its own operating system and is strongly isolated in the host kernel. Docker containers all run on a single kernel. Furthermore docker resources are shared. If an attacker gets access to one container he'll be able to exploit  all containers in a cluster. (https://geekflare.com/docker-vs-virtual-machine/) \\
+\textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
 
 \chapter{Development}
 \section{Getting started with Neo4j}
