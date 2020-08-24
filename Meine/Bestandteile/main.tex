@@ -170,7 +170,7 @@ Upon start up these records are being loaded into the "FS Cache" (File System Ca
 Here each node holds a list of relationships that are grouped by the relationship type to allow for quick traversals, and relationships only hold their properties as well as start- and end-node and their type. Any references to other records are being done by its ID. 
 
 \subsubsection{Traversing}
-For finding a node to start traversing the graph, Neo4j uses traditional indexing. (https://skillsmatter.com/skillscasts/2968-neo4j-internals around 32:45) Once the start node is found, 2 concepts take over:
+For finding a node to start traversing the graph, Neo4j uses traditional indexing. \citep[minute 32]{NeoInternals} Once the start node is found, 2 concepts take over:
 \begin{enumerate}
 \item \textbf{RelationshipExpanders} which will for a node return all relevant relationships to continue traversing from that node
 \item \textbf{Evaluators} which return if traversing should continue on this branch ($ \rightarrow $ expand) or not and if this node should be included in the result set or not.
@@ -184,7 +184,7 @@ When a query is run, the first thing that happens is that matching start-nodes a
 
 \section{Server - ApolloServer}
 %maybe some general information about Apollo?
-Apollo Server is a spec-compliant GraphQL server (https://www.apollographql.com/docs/apollo-server/). It can be embedded into Node.js middleware like Express or Fastify and will listen for connections on a defined port. \\
+Apollo Server is a spec-compliant GraphQL server. It can be embedded into Node.js middleware like Express or Fastify \cite{ApolloServerIntro} and will listen for connections on a defined port. \\
 When it receives one it will read the query and call the respective route, or resolvers as they are called. \\
 In addition to that the server will deliver, together with some more, a \emph{context} object to each route that contains a driver which connects to a database, which is Neo4j in our case. Using this object together with a specified Cypher query we can manipulate the DB. 
 
@@ -206,7 +206,7 @@ async CreateNode( _, args, ctx ) {
 Lets break down whats happening in this piece of code:
 \begin{itemize}
 \item Line 1 contains the function definition. "args" is an object that contains all data sent with the query from the frontend. "ctx" is the context object that contains the neo4j driver to communicate with the DB. The first argument "\_", which is a placeholder here as we do not need it, is the so called "parent" which is equal to the previous resolver in the resolver chain. (More about this later REMOVE THIS COMMENT)
-\item In line 2 we acquire a session to communicate with the database. (https://neo4j.com/docs/api/javascript-driver/4.1/class/src/driver.js~Driver.html) Over this object we can send parameters that get executed right away.
+\item In line 2 we acquire a session to communicate with the database. \cite{Neo4jDriver} Over this object we can send parameters that get executed right away.
 \item Lines 3 to 6 define a Cypher query which is similar to the ones shown in \exref{ex231} and \exref{ex232}. 
 \item In line 4 we make use of the args object and embed the nodeType directly into the query string by using template strings. This is necessary because at this position of a cypher query we can't make use of query variables the same way we do in the rest of the query. Later in that line we can see that by using \$<variableName> we can access query variables we pass along.
 \item Line 5 demonstrates the usage of an object we can pass as query variable. This object can't only contain simple datatypes, but its really useful to set various values at once.
@@ -498,7 +498,7 @@ In lines 31 and 32 we bind the this keyword on the increase and decrease functio
 The render method defines the output of the component. We'll render a paragraph telling the current score by accessing the state together with two buttons and their respective click handlers.
 
 \subsubsection{Updating Components}
-React is known for its good performance (https://dev.to/spukas/react-work-phases-4eaj) even in large applications. To understand better how it achieves this, we will look a bit at the internal process of rendering and updating the components.
+React is known for its good performance \cite{LinaSpukas} even in large applications. To understand better how it achieves this, we will look a bit at the internal process of rendering and updating the components.
 
 On the initial render React will create a component tree from which it'll then build the DOM that the browser converts into displayable objects and paints them on the screen. To show how react determines which part of the DOM it has to update, we'll quickly walk through the previous example:
 
@@ -507,7 +507,7 @@ When clicking the increase or decrease button in the previous example we update 
 \subsubsection{Finding The Differences} (maybe when coming back to this check https://reactjs.org/docs/faq-internals.html https://reactjs.org/docs/reconciliation.html and https://github.com/acdlite/react-fiber-architecture  and THIS:: https://www.youtube.com/watch?v=RquK3TImY9U )
 To know which lines to update, React performs a few steps: 
 \begin{itemize}
-\item The \emph{setState} function will mark the component and all its children as dirty. (https://medium.com/@gethylgeorge/how-virtual-dom-and-diffing-works-in-react-6fc805f9f84e großes Bild)
+\item The \emph{setState} function will mark the component and all its children as dirty. \cite{GethylGeorgeKurian}
 \item It'll recursively walk through all components marked as dirty, building them in the virtual DOM
 \item For each built element it compares it to the value in the actual DOM. If they differ it'll deduce if the item should be replaced, removed or updated and does so accordingly. 
 %https://overreacted.io/react-as-a-ui-runtime/#reconciliation
@@ -534,15 +534,15 @@ function App( props ) {
 }
 export default App;
 \end{lstlisting}
-Which is a lot shorter and has another big advantage: It protects from laziness. (https://hackernoon.com/react-stateless-functional-components-nine-wins-you-might-have-overlooked-997b0d933dbc) As this component doesn't support local state it is not too tempting to quickly hack something new into it. Rather the programmer gets encouraged to think about the structure and create a proper component for a new feature together with its own state object that only that component needs.
+Which is a lot shorter and has another big advantage: It protects from laziness. \cite{CoryHouse} As this component doesn't support local state it is not too tempting to quickly hack something new into it. Rather the programmer gets encouraged to think about the structure and create a proper component for a new feature together with its own state object that only that component needs.
 
 And of course visually the result is equal to the one in \textbf{\ref{ex251}} and \textbf{\ref{ex252}}.
 
 \section{Client - ApolloClient}
-ApolloClient is a state management library for JavaScript that manages data with GraphQL. It offers an all in one solution for fetching, caching and modifying application data and together with automatic UI updates upon events from the server. (https://www.apollographql.com/docs/react/)
+ApolloClient is a state management library for JavaScript that manages data with GraphQL. It offers an all in one solution for fetching, caching and modifying application data and together with automatic UI updates upon events from the server. \cite{ApolloClientIntro}
 
 \subsubsection{Hooks}
-ApolloClient 3 offers this by providing custom \textbf{hooks}. Hooks are a new addition to React since React 16.8 and were introduced to improve stateless functional components (https://reactjs.org/docs/hooks-intro.html) and can only be used in such (https://reactjs.org/docs/hooks-overview.html). There were a few reasons that led to the introduction of hooks like the appearance of complex class components that couldn't be split into smaller ones, not re-usable stateful logic and classes being not ideal for future optimization. (https://reactjs.org/docs/hooks-intro.html) Hooks allow for example the usage of state in functional components.
+ApolloClient 3 offers this by providing custom \textbf{hooks}. Hooks are a new addition to React since React 16.8 and were introduced to improve stateless functional components \cite{ReactHooksIntro} and can only be used in such. \cite{ReactHooksOverview} There were a few reasons that led to the introduction of hooks like the appearance of complex class components that couldn't be split into smaller ones, not re-usable stateful logic and classes being not ideal for future optimization. \cite{ReactHooksIntro} Hooks allow for example the usage of state in functional components.
 
 \subsubsection{Apollo Hooks}
 In addition to some built-in Hooks provided by React it is also possible to create them. Apollo implemented many own hooks, we will focus on \emph{useQuery}, \emph{useLazyQuery} and \emph{useMutation}.
@@ -560,7 +560,7 @@ function Test() {
 }
 \end{lstlisting}
 
-For the rest of the arguments please refer to (https://www.apollographql.com/docs/react/api/react/hooks/)
+For the rest of the arguments please refer to API reference form Apollo.
 
 To be able to use returned data and inform the user about the current status, all of these three hooks return a few other objects, the most important being \emph{data}, \emph{loading} and \emph{error}. These are boolean values and allow for conditional rendering inside a component, depending on their values: 
 \begin{lstlisting}
@@ -647,28 +647,24 @@ Another reason to go for early deployment is to allow other people to see, use a
 In this chapter we will talk about the tools that were used to deploy the application to a publicly available domain.
 
 \section{AWS}
-AWS is a cloud platform from Amazon that offers over 175 different services in 24 different geographic regions around the world to allow for high availability all around the world. (https://aws.amazon.com/what-is-aws/) \\
-AWS was launched in 2002 only offering SOAP (a messaging protocol used in distributed systems to exchange information) and XML interfaces. (https://mediatemple.net/blog/cloud-hosting/brief-history-aws/) In 2003 the idea of a big system offering services and tools was born as the leadership realized that one of the company's strengths was building and running effective, reliable and scalable data centers. (https://techcrunch.com/2016/07/02/andy-jassys-brief-history-of-the-genesis-of-aws/) After developing a more precise idea of how this strengths could be used to fulfill a lot of companies' needs the first public launch was in 2006 with \emph{Simple Storage Service} (S3), the \emph{Elastic Compute Cloud} (EC2) and a \emph{Simple Queue Service} (SQS) following shortly after. 
-%(https://mediatemple.net/blog/cloud-hosting/brief-history-aws/)
+AWS is a cloud platform from Amazon that offers over 175 different services in 24 different geographic regions around the world to allow for high availability all around the world. \cite{WhatIsAws}\\
+AWS was launched in 2002 only offering SOAP (a messaging protocol used in distributed systems to exchange information) and XML interfaces. \cite{HistoryAwsMedia} In 2003 the idea of a big system offering services and tools was born as the leadership realized that one of the company's strengths was building and running effective, reliable and scalable data centers. After developing a more precise idea of how this strengths could be used to fulfill a lot of companies' needs the first public launch was in 2006 with \emph{Simple Storage Service} (S3), the \emph{Elastic Compute Cloud} (EC2) and a \emph{Simple Queue Service} (SQS) following shortly after. \cite{HistoryAwsTech}
 
-Since then the services offered by AWS keep growing and other companies like Google, Microsoft or IBM started to compete in the business. In a 2019 research from Gartner AWS was found as one of the leading cloud Infrastructure as a Service providers world wide (IaaS) 
-%(https://www.gartner.com/doc/reprints?id=1-1CMAPXNO&ct=190709&st=sb) 
+Since then the services offered by AWS keep growing and other companies like Google, Microsoft or IBM started to compete in the business. In a 2019 research from Gartner AWS was found as one of the leading cloud Infrastructure as a Service providers world wide (IaaS) \cite{Gartner} 
 regarding \emph{Completeness of Vision} and \emph{Ability to execute}. 
 
 \subsection{AWS-EC2}
-EC2 is a service that allows the creation of virtual machines with over 300 different variations of computational capacities like the number of CPUs, Memory, Storage and Network Performance.
-%(https://aws.amazon.com/ec2/?nc1=h_ls) 
+EC2 is a service that allows the creation of virtual machines with over 300 different variations of computational capacities like the number of CPUs, Memory, Storage and Network Performance. \cite{AwsEc2} 
 Available configurations that can run on an instance are called Amazon Machine Images (AMIs) and include various Linux based distributions like Ubuntu, Debian or fedora as well as Windows. In addition to empty operating systems Amazon and different communities also provides images with certain pre-installed software making sure that instances can be set up quickly. \\
-Basically, an EC2 instance is a virtual machine that runs on an Amazon server. (https://www.quora.com/Is-EC2-a-virtual-machine)
+Basically, an EC2 instance is a virtual machine that runs on an Amazon server. \cite{Ec2VirtualMachine}
 
 %In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
 
 \subsection{AWS-ECS}
-ECS is a service to run automatically managed containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. 
-%(https://aws.amazon.com/ecs/?nc1=h_ls)
+ECS is a service to run automatically managed containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
 These are the most important terms when talking about AWS ECS: \\
 
-A \textbf{definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. (https://www.freecodecamp.org/news/amazon-ecs-terms-and-architecture-807d8c4960fd/)
+A \textbf{definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
 
 A \textbf{task} is an instance that is created following the specifications in the task definition. A task can run various Docker containers at once. A task is where an application actually gets executed.
 
@@ -676,11 +672,8 @@ A \textbf{service} is used to manage tasks. It is possible to specify a minimum 
 
 A \textbf{Cluster} is a logical grouping of services. \\
 
-<<<<<<< HEAD
-These components can be visually put together as shown in figure \textbf{\ref{ex311}}. (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
-=======
+These components can be visually put together as shown in figure \textbf{\ref{ex311}}.
 These components can be visually put together as shown in the figure below. (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
->>>>>>> 4d6893b6d823151844e816054fcf2ceb16956cf6
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.85]{Bilder/overview-fargate.png}
@@ -689,12 +682,12 @@ These components can be visually put together as shown in the figure below. (htt
 \end{figure}
 
 The orange square symbolizes ECS inside the big AWS infrastructure. We will ignore the square denoted with "VPC" as it is not relevant for further understanding.\\
-A task can be created from a task definition and be placed in a service. The services are here shown as light blue squares labeled \emph{Fargate}. Fargate is a computation engine from Amazon which calculates which virtual machine to use according to the task definition and creates and starts it and then runs the docker image from a specified container registry automatically. (https://aws.amazon.com/fargate/) The orange square with dots and dashes is a cluster. This cluster contains 2 services, reach running 3 tasks. 
+A task can be created from a task definition and be placed in a service. The services are here shown as light blue squares labeled \emph{Fargate}. Fargate is a computation engine from Amazon which calculates which virtual machine to use according to the task definition and creates and starts it and then runs the docker image from a specified container registry automatically. \cite{AwsFargate} The orange square with dots and dashes is a cluster. This cluster contains 2 services, reach running 3 tasks. 
 
 The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of a geological region.
 
 \subsection{AWS-Amplify}
-Amplify is a services that aims to make the deployment as well as the development of applications as easy as possible. It comes with many advanced features that help setting up an app quickly. Some examples are: Authentication, API creation, Analytics, Push Notifications and many more (https://aws.amazon.com/amplify/). It creates a certificate for any deployed application, allowing for HTTPS connections. Further it is able to scan a connected GitHub repository and provide a template configuration based on the framework used.
+Amplify is a services that aims to make the deployment as well as the development of applications as easy as possible. It comes with many advanced features that help setting up an app quickly. Some examples are: Authentication, API creation, Analytics, Push Notifications and many more \cite{AwsAmplify}. It creates a certificate for any deployed application, allowing for HTTPS connections. Further it is able to scan a connected GitHub repository and provide a template configuration based on the framework used.
 
 Another really nice feature is the easy deployment flow: For each application it is possible to connect various branches. Each branch will have its unique URL and once a developer pushes to a connected branch, Amplify will build the newest status of the application. This is a great feature for testing new features in a production environment without having to deploy to a master server directly.
 
@@ -702,15 +695,15 @@ Another really nice feature is the easy deployment flow: For each application it
 Docker is a platform that provides the ability to a developer to create any environment in which he wants to execute code in.
 Before comparing it to a virtual machine we'll take a look at the basic terminology:
 
-A \emph{Docker File} is a text file containing instructions that tell the Docker Engine how to build a \emph{Docker Image}. (https://nickjanetakis.com/blog/differences-between-a-dockerfile-docker-image-and-docker-container)
+A \emph{Docker File} is a text file containing instructions that tell the Docker Engine how to build a \emph{Docker Image}. \cite{NickDocker}
 
 This \emph{Docker Image} is a file containing necessary data to execute a given program. The in the docker file specified libraries are saved, folders from the local machine are copied, environment variables are set etc.. 
 
 When running the image, we will get a \emph{Docker Container}. It will execute specified commands and by that for example download node modules. This container is an instance executed by the \emph{Docker Engine} which runs on top of the Host OS of an actual machine.
 \\
 
-While it is similar to a virtual machine, there are certain differences between them: (https://geekflare.com/docker-vs-virtual-machine/)\\
-\textbf{Operating System} Every VM comes with its own operating system, making it heavy in terms of memory and processing power they require. Docker containers in turn all share the hosts operating system and only require the docker engine to be installed on the machine: (inspired by https://geekflare.com/docker-vs-virtual-machine/)
+While it is similar to a virtual machine, there are certain differences between them: \\
+\textbf{Operating System} Every VM comes with its own operating system, making it heavy in terms of memory and processing power they require. Docker containers in turn all share the hosts operating system and only require the docker engine to be installed on the machine: \cite{GeekDocker}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.8]{Bilder/DockerVsVM.png}
@@ -718,7 +711,7 @@ While it is similar to a virtual machine, there are certain differences between 
 \label{ex312}
 \end{figure}
 \noindent
-\textbf{Security} Following the previous point, every VM has its own operating system and is strongly isolated in the host kernel. Docker containers all run on a single kernel. Furthermore docker resources are shared. If an attacker gets access to one container he'll be able to exploit  all containers in a cluster. (https://geekflare.com/docker-vs-virtual-machine/) \\
+\textbf{Security} Following the previous point, every VM has its own operating system and is strongly isolated in the host kernel. Docker containers all run on a single kernel. Furthermore docker resources are shared. If an attacker gets access to one container he'll be able to exploit  all containers in a cluster. \cite{GeekDocker}) \\
 \textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
 
 \chapter{Development}
