@@ -1,5 +1,5 @@
 \chapter{Introduction}
-There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" (https://www.pcwdld.com/top-10-network-diagram-topology-and-mapping-software) or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end.
+There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" \cite{JeffParker} or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end or they are bound to displaying hardware components.
 
 The idea for this project is to offer an online editor with CRUD-functionality for a network, consisting of components of software projects, as well as a first implementation of an algorithm that will, in most cases, create a nice looking layout on its own.
 
@@ -10,23 +10,24 @@ The purpose is to try out and test a combination of technologies. This software,
 In this chapter we will introduce the individual components, tools and frameworks this application is built with. For some of them we will give some more insights on how they work internally, the others are big enough on their own. The order will be the same as they appeared in the development process.
 
 \section{The GRAND-stack}
-GRAND stands in this case for \textbf{G}raphQL, \textbf{R}eact, \textbf{A}pollo and \textbf{N}eo4j \textbf{D}atabase. (https://grandstack.io/docs/getting-started-neo4j-graphql) React is a frontend framework, Apollo is used for statemanagement on the client side and communicating to the database on the server side. GraphQL will be used for fetching and mutating data. Neo4j is a graph database and the server will communicate with it through a JavaScript driver provided by the Neo4j community. More details can be found in the Development and Documentation section.
+GRAND stands in this case for \textbf{G}raphQL, \textbf{R}eact, \textbf{A}pollo and \textbf{N}eo4j \textbf{D}atabase. \cite{GrandStackGettingStarted} React is a frontend framework, Apollo is used for statemanagement on the client side and communicating to the database on the server side. GraphQL will be used for fetching and mutating data. Neo4j is a graph database and the server will communicate with it through a JavaScript driver provided by the Neo4j community. More details can be found in the Development and Documentation section.
 
 \section{Query Language - GraphQL}
-GraphQL is a data query language as well as specification. Its development was started by Facebook in 2012 and it was open sourced in 2015. (https://foundation.graphql.org/)\\
+GraphQL is a data query language as well as specification. Its development was started by Facebook in 2012 and it was open sourced in 2015. \cite{GraphQLFoundation}
+
 After their application suffered from poor performance on mobile devices, they took a new implementation using natively implemented models and views. This required a new API for their news feed as it was previously delivered as pure HTML.\\
-After evaluating different common options like RESTful-APIs and FQL they often saw the same problems:  The ratio of data actually used compared to the one fetched was very small, the number of requests (https://www.youtube.com/watch?v=zvZP0PVAdR0) and the amount of code on both server and client side to prepare the data was big. (https://engineering.fb.com/core-data/graphql-a-data-query-language/)\\
-For example, for loading the start page of a single user, there would have been a lot of different requests necessary: (https://www.youtube.com/watch?v=zvZP0PVAdR0)
+After evaluating different common options like RESTful-APIs and FQL they often saw the same problems:  The ratio of data actually used compared to the one fetched was very small, the number of requests \cite{GraphQLIntro} and the amount of code on both server and client side to prepare the data was big. \cite{EngineeringFB}\\
+For example, for loading the start page of a single user, there would have been a lot of different requests necessary:
 \begin{itemize}
 \item \emph{https://facebook.com/user/id} - Get all user specific data
 \item \emph{https://facebook.com/user/id/events} - Get all possibly relevant events
 \item \emph{https://facebook.com/user/id/friends-suggestions} - Get all friend suggestions
 \item ...
-\end{itemize}
+\end{itemize} \cite{GraphQLIntro}
 
-GraphQL aims to resolve all these issues: Reduce the amount of unnecessary data transferred, reduce the number of requests and increase the developer productivity by making it easier to use fetched data. (https://engineering.fb.com/core-data/graphql-a-data-query-language/)
+GraphQL aims to resolve all these issues: Reduce the amount of unnecessary data transferred, reduce the number of requests and increase the developer productivity by making it easier to use fetched data. \cite{EngineeringFB}
 
-It allows developers to get a lot of different data from a single endpoint. This means that instead the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com}, with a query similar to:\\ (https://www.youtube.com/watch?v=zvZP0PVAdR0) (todo: define graphql styles)
+It allows developers to get a lot of different data from a single endpoint. This means that instead the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com}, with a query similar to:\\ (todo: define graphql styles)
 \newpage
 \begin{lstlisting}[caption={A GraphQL Query},label={ex211}]
 query {
@@ -44,7 +45,7 @@ query {
 	}
 }
 \end{lstlisting}
-
+\citep[with adaptions]{GraphQLIntro}	
 Where the answer would be a JSON-string: (todo: define JSON style)
 \begin{lstlisting}[caption={Example Response Data},label={ex212}]
 { 
@@ -64,6 +65,7 @@ Where the answer would be a JSON-string: (todo: define JSON style)
 	}
 }
 \end{lstlisting}
+\citep[with adaptions]{GraphQLIntro}	
 
 The query can be as extensive as the developer needs it, it will return only the data requested and the answer string can be directly accessed like a JSON-object. By that GraphQL fulfills all its design goals.
 \\ \\
@@ -82,9 +84,9 @@ type User {
 \noindent
 where "Event", "Friend" and "Friend\_Suggestion" themselves are other types described in a similar manner.
 
-By putting a "!" behind a property the programmer marks it as required, meaning it can never be null or empty. The square brackets define that the property is a list of the type they surround. (http://spec.graphql.org/June2018/)
+By putting a "!" behind a property the programmer marks it as required, meaning it can never be null or empty. The square brackets define that the property is a list of the type they surround.
 \\
-To be able to run queries in the first place, one must first define a root type for all queries:
+To be able to run queries in the first place, we must first define a root type for all queries:
 
 \begin{lstlisting}
 schema {
@@ -105,17 +107,17 @@ Here we describe a query that can be executed as shown in
 \\
 The server will then make requests to the DB, fetch the requested data and return it to the user once all fields were filled with values.
 \\
-For further information about the extensive type system please see the official GraphQL specification. (http://spec.graphql.org/June2018)
+For further information about the extensive type system please see the official GraphQL specification. \cite{GraphQLSpec}
 
 \section{Database - Neo4j}
 \subsubsection{General}
-Neo4j is a so called graph database. The idea of graph databases is, compared to traditional relational databases, a young concept and differs in a few concepts. At the moment Neo4j is the 22nd most popular database overall (https://db-engines.com/en/ranking) and the most popular graph database. (https://db-engines.com/en/ranking/graph+dbms)
+Neo4j is a so called graph database. The idea of graph databases is, compared to traditional relational databases, a young concept and differs in a few concepts. At the moment Neo4j is the 22nd most popular database overall \cite{DbEnginesGeneral} and the most popular graph database. \cite{DbEnginesGraph}
 
 \begin{itemize}
-\item Unlike most relational databases, who store data through tables and joins, Neo4j stores data in the form of actual nodes and relationships between such (https://neo4j.com/developer/neo4j-database/). In other DBMS relations between items generally are achieved through join-/lookup-tables which have to be generated. (https://neo4j.com/developer/graph-db-vs-rdbms/)
+\item Unlike most relational databases, who store data through tables and joins, Neo4j stores data in the form of actual nodes and relationships between such \cite{Neo4jDevGuides}. In other DBMS relations between items generally are achieved through join-/lookup-tables which have to be generated. \cite{RelVsGraph}
 
-\item When running a query on a relation DB the server will run through a table and when it finds the searched item it might look for the ID of a related item and start indexing again. With a graph DB the server will index (https://skillsmatter.com/skillscasts/2968-neo4j-internals around 32:45) once to find the initial node and can then directly access all connected items as they are stored through their relation with the current one. (https://www.youtube.com/watch?v=REVkXVxvMQE) These are stored as memory pointers which makes following them extremely efficient.
-\item Neo4j uses Cypher as query language. The Cypher syntax was supposed to visually represent the shape of the data a user wants to retrieve instead of describing how to get data, as well as offer the power and functionality other languages offer. (https://neo4j.com/developer/cypher-query-language/) 
+\item When running a query on a relation DB the server will run through a table and when it finds the searched item it might look for the ID of a related item and start indexing again. With a graph DB the server will index \citep[minute 32]{NeoInternals} once to find the initial node and can then directly access all connected items as they are stored through their relation with the current one. \cite{WhatGraphDB} These are stored as memory pointers which makes following them extremely efficient.
+\item Neo4j uses Cypher as query language. The Cypher syntax was supposed to visually represent the shape of the data a user wants to retrieve instead of describing how to get data, as well as offer the power and functionality other languages offer. \cite{Neo4jCypher} 
 \end{itemize}
 
 \subsubsection{Cypher}
@@ -131,9 +133,9 @@ Parentheses represent a node, square brackets a relationship. The naming works a
 \end{exmp}
 which might look a bit cleaner. We could also return only specific values of n and n2 and give them names by stating \\
 \emph{ ...RETURN n.label AS Label1, n2.label AS Label2 }\\
-The following information about Neo4j internals is all from (https://skillsmatter.com/skillscasts/2968-neo4j-internals) and (https://www.slideshare.net/thobe/an-overview-of-neo4j-internals). Sadly, these sources are all old and probably outdated, yet there does not seem to be more updated information on the internet.
+The following information about Neo4j internals is all from \cite{NeoInternals} and \cite{Neo4jInternalsPP}. Sadly, these sources are all old and probably outdated, yet there does not seem to be more updated information on the internet.
 \subsubsection{The Graph on Disk}
-Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. (Video be ca. 08:27) \\
+Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. \citep[minute 08]{NeoInternals} \\
 Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node. \\
 In addition to the first property, each node knows about its first relationship. If a it is the \emph{first} one, is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four others to other relationships, which are best explained in an example traversal in pseudo code:
 \begin{lstlisting}
