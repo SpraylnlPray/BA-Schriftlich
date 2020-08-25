@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  24 AUG 2020 18:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  25 AUG 2020 14:24
 entering extended mode
 **./vorlage.tex
 (vorlage.tex
@@ -627,38 +627,38 @@ Package color Info: Driver file: pdftex.def on input line 147.
 ) (vorlage.aux (Bestandteile/titel.aux)
 (Bestandteile/kurzzusammenfassung.aux)
 
-LaTeX Warning: Label `ex241' multiply defined.
+LaTeX Warning: Label `ex423' multiply defined.
 
 )
 \openout1 = `vorlage.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 85
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 84
 .
  ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmr.fd"
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Package scrbase Info: activating english \contentsname on input line 85.
-Package scrbase Info: activating english \listfigurename on input line 85.
-Package scrbase Info: activating english \listtablename on input line 85.
+Package scrbase Info: activating english \contentsname on input line 84.
+Package scrbase Info: activating english \listfigurename on input line 84.
+Package scrbase Info: activating english \listtablename on input line 84.
 \c@lstlisting=\count287
 \AtBeginShipoutBox=\box56
-Package hyperref Info: Link coloring OFF on input line 85.
+Package hyperref Info: Link coloring OFF on input line 84.
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/hyperref\nameref.
 sty"
@@ -674,9 +674,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count288
 )
-LaTeX Info: Redefining \ref on input line 85.
-LaTeX Info: Redefining \pageref on input line 85.
-LaTeX Info: Redefining \nameref on input line 85.
+LaTeX Info: Redefining \ref on input line 84.
+LaTeX Info: Redefining \pageref on input line 84.
+LaTeX Info: Redefining \nameref on input line 84.
  (vorlage.out) (vorlage.out)
 \@outlinefile=\write3
 \openout3 = `vorlage.out'.
@@ -688,7 +688,7 @@ Class scrbook Info: loading recommended package `bookmark'.
 (scrbook)           `bookmarkpackage=false' before \begin{document} and
 (scrbook)           you can avoid this message adding:
 (scrbook)             \usepackage{bookmark}
-(scrbook)           before \begin{document} on input line 85.
+(scrbook)           before \begin{document} on input line 84.
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/bookmark\bookmark
 .sty"
@@ -767,7 +767,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package scrhack Info: undefining \float@addtolists on input line 85.
+Package scrhack Info: undefining \float@addtolists on input line 84.
 \c@exmp=\count296
 \openout2 = `./Bestandteile/titel.aux'.
 
@@ -821,7 +821,7 @@ ogoHS.png>]
 
 ]
 LaTeX Font Info:    Trying to load font information for T1+lmss on input line 9
-3.
+2.
 
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmss.fd"
 File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -834,7 +834,7 @@ File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 
 
-] (Bestandteile/main.tex
+] [4] (Bestandteile/main.tex
 chapter 1.
 [1
 
@@ -844,7 +844,7 @@ chapter 1.
 ]
 chapter 2.
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 2
-2.
+4.
 ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ts1lmr.fd"
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -853,48 +853,48 @@ File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 ]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-2.
+4.
  ("C:\Users\Daniel\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmtt.fd"
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Underfull \hbox (badness 10000) in paragraph at lines 70--73
+Underfull \hbox (badness 10000) in paragraph at lines 72--75
 
  []
 
 [3] [4] [5] [6] [7] [8] [9]
-Underfull \hbox (badness 10000) in paragraph at lines 336--337
+Underfull \hbox (badness 10000) in paragraph at lines 338--339
 
  []
 
 [10]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 366.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 368.
  [11] [12] [13]
-Overfull \hbox (178.28069pt too wide) in paragraph at lines 507--509
+Overfull \hbox (178.28069pt too wide) in paragraph at lines 509--511
 \T1/lmr/m/n/12 (maybe when com-ing back to this check https://reactjs.org/docs/
 faq-internals.html https://reactjs.org/docs/reconciliation.html
  []
 
 
-Overfull \hbox (152.24069pt too wide) in paragraph at lines 507--509
+Overfull \hbox (152.24069pt too wide) in paragraph at lines 509--511
 \T1/lmr/m/n/12 and https://github.com/acdlite/react-fiber-architecture and THIS
 :: https://www.youtube.com/watch?v=RquK3TImY9U
  []
 
 [14] [15] [16] [17]
-Underfull \hbox (badness 10000) in paragraph at lines 636--638
+Underfull \hbox (badness 10000) in paragraph at lines 638--640
 
  []
 
 [18]
 chapter 3.
 
-Underfull \hbox (badness 10000) in paragraph at lines 645--646
+Underfull \hbox (badness 10000) in paragraph at lines 648--649
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 664--666
+Underfull \hbox (badness 10000) in paragraph at lines 667--669
 
  []
 
@@ -902,73 +902,96 @@ Underfull \hbox (badness 10000) in paragraph at lines 664--666
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 673--674
+Underfull \hbox (badness 10000) in paragraph at lines 676--677
 
  []
 
-<Bilder/overview-fargate.png, id=637, 569.87906pt x 639.89063pt>
+<Bilder/overview-fargate.png, id=643, 569.87906pt x 639.89063pt>
 File: Bilder/overview-fargate.png Graphic file (type png)
 <use Bilder/overview-fargate.png>
-Package pdftex.def Info: Bilder/overview-fargate.png  used on input line 679.
+Package pdftex.def Info: Bilder/overview-fargate.png  used on input line 682.
 (pdftex.def)             Requested size: 484.39948pt x 543.90959pt.
 
-Overfull \hbox (14.92892pt too wide) in paragraph at lines 679--680
+Overfull \hbox (14.92892pt too wide) in paragraph at lines 682--683
  [][] 
  []
 
 
-Overfull \hbox (247.45432pt too wide) in paragraph at lines 675--682
+Overfull \hbox (247.45432pt too wide) in paragraph at lines 678--685
 \T1/lmr/m/n/12 can be vi-su-ally put to-gether as shown in the fig-ure be-low. 
 (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) 
  []
 
 [20] [21 <./Bilder/overview-fargate.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 702--704
+Underfull \hbox (badness 10000) in paragraph at lines 705--707
 
  []
 
-<Bilder/DockerVsVM.png, id=653, 593.21625pt x 234.1247pt>
+<Bilder/DockerVsVM.png, id=660, 593.21625pt x 234.1247pt>
 File: Bilder/DockerVsVM.png Graphic file (type png)
 <use Bilder/DockerVsVM.png>
-Package pdftex.def Info: Bilder/DockerVsVM.png  used on input line 709.
+Package pdftex.def Info: Bilder/DockerVsVM.png  used on input line 712.
 (pdftex.def)             Requested size: 474.57364pt x 187.3pt.
 
-Overfull \hbox (5.10309pt too wide) in paragraph at lines 709--710
+Overfull \hbox (5.10309pt too wide) in paragraph at lines 712--713
  [][] 
  []
 
 [22] [23 <./Bilder/DockerVsVM.png>]
 chapter 4.
+<Bilder/BasicGraph.png, id=675, 572.89032pt x 93.34875pt>
+File: Bilder/BasicGraph.png Graphic file (type png)
+<use Bilder/BasicGraph.png>
+Package pdftex.def Info: Bilder/BasicGraph.png  used on input line 749.
+(pdftex.def)             Requested size: 458.31287pt x 74.6791pt.
 [24
 
 
 ]
+<Bilder/BasicGraphNeo1.png, id=680, 216.81pt x 192.72pt>
+File: Bilder/BasicGraphNeo1.png Graphic file (type png)
+<use Bilder/BasicGraphNeo1.png>
+Package pdftex.def Info: Bilder/BasicGraphNeo1.png  used on input line 766.
+(pdftex.def)             Requested size: 216.80946pt x 192.71951pt.
+ [25 <./Bilder/BasicGraph.png>]
+<Bilder/BasicGraphNeo2.png, id=691, 197.98969pt x 220.57407pt>
+File: Bilder/BasicGraphNeo2.png Graphic file (type png)
+<use Bilder/BasicGraphNeo2.png>
+Package pdftex.def Info: Bilder/BasicGraphNeo2.png  used on input line 793.
+(pdftex.def)             Requested size: 197.9892pt x 220.57352pt.
+ [26 <./Bilder/BasicGraphNeo1.png>]
+<Bilder/BasicGraphNeo3.png, id=705, 421.575pt x 155.83218pt>
+File: Bilder/BasicGraphNeo3.png Graphic file (type png)
+<use Bilder/BasicGraphNeo3.png>
+Package pdftex.def Info: Bilder/BasicGraphNeo3.png  used on input line 801.
+(pdftex.def)             Requested size: 421.57396pt x 155.8318pt.
+ [27 <./Bilder/BasicGraphNeo2.png> <./Bilder/BasicGraphNeo3.png>] [28]
 chapter 5.
-[25
+[29
 
 
 ]
 chapter 6.
-[26
+[30
 
 
 ]
 chapter 7.
-) [27
+) [31
 
 
 ] (vorlage.lof)
 \tf@lof=\write5
 \openout5 = `vorlage.lof'.
 
- [28
+ [32
 
 
 ] (vorlage.lot)
 \tf@lot=\write6
 \openout6 = `vorlage.lot'.
 
- [29
+ [33
 
 
 
@@ -1002,7 +1025,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 106--112
 ps : / / www . freecodecamp . org / news /
  []
 
-[30
+[34
 
 
 
@@ -1117,7 +1140,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 198--202
 1/lmr/m/n/12 , []$\T1/lmtt/m/n/12 https : / / neo4j . com / developer /
  []
 
-[31]
+[35]
 Underfull \hbox (badness 10000) in paragraph at lines 211--217
 []\T1/lmr/m/sc/12 Parker\T1/lmr/m/n/12 , Jeff:  \T1/lmr/m/it/12 Top 10 Net-work
  Di-a-gram, Topol-
@@ -1141,7 +1164,7 @@ Underfull \hbox (badness 5388) in paragraph at lines 226--231
 hases\T1/lmr/m/n/12 .  []$\T1/lmtt/m/n/12 https : / / dev . to / spukas /
  []
 
-) (Bestandteile/erklaerung.tex [32]
+) (Bestandteile/erklaerung.tex [36]
 Underfull \hbox (badness 10000) in paragraph at lines 6--7
 
  []
@@ -1152,26 +1175,26 @@ Underfull \hbox (badness 10000) in paragraph at lines 25--26
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 112.
- [33]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 112.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 111.
+ [37]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 111.
  (vorlage.aux (Bestandteile/titel.aux)
 (Bestandteile/kurzzusammenfassung.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 112.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 112.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 111.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 111.
 Package rerunfilecheck Info: File `vorlage.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 112.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 111.
  ) 
 Here is how much of TeX's memory you used:
- 16585 strings out of 480756
- 315234 string characters out of 2893314
+ 16648 strings out of 480756
+ 316307 string characters out of 2893314
  765078 words of memory out of 3000000
- 31839 multiletter control sequences out of 15000+200000
+ 31878 multiletter control sequences out of 15000+200000
  587917 words of font info for 54 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  53i,20n,81p,10104b,1977s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1190,9 +1213,9 @@ grams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Daniel/AppData/Loca
 l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/Users/Daniel/AppData
 /Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Daniel/Ap
 pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt12.pfb>
-Output written on vorlage.pdf (36 pages, 574961 bytes).
+Output written on vorlage.pdf (41 pages, 638883 bytes).
 PDF statistics:
- 1028 PDF objects out of 1200 (max. 8388607)
- 490 named destinations out of 1000 (max. 500000)
- 304 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1087 PDF objects out of 1200 (max. 8388607)
+ 510 named destinations out of 1000 (max. 500000)
+ 332 words of extra memory for PDF output out of 10000 (max. 10000000)
 

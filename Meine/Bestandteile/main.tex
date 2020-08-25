@@ -1,4 +1,5 @@
 \chapter{Introduction}
+
 There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" \cite{JeffParker} or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end or they are bound to displaying hardware components.
 
 The idea for this project is to offer an online editor with CRUD-functionality for a network, consisting of components of software projects, as well as a first implementation of an algorithm that will, in most cases, create a nice looking layout on its own.
@@ -7,6 +8,7 @@ The idea for this project is to offer an online editor with CRUD-functionality f
 The purpose is to try out and test a combination of technologies. This software, or variations of it, might later be incorporated into a bigger project or adapted to fit another use case. The experiences and impressions during development can be of help when thinking about what technology stack to use, which is why a big part of this paper is dedicated to documenting this process.
 
 \chapter{Backend to Frontend}
+
 In this chapter we will introduce the individual components, tools and frameworks this application is built with. For some of them we will give some more insights on how they work internally, the others are big enough on their own. The order will be the same as they appeared in the development process.
 
 \section{The GRAND-stack}
@@ -217,7 +219,7 @@ Lets break down whats happening in this piece of code:
 \subsubsection{Resolver Chain}
 To explain the resolver chain we will take a look at the following example GraphQL query: 
 %(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
-\begin{lstlisting}[label={ex241}]
+\begin{lstlisting}[label={ex242}]
 query GetBooksByLibrary {
 	libraries { 
 		branch 
@@ -233,7 +235,7 @@ query GetBooksByLibrary {
 
 which will be executed on this schema 
 %(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
-\begin{lstlisting}[caption={Schema Definition},label={ex242}]
+\begin{lstlisting}[caption={Schema Definition},label={ex243}]
 # A library has a branch and books 
 type Library { 
 	branch: String! 
@@ -267,7 +269,7 @@ To resolve the query we need 4 resolvers:
 \noindent
 Assuming we have static arrays called "libraries", "books" and "authors" that are filled with data, the resolvers might look like the following: 
 %(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
-\begin{lstlisting}[caption={Resolver Definition},label={ex243}]
+\begin{lstlisting}[caption={Resolver Definition},label={ex244}]
 const resolvers = { 
 	Query: { 
 		libraries() { 
@@ -298,7 +300,7 @@ const resolvers = {
 };
 \end{lstlisting}
 
-First, the Query resolver is hit and it will search for a defined key that is similar to the name mentioned in the highest level of the query object in \textbf{\ref{ex241}}, in this case "libraries". In the GraphQL schema under \textbf{\ref{ex242}} we defined that this query will return an array of Library objects. \\
+First, the Query resolver is hit and it will search for a defined key that is similar to the name mentioned in the highest level of the query object in \textbf{\ref{ex241}}, in this case "libraries". In the GraphQL schema under \textbf{\ref{ex243}} we defined that this query will return an array of Library objects. \\
 Knowing this, the server will now go through each object of this array and look for resolvers of the in the query specified fields. This object is passed as \emph{parent} into the next resolver in the resolver chain. \\
 For each library we want the branch and an array of books. As branch is a primitive type it does not need to be further resolved. Books however, returns an array of non-primitive types. To find out which books we need to return we can access the value \emph{parent.branch} and compare it to the branch of each book in the books array and return those who match. \\
 books is again an array of a non primitive type and has to be further resolved by iterating through the array and accessing the requested values title and author. Title is just a string, whereas author will get resolved further etc.
@@ -640,6 +642,7 @@ The setup time for working with Apollo Client is very short as it offers great d
 Further it allows the programmer to define all its behavior precisely when he wants to and by that its a great tool to work with.
 
 \chapter{Deployment}
+
 While developing in a local environment it is also important to test the application in a production environment as early as possible. Many frameworks make optimizations to improve performance. This might lead to errors that can't be seen in a local setup. Often they also change error behavior. While during development an error might only lead to a warning message, in production the same error might cause the application to crash.
 
 Another reason to go for early deployment is to allow other people to see, use and test the application. Someone who sees the app for the first time or at least doesn't know how things were thought to work will make completely different use of it than a programmer. New issues with the workflow can be discovered and problems that a developer would never have thought of be reported. Further the layout will be tested on different screens, browsers and devices, unveiling unknown layout troubles. Issues discovered early are much easier to fix than those who are integrated deeply into the codebase. \\
@@ -715,7 +718,92 @@ While it is similar to a virtual machine, there are certain differences between 
 \textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
 
 \chapter{Development}
+Here we will talk about the various steps in the development process as well as some difficulties that appeared together with their solutions.
+\section{Why the GRANDstack}
+To find out which tech stack to use, the first step was to analyze what the application should be able to do:
+\begin{itemize}
+\item The app will be interactive, not purely informational
+\item The user will create, modify and delete data
+\item Local changes made to data can be saved permanently
+\item Data must be displayed as graph
+\item At some point we might want to be able to implement real time updates for changes made by another user
+\end{itemize}
+This will give a list of requirements our tech stack should fulfill:
+\begin{itemize}
+\item Updating the DOM should be done efficiently as the layout will change depending on user actions
+\item A local state management will be needed to keep track of local changes
+\item A database will be necessary to permanently save changes
+\item An intuitive way for saving graph data
+\item Communication with the server should be lightweight and easy to implement
+\end{itemize}
+
+Having looked at the individual parts of the GRANDstack, we can see quickly that it covers most of the things we want: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL will allow us to only transmit the data we need. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Having a state management framework and a backend server that are designed to work together also promises for a trouble free development. The Apollo hooks make it very intuitive to update the UI according to state changes.
+
+Furthermore this stack contains many relatively young technologies and as mentioned in chapter 1 this project also serves to explore these.
 \section{Getting started with Neo4j}
+While it has many advantages using Neo4j also leads inevitably to a lot of learning. Many things are similar to more known relational databases like Oracle, MySQL or MongoDB there are also a few differences, the biggest probably being Cypher. We already talked a bit about its syntax, so lets see how we can create a bit of basic data that we can later start working with.
+
+To do so, we will first think of a small network that we want to save in the database:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.8]{Bilder/BasicGraph.png}
+\captionof{figure}{A small network of software components}
+\label{ex421}
+\end{figure}
+
+Now that we have a visual idea of what we want to save, we can think about how this data would look in Neo4j. We will obviously have 3 nodes for DB, Backend and Frontend, so lets create these in the Neo4j Browser:
+\begin{lstlisting}
+CREATE (:Node:UserInterface {id: randomUUID(), label: "Frontend", story: "Interaction point for the user", nodeType: "UserInterface"})
+CREATE (:Node:API {id: randomUUID(), label: "Backend", story: "Endpoint for requests, fetches from and mutates data on the DB", nodeType: "API"})
+CREATE (:Node:Persistence {id: randomUUID(), label: "DB", story: "Saves data for the methodical designer", nodeType: "Persistence"})
+\end{lstlisting}
+
+Everything between the parentheses of a create statement defines a new node in Neo4j. By using colons we can define labels for a node. These can be used to filter for a certain type of node. Here we define multiple labels for each node. All of them are of type node and each of them has its own specific label, marking them as different node types. We define properties on all of our nodes by using curly braces. We generate a unique ID for each node by using Neo4j's \emph{randomUUID()} function. We define a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore we give each node a nodeType. This might seem a bit counter intuitive as we already defined that in the labels for the node but will get clear later when we see how we use the data in the frontend. 
+
+If we look at the created graph in the Neo4j Browser we will see the following:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{Bilder/BasicGraphNeo1.png}
+\captionof{figure}{The nodes in Neo4j Browser}
+\label{ex422}
+\end{figure}
+
+Technically we could now directly create the respective connections between the nodes to complete the data for the image. But lets first think about what properties such a link might contain later:
+\begin{itemize}
+\item Data about the x-end of the connection (arrow-type, color, an annotation about how the x-node component sees the connection)
+\item The same for the y-end
+\item Information about if the link is part of a sequence of steps and if so a short description of the step
+\item A label, id, story and linkType
+\item The IDs of the nodes it connects
+\end{itemize}
+
+We could of course save all this information on the relationship between the nodes. But if the user now only updates the label of a node and saves this change, the DB will have to write all other properties as well without actually modifying them. Because of that it might be a good idea to separate the data about each end of the link as well as sequence into their own nodes.
+
+This means that we will now create 4 nodes to represent the links between our components and connect each of them. For now we will leave out additional data about link ends and sequence properties and create those in a separate step:
+\begin{lstlisting}
+MATCH (api:API) WHERE api.label = "Backend"
+MATCH (db:Persistence) WHERE db.label = "DB"
+CREATE (l:Link)
+SET l.label = "Mutates", l.linkType = "Mutate", l.story = "See JIRA for details: https://.."
+CREATE (api)<-[:IS_X]-(l)-[:IS_Y]->(db)
+\end{lstlisting}
+First we find a node with an \emph{API} label and one with a \emph{Persistence} label. By putting a string in front of the first colon in the match case we can declare a variable name for the found node which we can use later to reference it. Then we create a link from api to DB, giving it a \emph{Link} label and assigning the link the variable name \emph{l}. We use this variable to set the links properties label, linkType and story. This time the story serves as reference to an external document describing the relationship in more detail. Then we create a connection between the link-node (a Neo4j node representing a link in the application) and the node-node (a Neo4j node representing a node in the application). After executing the Neo4j Browser will show the following image:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{Bilder/BasicGraphNeo2.png}
+\captionof{figure}{After creating the first link-node}
+\label{ex423}
+\end{figure}
+
+And when we add the rest of the connection using the same approach we will get the whole graph representation of \textbf{figure \ref{ex421}}:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{Bilder/BasicGraphNeo3.png}
+\captionof{figure}{Whole graph in the DB}
+\label{ex423}
+\end{figure}
+Its important that directions of the arrows do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform we made all relationships to be outgoing from the link nodes.
+
 \section{Manipulating the DB through ApolloServer and GraphQL-Playground}
 \section{Making ApolloServer and ApolloClient communicate through GraphQL}
 \section{Building the UI}
