@@ -718,7 +718,10 @@ While it is similar to a virtual machine, there are certain differences between 
 \textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
 
 \chapter{Development}
-Here we will talk about the various steps in the development process as well as some difficulties that appeared together with their solutions.
+In this chapter I will talk about the steps in development and explain some thought processes on the way. There might and probably will be parts where you see flaws in my work. This is intended to keep you from making the same mistakes when starting to develop an application with the GRANDstack. 
+
+This chapter will also contain a few difficulties I encountered and how I managed to get them working. Again, this part is not supposed to be a "How to" kind of guide - I was completely new to all of the technologies used when starting this project - but rather to document some of my decisions and the reason why I made them.
+
 \section{Why the GRANDstack}
 To find out which tech stack to use, the first step was to analyze what the application should be able to do:
 \begin{itemize}
@@ -737,13 +740,13 @@ This will give a list of requirements our tech stack should fulfill:
 \item Communication with the server should be lightweight and easy to implement
 \end{itemize}
 
-Having looked at the individual parts of the GRANDstack, we can see quickly that it covers most of the things we want: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL will allow us to only transmit the data we need. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Having a state management framework and a backend server that are designed to work together also promises for a trouble free development. The Apollo hooks make it very intuitive to update the UI according to state changes.
+Having looked at the individual parts of the GRANDstack, you can see quickly that it contains most of the things I imagined to be useful: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL will allows to only transmit the data needed in case of a lot of communication with the server. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Having a state management framework and a backend server that are designed to work together also promises for a trouble free development. The Apollo hooks make it very intuitive to update the UI according to state changes.
 
 Furthermore this stack contains many relatively young technologies and as mentioned in chapter 1 this project also serves to explore these.
-\section{Getting started with Neo4j}
-While it has many advantages using Neo4j also leads inevitably to a lot of learning. Many things are similar to more known relational databases like Oracle, MySQL or MongoDB there are also a few differences, the biggest probably being Cypher. We already talked a bit about its syntax, so lets see how we can create a bit of basic data that we can later start working with.
 
-To do so, we will first think of a small network that we want to save in the database:
+\section{Getting started with Neo4j}
+When starting with Neo4j I wanted to first create a small basic data set that wouldn't be too complicated so I could experiment with it. Having this said I came up with this network:
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.8]{Bilder/BasicGraph.png}
@@ -751,16 +754,21 @@ To do so, we will first think of a small network that we want to save in the dat
 \label{ex421}
 \end{figure}
 
-Now that we have a visual idea of what we want to save, we can think about how this data would look in Neo4j. We will obviously have 3 nodes for DB, Backend and Frontend, so lets create these in the Neo4j Browser:
+This is the network I would like to display in the application. It helped me a lot to first draw it on paper and then think of the individual components needed. As there will be one graph in the database and one in the application it is important to carefully separate them when talking about a node: This could refer to one either in the database or in the application. While the node in the app is always a node in the database, this is not necessarily the case the other way around as a node in the database could also represent data about a connection in the application.
+
+I created the three nodes for DB, Backend and Frontend using the following code in the Neo4j Browser:
+
 \begin{lstlisting}
 CREATE (:Node:UserInterface {id: randomUUID(), label: "Frontend", story: "Interaction point for the user", nodeType: "UserInterface"})
 CREATE (:Node:API {id: randomUUID(), label: "Backend", story: "Endpoint for requests, fetches from and mutates data on the DB", nodeType: "API"})
 CREATE (:Node:Persistence {id: randomUUID(), label: "DB", story: "Saves data for the methodical designer", nodeType: "Persistence"})
 \end{lstlisting}
 
-Everything between the parentheses of a create statement defines a new node in Neo4j. By using colons we can define labels for a node. These can be used to filter for a certain type of node. Here we define multiple labels for each node. All of them are of type node and each of them has its own specific label, marking them as different node types. We define properties on all of our nodes by using curly braces. We generate a unique ID for each node by using Neo4j's \emph{randomUUID()} function. We define a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore we give each node a nodeType. This might seem a bit counter intuitive as we already defined that in the labels for the node but will get clear later when we see how we use the data in the frontend. 
+Everything between the parentheses of a create statement defines a new node in Neo4j. By using colons I defined labels for a node. These can be used to filter for a certain type of node and can improve performance when traversing. 
 
-If we look at the created graph in the Neo4j Browser we will see the following:
+All of them are of type node and each of them has its own specific label, marking them as different node types. By using curly braces I defined properties on each of them: A unique ID for each node by using Neo4j's \emph{randomUUID()} function, a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore I gave each node a nodeType. This might seem a bit counter intuitive as this was already defined in the labels for the node. However later when retrieving the nodes from the database it'd only be possible to retrieve \emph{all} labels of a node by using Neo4j's \emph{RETURN labels(n)} function. This would return a list, but for displaying them I'd only need one which is why I chose to include this information in the properties as well.
+
+This is how the created graph looks like in the Neo4j Browser:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{Bilder/BasicGraphNeo1.png}
@@ -768,7 +776,7 @@ If we look at the created graph in the Neo4j Browser we will see the following:
 \label{ex422}
 \end{figure}
 
-Technically we could now directly create the respective connections between the nodes to complete the data for the image. But lets first think about what properties such a link might contain later:
+Before directly creating the respective connections between the nodes to complete the data for the image I first thought about what properties such a link might contain later:
 \begin{itemize}
 \item Data about the x-end of the connection (arrow-type, color, an annotation about how the x-node component sees the connection)
 \item The same for the y-end
@@ -777,9 +785,19 @@ Technically we could now directly create the respective connections between the 
 \item The IDs of the nodes it connects
 \end{itemize}
 
-We could of course save all this information on the relationship between the nodes. But if the user now only updates the label of a node and saves this change, the DB will have to write all other properties as well without actually modifying them. Because of that it might be a good idea to separate the data about each end of the link as well as sequence into their own nodes.
+I thought of saving all this information on the relationship between the nodes. But if the user now updates only the label of a node and saves this change, the frontend will send all fields and the DB will have to write all other properties as well without actually modifying them.
 
-This means that we will now create 4 nodes to represent the links between our components and connect each of them. For now we will leave out additional data about link ends and sequence properties and create those in a separate step:
+To somewhat minimize the amount of data sent I decided to split the information among various nodes:
+\begin{itemize}
+\item One link-node that containing the label, id, story and linkType
+\item Two link-end-nodes containing visual information about the arrow as well as a "note" field to clarify how one node might perceive the connection
+\item One sequence-node to specify whether or not the node is part of a sequence
+\end{itemize}
+
+The link-node would have direct connections to the components it connects. The sequence- and link-end-nodes would be connected to the link-node and can be accessed by finding the link and from there looking for respective connections.
+
+Having this in mind I went on to create the link-nodes and attach them to their components. At first I didn't create any sequence or link-end nodes to keep things simple:
+
 \begin{lstlisting}
 MATCH (api:API) WHERE api.label = "Backend"
 MATCH (db:Persistence) WHERE db.label = "DB"
@@ -787,7 +805,8 @@ CREATE (l:Link)
 SET l.label = "Mutates", l.linkType = "Mutate", l.story = "See JIRA for details: https://.."
 CREATE (api)<-[:IS_X]-(l)-[:IS_Y]->(db)
 \end{lstlisting}
-First we find a node with an \emph{API} label and one with a \emph{Persistence} label. By putting a string in front of the first colon in the match case we can declare a variable name for the found node which we can use later to reference it. Then we create a link from api to DB, giving it a \emph{Link} label and assigning the link the variable name \emph{l}. We use this variable to set the links properties label, linkType and story. This time the story serves as reference to an external document describing the relationship in more detail. Then we create a connection between the link-node (a Neo4j node representing a link in the application) and the node-node (a Neo4j node representing a node in the application). After executing the Neo4j Browser will show the following image:
+
+This code will find a node with an \emph{API} label and one with a \emph{Persistence} label. We can be sure that this will find the correct nodes in this example because only one of each type exists. Normally the node ID would be necessary to identify it. Putting a string in front of the first colon in the match case will declare a variable name for the found node which can be used later to reference it. Then the code will create a link from api to DB, giving it a \emph{Link} label and assigning the link the variable name \emph{l}. Using this variable I set the link's properties label, linkType and story. This time the story serves as reference to an external document describing the relationship in more detail. Then using another create statement Neo4j will create a connection between the link-node (a Neo4j node representing a link in the application) and the node-node (a Neo4j node representing a node in the application). After executing the Neo4j Browser will show the following image:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{Bilder/BasicGraphNeo2.png}
@@ -795,18 +814,20 @@ First we find a node with an \emph{API} label and one with a \emph{Persistence} 
 \label{ex423}
 \end{figure}
 
-And when we add the rest of the connection using the same approach we will get the whole graph representation of \textbf{figure \ref{ex421}}:
+After adding the rest of the connection using the same approach the whole representation of \textbf{figure \ref{ex421}} on the data layer looks like:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{Bilder/BasicGraphNeo3.png}
 \captionof{figure}{Whole graph in the DB}
 \label{ex423}
 \end{figure}
-Its important that directions of the arrows do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform we made all relationships to be outgoing from the link nodes.
+Its important that directions of the arrows here do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform we made all relationships to be outgoing from the link nodes.
 
 \section{The GraphQL Schema}
-Development of applications that leverage GraphQL usually start by creating a schema to define how data looks like. The good thing about this is that it can be adapted if during the process we discover that we need to make some changes to it. We'll take a quick look at the GraphQL schema this app uses and talk quickly about each component.
-\begin{lstlisting}
+Development of applications that leverage GraphQL usually start by creating a schema to define how data looks like. The good thing about this is that it can be adapted if during the process we discover that we need to make some changes to it.
+
+Here I want to take a brief look at the GraphQL schema this app uses and mention a few things that didn't work out as I thought they would.
+\begin{lstlisting}[caption={GraphQL Enums},label={enums}]
 enum NodeType{
   API
   Command
@@ -847,9 +868,18 @@ enum ArrowType{
   InvTriangle
 }
 \end{lstlisting}
-These are the values an arrow on a link displayed in the application can have. The actual values in this enum depends highly on the options from the canvas library used.
+These are the values an arrow on a link displayed in the application can have. The actual values in this enum depend highly on the options from the canvas library used (in this example visjs).
 
 \begin{lstlisting}
+interface IDisplayable{
+  """
+  Minimal data necessary for the object to appear on screen
+  """
+  id: ID!
+  label: String
+  story: URI
+}
+
 type Node implements INode & IDisplayable{
   id: ID!
   label: String!
@@ -875,9 +905,11 @@ type Link implements ILink & IDisplayable{
 }
 
 \end{lstlisting}
-Each node and link has to at least contain an ID, label and a type. This is the minimal information necessary to display it on the screen. To retrieve the links attached to the node we make use of the \emph{@cypher} directive we talked about earlier. This is an array which can be empty as nodes do not necessarily need be connected in any way. Same counts for the array of connected nodes.
+Coming from an Object Oriented background I wanted to use interfaces.  Having an ID, label and story object to be apparent on all entities that can be shown on screen makes sense. What I didn't know when creating the schema is that visjs requires each link to be connected to an x and y node, in other words: a link can't "float". This means that there are two more required fields in the ILink interface, making the IDisplayable interface more or less loosing its purpose of defining properties that are required to be displayed.
 
-A link needs some more information to be displayed. It requires an x and y node as the canvas library used in this project will not display any links that are missing one of the two. \emph{optional} is a value that can be used to mark a link of a sequence will only be done in certain cases.
+To retrieve the links attached to the node we make use of the \emph{@cypher} directive we talked about earlier. This is an array which can be empty as nodes do not necessarily need be connected in any way. Same counts for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather that nodes. In the end I decided to place them on nodes as it made more sense to me that for example an event would be synchronous rather than the dispatch call for it.
+
+\emph{optional} on link is a value that can be used to clarify that a link of a sequence will only be done in certain cases.
 
 \begin{lstlisting}
 type SequenceProperty{
@@ -906,9 +938,12 @@ type LinkEnd{
 \end{lstlisting}
 Every sequence on a link can contain a string identifying the sequence group it belongs to as well as a sequence number to display the order in which steps will be executed. Each link end can contain a note about how the component on the respective end perceives the incoming connection.
 
-The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. There are a few more in use but as the idea always stays the same we will not show them here.
+The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as we can just pass all input objects from a form to the query. But as you can see in the above code snippet there is one input type for creating and one for updating nodes. The reason for this decision was that I'd pass all optional parameters as an input object and the required ones manually. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types.
 
-\begin{lstlisting}
+This schema could be improved by using GraphQL fragments and make it shorted by that, but I'd still avoid the usage of these input types and instead pass all arguments directly. 
+
+\begin{lstlisting}[caption={Mutation Type Definition},label={mutations}]
+\label{exMutations}
 type Mutation{
   SeedDB: seedReturn
   CreateNode(id: ID!, label: String!, nodeType: NodeType!, props: NodeCreateInput): NodeOperationReturn
@@ -934,9 +969,182 @@ type Mutation{
 }
 \end{lstlisting}
 
+This is the definition of the root mutation type. It clarifies even more the previously made point of having a lot of trouble formatting the inputs for a mutation: When dispatching a \emph{CreateNode} mutation 2 (label and nodeType) of the form inputs have to be passed directly, while all others need to be put into an object called props that contains the fields defined in the respective input type. This makes the code for form handling a lot harder to re-use, especially as the input types vary for updating and creating.
 
-\section{Manipulating the DB through ApolloServer and GraphQL-Playground}
-\section{Making ApolloServer and ApolloClient communicate through GraphQL}
+Lets talk about the return types I defined for each operation:
+\begin{lstlisting}
+interface IReturnInfo{
+  success: Boolean!
+  message: String
+}
+type NodeOperationReturn implements IReturnInfo {
+  success: Boolean!
+  message: String
+  node: Node
+}
+type LinkOperationReturn implements IReturnInfo{
+  success: Boolean!
+  message: String
+  link: Link
+}
+\end{lstlisting}
+Having built a small project using a REST-API before starting this app, this is how I imagined the process:
+\begin{itemize}
+\item Frontend dispatches a call to the server
+\item Server starts resolving
+\item Resolving is successful
+	\begin{itemize}
+		\item Server sets \emph{success} to true and adds the created object to the payload
+	\end{itemize}
+\item Resolving fails
+	\begin{itemize}
+		\item Server sets \emph{success} to false and adds an error message
+	\end{itemize}
+
+\item Frontend checks \emph{success} and depending on its value will either display data about the modified object(s) or the error message defined by the server
+\end{itemize}
+
+Maybe it was due to my little experience but it didn't seem intuitive to me at all how to define custom responses from the ApolloServer to the client. Just by accident I found a way to return custom error messages, but it was already late in development process and there was not enough time left to build it into all places where it would've been necessary. More about this in \autoref{chap:LB}.
+
+\begin{lstlisting}
+type Query{
+  Nodes: [Node]
+  Links: [Link]
+  IsProjectBeingEdited: EditRightQueryReturn
+}
+
+schema {
+  mutation: Mutation
+  query: Query
+}
+\end{lstlisting}
+
+The end of the schema contains the definition for the query type and the root schema.
+
+\section{Communicating with the DB through ApolloServer and GraphQL-Playground}
+The next step was to communicate with the database through the server. After setting up a small ApolloServer (more on setup in \autoref{chap:Doc}) I created a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning I made many mistakes which left the dataset in a bad shape and fixing it manually would've taken a lot of time. In \autoref{mutations} in line 2 is the GraphQL definition. The resolver looks like the following:
+\begin{lstlisting}
+const seedQuery = require( './seed' );
+async SeedDB( _, __, ctx ) {
+	const session = ctx.driver.session();
+	const deleteQuery = `
+		MATCH (n) DETACH DELETE n
+	`;
+	await session.run( deleteQuery );
+	await session.run( seedQuery );
+	await session.close();
+	return {
+		success: true,
+	};
+},
+\end{lstlisting}
+
+The \emph{seedQuery} is a long cypher query defined in an external file. After deleting all nodes and connections in the database we pass using the \emph{deleteQuery} we run it to create new data to use.
+
+To run this resolver and seed our database we will open the GraphQL Playground in the browser and execute the following GraphQL query:
+\begin{lstlisting}[caption={Seeding the DB through GraphQL Playground}, label={exSeed}]
+mutation seedDB {
+  SeedDB {
+    success
+  }
+}
+\end{lstlisting}
+The name in line 1 is completely optional. What matters is line 2 as this string will be used to identify the correct resolver. Using the curly braces we define a result set. After hitting the play button we will get the expected result:
+\begin{lstlisting}[caption={Seeding Result}, label={exResSeed}]
+{
+  "data": {
+    "SeedDB": {
+      "success": true
+    }
+  }
+}
+\end{lstlisting}
+
+The next step was retrieving data. To save some time when writing queries I used the neo4j-graphql-js npm package which combines the resolvers and GraphQL schema to an executable schema. This package can generate many queries and mutations based on the schema we provide but still allows the usage of resolvers I define on my own.
+By doing so, I could fetch nodes without any more coding:
+
+\begin{lstlisting}[caption={Fetching Nodes}, label={exFetch}]
+query nodes {
+  Nodes {
+    id
+    nodeType
+    label
+  }
+}
+\end{lstlisting}
+
+With the result being:
+\begin{lstlisting}[caption={Result Set}, label={exResFetch}]
+{
+  "data": {
+    "Nodes": [
+      {
+        "id": "738e414d-bc1f-4e90-ad76-ec44d34f1a71",
+        "nodeType": "AbstractUserInterface",
+        "label": "UI"
+      },
+      {
+        "id": "6c4b4dba-5726-47bc-8fb5-10affcf03ef7",
+        "nodeType": "API",
+        "label": "Server"
+      },
+      {
+        "id": "2554b296-ffed-4028-ad80-1181dfe97ecd",
+        "nodeType": "Persistence",
+        "label": "NeoDB"
+      },
+      {
+        "id": "ded515d5-8016-4324-a756-201b9e1f2db0",
+        "nodeType": "Event",
+        "label": "Create Node"
+      }
+    ]
+  }
+}
+\end{lstlisting}
+
+Finally I wanted to create a resolver to create a node. The reason why I did this by hand was that I wanted to have control over the Cypher query, to be sure that the properties would be assigned the way I wanted it:
+\begin{lstlisting}
+		async CreateNode( _, args, ctx ) {
+			try {
+				const session = ctx.driver.session();
+				const query = `
+					CREATE (n:Node:${ args.nodeType } {id: $id, label: $label, nodeType: $nodeType})
+					SET n += $props
+					RETURN n`;
+				const results = await session.run( query, args );
+				await session.close();
+				return {
+					...defaultRes,
+					node: PrepareReturn( results, 'n', defaultNode ),
+				};
+			}
+			catch ( e ) {
+				return errorRes( e );
+			}
+		}
+\end{lstlisting}
+In line 5 I make use of ES6 template strings and use the \emph{args} parameter to create the correct label in the query string, as it is not possible to use query variables in labels in Cypher. This example also shows the usage of query variables in Cypher really well. The \emph{args} object will be destructured and its keys are available to the query by using the \emph{\$} sign. This example also shows how to use input types in line 6 to set various properties at once using Cypher. In the GraphQL Playground it can be used like the following:
+\begin{lstlisting}[caption={Using the Create Node resolver}]
+mutation createNode($props: NodeCreateInput) {
+  CreateNode(id: "1", label: "new test", nodeType: Object, props: $props){
+    success
+    node {
+      id
+      label
+    }
+  }
+}
+\end{lstlisting}
+
+And the \emph{Query Variables} section contains the contents for \emph{props}:
+\begin{lstlisting}
+{
+  "props": {"synchronous": false, "unreliable": false, "story": "test"}
+}
+\end{lstlisting}
+
+\section{Making ApolloServer and ApolloClient communicate}
 \section{Building the UI}
 \subsection{Components}
 \section{Problems}
@@ -944,16 +1152,18 @@ type Mutation{
 \subsection{AWS-Healthcheck}
 \subsection{Apollo Error-Codes}
 \subsection{Apollo Chrome Dev-Tools}
-\subsection{Graph-Layout}
+\subsection{CORS-problems}
+\section{Graph-Layout}
 \subsubsection{Tree-Layout}
 \subsubsection{Flower-Layout}
 \section{Behavior Decisions}
 \section{Avoiding data corruption through multiple editors at once}
 \section{Detect multiple connections between two nodes}
-\section{CORS-problems}
 
 \chapter{Looking back}
+\label{chap:LB}
 
 \chapter{Documentation}
+\label{chap:Doc}
 
 \chapter{Ideas for the Future}
