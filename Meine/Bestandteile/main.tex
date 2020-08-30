@@ -1162,6 +1162,30 @@ And the \emph{Query Variables} section contains the contents for \emph{props}:
 
 \chapter{Looking back}
 \label{chap:LB}
+Here I first want to give a few insights on what in my opinion was something positive in this project and then get to a few things that weren't so ideal from my point of view as well as suggestions to some points on how they could be improved.
+
+\section{What was good}
+\begin{itemize}
+\item[It works!] The application works and runs stable on a public domain without any known bugs in the functionality.
+\item[The tech-stack] In a long term view I think choosing the GRANDstack was a good idea. When the functionality for real time updates is getting implemented GraphQL will be even more useful and Apollo will help a lot doing so. In addition all components work together well and will allow for a comfortable further development.
+\item[Interesting] Learning HTML, CSS and JavaScript from scratch at the beginning of the project was of course a lot to take in. Then getting to know 2 Web-Frameworks right away and learn GraphQL was an even bigger challenge. But with time I understood every part more and more and it was interesting to take a deep dive into an area of software development that I hadn't seen before.
+\end{itemize}
+
+\section{What was not ideal}
+\begin{itemize}
+\item[Warmup time] In the beginning I tried to get a basic application going as quickly as possible. On the one hand because I was afraid to get into time pressure at the end, on the other hand because I wanted to prove, to myself and others, that I can actually do it. By now I think I should have taken things slower to get a better overview of all the tools, especially Apollo. It offers a lot of customization and functionality and if I'd have taken more time to understand it I might have been quicker in the end.
+\item[The tech-stack] Despite having it on the positive list it appears here as well. The reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency, but I only make use of very small and specific parts of it, the most important one being state management. While it is not bad at it I can't see the advantage of it over using a pure state management library like Redux. Having to define a GraphQL query for fetching the local state blows the code base incredibly and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition it made development slower because many times I forgot that I needed a property, or even a few of them, just to add them and in the end use another query I already had defined. 
+
+In addition looking at how the app works at the moment it could easily be implemented using a REST-API. On the initial start the app fetches all nodes and links from the database. When the user hits save it will send modified links and nodes to the server where their ID is used to modify them in the database. As nodes and links are the only two types of entities in this application (and it'll most likely stay that way) using a REST-API might have been the better choice.
+\item[Apollo Dev Tools] I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not so pleasurable as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.65]{Bilder/ScreenOfDeath.png}
+\captionof{figure}{The Apollo Dev Tools can't connect}
+\end{figure}
+This became especially annoying when I wanted to check the local state after completing certain steps and then having to re-load the page.
+
+\end{itemize}
 
 \chapter{Documentation}
 \label{chap:Doc}
