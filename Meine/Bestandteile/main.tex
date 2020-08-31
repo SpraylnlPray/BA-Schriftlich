@@ -861,7 +861,7 @@ Every sequence on a link can contain a string identifying the sequence group it 
 
 The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as we can just pass all input objects from a form to the query. But as we can see in the above code snippet there is one input type for creating and one for updating nodes. The reason for that is that we'd pass all optional parameters as an input object and the required ones manually. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types.
 
-This schema could be improved by using GraphQL fragments and make it shorted by that, but I'd still avoid the usage of these input types and instead pass all arguments directly. 
+This schema could be improved by using GraphQL fragments and make it shorter by that, but the usage of these input types was not worth the effort. 
 
 \begin{lstlisting}[caption={Mutation Type Definition},label={mutations}]
 \label{exMutations}
@@ -909,7 +909,7 @@ type LinkOperationReturn implements IReturnInfo{
   link: Link
 }
 \end{lstlisting}
-Having built a small project using a REST-API before starting this app, this is how I imagined the process:
+Similar to how a project using a REST-API would implement it, this was the idea of the process:
 \begin{itemize}
 \item Frontend dispatches a call to the server
 \item Server starts resolving
@@ -925,7 +925,7 @@ Having built a small project using a REST-API before starting this app, this is 
 \item Frontend checks \emph{success} and depending on its value will either display data about the modified object(s) or the error message defined by the server
 \end{itemize}
 
-Maybe it was due to my little experience but it didn't seem intuitive to me at all how to define custom responses from the ApolloServer to the client. Just by accident I found a way to return custom error messages, but it was already late in development process and there was not enough time left to build it into all places where it would've been necessary. More about this in \autoref{chap:LB}.
+Maybe it was due to missing experience, but it didn't seem intuitive at all to define custom responses from the ApolloServer to the client. Just by accident the manner to return custom error messages appeared, but it was already late in development process and there was not enough time left to build it into all places where it would've been necessary. More about this in \autoref{chap:LB}.
 
 \begin{lstlisting}
 type Query{
@@ -941,7 +941,6 @@ schema {
 \end{lstlisting}
 
 The end of the schema contains the definition for the query type and the root schema.
-
 
 \section{Getting started with Neo4j}
 To get started with Neo4j we first want to create a small basic data set that shouldn't be too complicated so we can easily experiment with it. So lets try to create a representation of the following graph in the database:
@@ -1170,28 +1169,29 @@ And the \emph{Query Variables} section contains the contents for \emph{props}:
 
 \chapter{Looking back}
 \label{chap:LB}
-Here I first want to give a few insights on what in my opinion was something positive in this project and then get to a few things that weren't so ideal from my point of view as well as suggestions to some points on how they could be improved.
+Here we will first look at a list of things that were positive in this project and then go on to a others that maybe weren't ideal together with suggestions to some points on how they could be improved.
 
 \section{What was good}
 \begin{itemize}
-\item[It works!] The application works and runs stable on a public domain without any known bugs in the functionality.
-\item[The tech-stack] In a long term view I think choosing the GRANDstack was a good idea. When the functionality for real time updates is getting implemented GraphQL will be even more useful and Apollo will help a lot doing so. In addition all components work together well and will allow for a comfortable further development.
-\item[Interesting] Learning HTML, CSS and JavaScript from scratch at the beginning of the project was of course a lot to take in. Then getting to know 2 Web-Frameworks right away and learn GraphQL was an even bigger challenge. But with time I understood every part more and more and it was interesting to take a deep dive into an area of software development that I hadn't seen before.
+\item[It works!] The application works and runs stable on a public domain without any known bugs in the functionality which is a big success.
+\item[The tech-stack] In a long term view choosing the GRANDstack was a good idea. When the functionality for real time updates is getting implemented GraphQL will be even more useful and Apollo will help a lot doing so. In addition all components work together well and will allow for a comfortable further development and scaling.
+\item[Interesting] Learning many new things from scratch at the beginning of the project is of course a lot to take in. But with time came more understanding of every part and it is interesting to take a deep dive into this area of software development and get to explore profoundly all parts of it.
 \end{itemize}
 
 \section{What was not ideal}
 \begin{itemize}
-\item[Warmup time] In the beginning I tried to get a basic application going as quickly as possible. On the one hand because I was afraid to get into time pressure at the end, on the other hand because I wanted to prove, to myself and others, that I can actually do it. By now I think I should have taken things slower to get a better overview of all the tools, especially Apollo. It offers a lot of customization and functionality and if I'd have taken more time to understand it I might have been quicker in the end.
-\item[The tech-stack] Despite having it on the positive list it appears here as well. The reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency, but I only make use of very small and specific parts of it, the most important one being state management. While it is not bad at it I can't see the advantage of it over using a pure state management library like Redux. Having to define a GraphQL query for fetching the local state blows the code base incredibly and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition it made development slower because many times I forgot that I needed a property, or even a few of them, just to add them and in the end use another query I already had defined. 
+\item[Warmup time] Trying to get going as quickly as possible right in the beginning was not best choice. The reason for doing so was to have something to show to others early in the development and to avoid having time issues later on. However, it might have turned out to be quicker to first get a good overview of all the technologies and frameworks, especially Apollo. It offers a lot of functionality and taking more time in the beginning could have been faster and led to a cleaner code base in the end.
+
+\item[The tech-stack] Despite having it on the positive list it appears here as well, the reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency, but the app only makes use of very small and specific parts of it, the most important one being state management. While it is not bad at it there is no big advantage of it over using a pure state management library like Redux. Furthermore having to define a GraphQL query for fetching the local state creates many lines of code and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition to that it made development slower because many times it comes up later that another property, or even a few, are needed which have to be added to the query. In the end queries often turn out so similar that the only logical thing would be to use the same query for many different purposes.
 
 In addition looking at how the app works at the moment it could easily be implemented using a REST-API. On the initial start the app fetches all nodes and links from the database. When the user hits save it will send modified links and nodes to the server where their ID is used to modify them in the database. As nodes and links are the only two types of entities in this application (and it'll most likely stay that way) using a REST-API might have been the better choice.
-\item[Apollo Dev Tools] I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not so pleasurable as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
+\item[Apollo Dev Tools] I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not such a pleasant experience as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.65]{Bilder/ScreenOfDeath.png}
 \captionof{figure}{The Apollo Dev Tools can't connect}
 \end{figure}
-This became especially annoying when I wanted to check the local state after completing certain steps and then having to re-load the page.
+This became especially annoying when wanting to check the local state after completing certain steps and then having to re-load the page a few times.
 
 \end{itemize}
 
