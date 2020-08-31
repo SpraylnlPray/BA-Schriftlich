@@ -34,9 +34,9 @@
 \contentsline {section}{\numberline {3.2}Docker}{22}{section.3.2}%
 \contentsline {chapter}{\numberline {4}Development}{24}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Why the GRANDstack}{24}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Getting started with Neo4j}{25}{section.4.2}%
-\contentsline {section}{\numberline {4.3}The GraphQL Schema}{28}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Communicating with the DB through ApolloServer and GraphQL-Playground}{33}{section.4.4}%
+\contentsline {section}{\numberline {4.2}The GraphQL Schema}{25}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Getting started with Neo4j}{29}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Communicating with the DB through ApolloServer and GraphQL-Playground}{32}{section.4.4}%
 \contentsline {section}{\numberline {4.5}Making ApolloServer and ApolloClient communicate}{36}{section.4.5}%
 \contentsline {section}{\numberline {4.6}Building the UI}{36}{section.4.6}%
 \contentsline {subsection}{\numberline {4.6.1}Components}{36}{subsection.4.6.1}%
