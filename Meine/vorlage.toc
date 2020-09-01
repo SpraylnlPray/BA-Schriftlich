@@ -37,25 +37,26 @@
 \contentsline {section}{\numberline {4.2}The GraphQL Schema}{25}{section.4.2}%
 \contentsline {section}{\numberline {4.3}Getting started with Neo4j}{29}{section.4.3}%
 \contentsline {section}{\numberline {4.4}Communicating with the DB through ApolloServer and GraphQL-Playground}{32}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Making ApolloServer and ApolloClient communicate}{36}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Building the UI}{36}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Components}{36}{subsection.4.6.1}%
-\contentsline {section}{\numberline {4.7}Problems}{36}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Keeping the data consistent when saving changes}{36}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}AWS-Healthcheck}{36}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Apollo Error-Codes}{36}{subsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{36}{subsection.4.7.4}%
-\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{36}{subsection.4.7.5}%
-\contentsline {section}{\numberline {4.8}Graph-Layout}{36}{section.4.8}%
-\contentsline {subsubsection}{\nonumberline Tree-Layout}{36}{section*.26}%
-\contentsline {subsubsection}{\nonumberline Flower-Layout}{36}{section*.27}%
-\contentsline {section}{\numberline {4.9}Behavior Decisions}{36}{section.4.9}%
-\contentsline {section}{\numberline {4.10}Avoiding data corruption through multiple editors at once}{36}{section.4.10}%
-\contentsline {section}{\numberline {4.11}Detect multiple connections between two nodes}{36}{section.4.11}%
-\contentsline {chapter}{\numberline {5}Looking back}{37}{chapter.5}%
-\contentsline {section}{\numberline {5.1}What was good}{37}{section.5.1}%
-\contentsline {section}{\numberline {5.2}What was not ideal}{37}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Documentation}{39}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Ideas for the Future}{40}{chapter.7}%
-\contentsline {chapter}{\nonumberline List of Figures}{41}{chapter*.29}%
-\contentsline {chapter}{\nonumberline List of Tables}{42}{chapter*.30}%
+\contentsline {section}{\numberline {4.5}Making ApolloServer and ApolloClient communicate}{35}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Building the UI}{37}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Components}{37}{subsection.4.6.1}%
+\contentsline {section}{\numberline {4.7}Problems}{38}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Keeping the data consistent when saving changes}{38}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}AWS-Healthcheck}{38}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Apollo Error-Codes}{38}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{38}{subsection.4.7.4}%
+\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{39}{subsection.4.7.5}%
+\contentsline {section}{\numberline {4.8}Graph-Layout}{39}{section.4.8}%
+\contentsline {subsubsection}{\nonumberline Tree-Layout}{39}{section*.28}%
+\contentsline {subsubsection}{\nonumberline Flower-Layout}{39}{section*.29}%
+\contentsline {section}{\numberline {4.9}Behavior Decisions}{39}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Avoiding Data Corruption}{39}{section.4.10}%
+\contentsline {section}{\numberline {4.11}Detect Multiple Connections}{39}{section.4.11}%
+\contentsline {chapter}{\numberline {5}Looking back}{40}{chapter.5}%
+\contentsline {section}{\numberline {5.1}What was good}{40}{section.5.1}%
+\contentsline {section}{\numberline {5.2}What was not ideal}{40}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Documentation}{42}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Running the App locally}{42}{section.6.1}%
+\contentsline {chapter}{\numberline {7}Ideas for the Future}{43}{chapter.7}%
+\contentsline {chapter}{\nonumberline List of Figures}{44}{chapter*.30}%
+\contentsline {chapter}{\nonumberline List of Tables}{45}{chapter*.31}%

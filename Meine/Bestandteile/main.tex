@@ -580,7 +580,7 @@ function Test() {
 In comparison to \emph{useQuery} the other two also return a function object that can be called when we wish to execute the query or mutation (see example below).
 
 The \emph{useMutation} hook is the only one of the three allowing for an \emph{update} argument in the options object. In this we can access the local cache and have access to the results returned from the mutation. This can be useful if we need to update internal data depending on the result of a server operation:
-\begin{lstlisting}[caption={Creating a Mutation}]
+\begin{lstlisting}[caption={Creating a Mutation},label={ex:usingMutation}]
 function Mutate() {
 	const [ runMutation, { data, loading, error } ] = useMutation( DO_THING, {
 		update: ( cache, { data } ) => {
@@ -1132,7 +1132,7 @@ Finally lets write a resolver to create a node. The reason for doing this by han
 		}
 \end{lstlisting}
 In line 5 we make use of ES6 template strings and use the \emph{args} parameter to create the correct label in the query string, as it is not possible to use query variables in labels in Cypher. This example also shows the usage of query variables in Cypher really well. The \emph{args} object will be destructured and its keys are available to the query by using the \emph{\$} sign. Furthermore it demonstrates how to use input types in line 6 to set various properties at once using Cypher. In the GraphQL Playground it can be used like the following:
-\begin{lstlisting}[caption={Using the Create Node resolver}]
+\begin{lstlisting}[caption={Using the Create Node resolver},label={ex:RunCreateNode}]
 mutation createNode($props: NodeCreateInput) {
   CreateNode(id: "1", label: "new test", nodeType: Object, props: $props){
     success
@@ -1152,20 +1152,108 @@ And the \emph{Query Variables} section contains the contents for \emph{props}:
 \end{lstlisting}
 
 \section{Making ApolloServer and ApolloClient communicate}
+After looking at how to run queries from the GraphQL-Playground and how they are resolved in the server, we not need to put those two parts together. The ApolloClient needs nothing more but a URI that points to the ApolloServer.
+
+To then run the createNode mutation seen in \autoref{ex:RunCreateNode} we will make use of the \emph{useMutation} hook from Apollo shown in \autoref{ex:usingMutation}. To do so we first define the query object:
+
+\begin{lstlisting}[label={ex:DefQuery}]
+export const CREATE_NODE = gql`
+  mutation($id: ID!, $label: String!, $nodeType: NodeType!, $props: NodeCreateInput){
+    CreateNode(id: $id, label: $label, nodeType: $nodeType, props: $props) {
+      success
+      node {
+        id
+        label
+        nodeType
+        story
+        synchronous
+        unreliable
+      }
+    }
+  }
+`;
+\end{lstlisting}
+
+To use it we'll create a small functional component and pass the query to the hook:
+
+\begin{lstlisting}[caption={Using the Query in a Component}]
+import { CREATE_NODE } from './queries'
+
+const NodeCreationComponent = () => {
+	const [ runCreateNode ] = useMutation( CREATE_NODE );
+	
+	const handleSubmit = ( e ) => {
+		e.stopPropagation();
+		const { label, story, synchronous, nodeType, unreliable } = state; 
+		const id = generateID();
+		const variables = { id, label, nodeType, props: { story, synchronous, unreliable } }; 
+		runCreateNode( { variables } );
+	}
+	
+	const inputForm = () => { ... };
+	
+	return (
+		<div>
+			{ inputForm }
+			<button onClick={ handleSubmit }>Save</button>
+		</div>	
+	);
+}
+\end{lstlisting}
+In line 8 we retrieve the input fields from the form. To shorten the example the form is represented as JSX. This allows to save HTML or other react components in variables and render them by using curly braces.
+
+Line 10 contains the creation of the variables object we pass to the mutation in line 11. It will destructure the object and pass on all properties.
+
+Line 14 contains the JSX definition of the form and we use it in line 18 by using curly braces.
+
 \section{Building the UI}
+When building a React application its useful to think about the structure to get an idea of what components will be necessary. Furthermore if the application should be usable on mobile devices it might be a good idea to first create the layout for those. Moving then to a layout that is suitable for a PC screen is a lot easier than the other way around.
+
 \subsection{Components}
+Lets think about what will appear on the screen:
+
+The application should have a big canvas to display the graph and allow interaction with it. There needs to be space to show information about a clicked link or node, as well as options to search/filter the view. A button to save data to the database and also to discard local changes should be apparent. So lets take a look at the app and at the components it consists of:
+\begin{figure}[H]
+\includegraphics[scale=.46]{Bilder/Layout.png}
+\captionof{figure}{The Components in the UI}
+\end{figure}
+The top level components in red are:
+\begin{itemize}
+\item[1] \textbf{HeaderArea:} It is almost completely static and contains the name of the application, together with two other components that manage the communication with the server.
+\item[2] \textbf{InteractionPane} All components that are required to modify the data of the application will go in here.
+\item[3] \textbf{EditorPane} The canvas that contains the graph the user sees.
+\end{itemize}
+
+Their child components in green:
+\begin{itemize}
+\item[1] \textbf{OptionBar} It contains the buttons to create a node or a link, together with a button that will hide the entire \emph{InteractionPane} to give the \emph{EditorPane} the full window width.
+\item[2] \textbf{InputPane} All components that require input from the user are child components of this one. This could be called a container component as it doesn't display anything on its own.
+\item[3] \textbf{ProjectStatus} Shows information about if the user can make changes to the data and allows the request of editing rights to do so.
+\item[4] \textbf{SavePane} Will send changed entities to the server and inform the user about the progress or discard local changes.
+\end{itemize}
+
+The child component of the \emph{InputPane} in cyan is called \textbf{GraphSettingsPane}. In the future there will be more options on manipulating data shown in the graph, like filtering for certain types, special layout algorithms etc. What component is displayed here varies depending on what the user last clicked. There are 2 more forms for creating and editing a node or a link.
+
 \section{Problems}
 \subsection{Keeping the data consistent when saving changes}
 \subsection{AWS-Healthcheck}
 \subsection{Apollo Error-Codes}
 \subsection{Apollo Chrome Dev-Tools}
+I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not such a pleasant experience as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.65]{Bilder/ScreenOfDeath.png}
+\captionof{figure}{The Apollo Dev Tools can't connect}
+\end{figure}
+This became especially annoying when wanting to check the local state after completing certain steps and then having to re-load the page a few times.
+
 \subsection{CORS-problems}
 \section{Graph-Layout}
 \subsubsection{Tree-Layout}
 \subsubsection{Flower-Layout}
 \section{Behavior Decisions}
-\section{Avoiding data corruption through multiple editors at once}
-\section{Detect multiple connections between two nodes}
+\section{Avoiding Data Corruption}
+\section{Detect Multiple Connections}
 
 \chapter{Looking back}
 \label{chap:LB}
@@ -1185,17 +1273,10 @@ Here we will first look at a list of things that were positive in this project a
 \item[The tech-stack] Despite having it on the positive list it appears here as well, the reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency, but the app only makes use of very small and specific parts of it, the most important one being state management. While it is not bad at it there is no big advantage of it over using a pure state management library like Redux. Furthermore having to define a GraphQL query for fetching the local state creates many lines of code and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition to that it made development slower because many times it comes up later that another property, or even a few, are needed which have to be added to the query. In the end queries often turn out so similar that the only logical thing would be to use the same query for many different purposes.
 
 In addition looking at how the app works at the moment it could easily be implemented using a REST-API. On the initial start the app fetches all nodes and links from the database. When the user hits save it will send modified links and nodes to the server where their ID is used to modify them in the database. As nodes and links are the only two types of entities in this application (and it'll most likely stay that way) using a REST-API might have been the better choice.
-\item[Apollo Dev Tools] I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not such a pleasant experience as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
-\begin{figure}[H]
-\centering
-\includegraphics[scale=.65]{Bilder/ScreenOfDeath.png}
-\captionof{figure}{The Apollo Dev Tools can't connect}
-\end{figure}
-This became especially annoying when wanting to check the local state after completing certain steps and then having to re-load the page a few times.
-
 \end{itemize}
 
 \chapter{Documentation}
 \label{chap:Doc}
+\section{Running the App locally}
 
 \chapter{Ideas for the Future}
