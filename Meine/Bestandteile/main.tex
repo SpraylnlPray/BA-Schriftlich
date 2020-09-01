@@ -664,10 +664,11 @@ Basically, an EC2 instance is a virtual machine that runs on an Amazon server. \
 %In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
 
 \subsection{AWS-ECS}
+RE-WRITE THIS
 ECS is a service to run automatically managed containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
 These are the most important terms when talking about AWS ECS: \\
 
-A \textbf{definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
+A \textbf{task definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
 
 A \textbf{task} is an instance that is created following the specifications in the task definition. A task can run various Docker containers at once. A task is where an application actually gets executed.
 
@@ -675,17 +676,16 @@ A \textbf{service} is used to manage tasks. It is possible to specify a minimum 
 
 A \textbf{Cluster} is a logical grouping of services. \\
 
-These components can be visually put together as shown in figure \textbf{\ref{ex311}}.
-These components can be visually put together as shown in the figure below. (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
+These components can be visually put together as shown in the figure below.
 \begin{figure}[H]
 \centering
-\includegraphics[scale=.85]{Bilder/overview-fargate.png}
+\includegraphics[scale=.5]{Bilder/EcsStructure.png}
 \captionof{figure}{Strucute of AWS ECS}
 \label{ex311}
 \end{figure}
 
 The orange square symbolizes ECS inside the big AWS infrastructure. We will ignore the square denoted with "VPC" as it is not relevant for further understanding.\\
-A task can be created from a task definition and be placed in a service. The services are here shown as light blue squares labeled \emph{Fargate}. Fargate is a computation engine from Amazon which calculates which virtual machine to use according to the task definition and creates and starts it and then runs the docker image from a specified container registry automatically. \cite{AwsFargate} The orange square with dots and dashes is a cluster. This cluster contains 2 services, reach running 3 tasks. 
+A task is created from a task definition and be placed in a service. The services are here shown as light blue squares labeled \emph{Fargate}. Fargate is a computation engine from Amazon which calculates which virtual machine to use according to the task definition and creates and starts it and then runs the docker image from a specified container registry automatically. \cite{AwsFargate} The orange square with dots and dashes is a cluster. This cluster contains 2 services, reach running 3 tasks. 
 
 The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of a geological region.
 
@@ -1235,8 +1235,67 @@ Their child components in green:
 The child component of the \emph{InputPane} in cyan is called \textbf{GraphSettingsPane}. In the future there will be more options on manipulating data shown in the graph, like filtering for certain types, special layout algorithms etc. What component is displayed here varies depending on what the user last clicked. There are 2 more forms for creating and editing a node or a link.
 
 \section{Problems}
+This section will talk about difficulties or problems that appeared during development. For some of them there was a solution found, others are simply to document them.
+
 \subsection{Keeping the data consistent when saving changes}
+% In which order do the updates need to be executed?
+In the very beginning the process of saving local changes to the database was the following: Go through all created/edited/deleted entities and for each of them dispatch a call to the server. This often led to inconsistent data sets that could not be displayed by visjs. To explain this problem we need to look at a few examples of saving scenarios:
+\begin{itemize}
+\item[1] The user creates 2 nodes and connects them with a link.
+
+Despite this being a very simple example, the approach to save data in Neo4j can cause problems. When creating the link it will look for the IDs of both nodes to connect to. But if for example one of the calls to the database to create the nodes hasn't arrived or wasn't processed yet? Neo4j will throw an error because we're trying to work with a node that doesn't exist.
+
+\item[2] The user deletes a node that has a circular link (both ends of the link point to the same node) attached to it.
+
+Deleting such a node will also automatically lead to the deletion of the link. When the call to delete the node gets processed first, Neo4j will also throw an error as it doesn't allow to delete nodes with relationships.
+
+\item[3] The user deletes a link that has a sequence and link-end property.
+
+As discussed previously, these two exist as their own nodes in Neo4j. Simply deleting the link won't work as it has connected relationships. Using \emph{DETACH DELETE} to delete the node will at least not throw an error, but leave the sequence- and link-end-node fly around in the database with not chance to ever get deleted again except someone looks through the database and does so by hand.
+\end{itemize}
+
+There are many more cases where the execution order of queries is critical for keeping the database clean and there might be multiple ways of doing so. At the moment the application makes use of the ES6 function \emph{Promise.all()}. There is an array for each type of operation (creating node, creating link, deleting node, etc.). When the application finds an entity that needs to be sent to the server it will push the return value from the Apollo mutation hook into the respective array. Using \emph{Promise.all( iterable )} it waits for all promises of that type to resolve and only if that is the case it will continue the saving process.
+
+The order used at the moment is the following:
+\begin{itemize}
+\item[1.] \textbf{Creating and updating nodes} First make sure that all nodes that might be needed later are created. In addition to that any updates made to other nodes can be done simultaneously as that won't affect other entities.
+\item[2.] \textbf{Create Links} Add any new links to the database as they might be referenced in sequence- and link-end-creations in the next step.
+\item[3.] \textbf{Sequences and Link-Ends} must be created on newly created links
+\item[4.] \textbf{Update Links} Changes to Links can be commited safely to the database as any new node they might connect to is guaranteed to exist and internal updates won't affect other entities. In the same step we can update their link-end- and sequence-properties.
+%CHECK IF THIS IS TRUE
+\item[5.] \textbf{Delete Links} Remove deleted links from the database. This must be done before deleting nodes as otherwise deleting a node might not work if it has attached relationships.
+\item[6.] \textbf{Delete Nodes} Remove deleted nodes from the database. Its important to do this using \emph{DELETE} and not \emph{DETACH DELETE} to make sure there won't be any links without node on one end.
+\item[7.] \textbf{Reset Local Store} After that mark all items in the local store as up do date.
+\end{itemize}
+
+Here is a short piece of code to make the idea of promises better understandable:
+\begin{lstlisting}[caption={Usage of Promise.all()}]
+for ( let node of createdNodes ) {
+	const { id, label, story, synchronous, nodeType, unreliable } = node;
+	const variables = { id, label, nodeType, props: { story, synchronous, unreliable } };
+	nodePromises.push( runCreateNode( { variables } ) );
+}
+for ( let node of editedNodes ) {
+	const { id, label, story, synchronous, nodeType, unreliable } = node;
+	const variables = { id, props: { label, nodeType, story, synchronous, unreliable } };
+	nodePromises.push( runUpdateNode( { variables } ) );
+}
+
+Promise.all( nodePromises ) 
+	.then( () => {
+				for ( let link of createdLinks ) {
+					...
+					createLinkPromises.push( runCreateLink( { variables } ) );				
+				}
+				Promise.all( createLinkPromises )
+					.then( () => {	
+		...
+\end{lstlisting}
+In line 4 and 9 the promises are pushed into the array. All of the mutations are executed instantly. The \emph{then} branch of \emph{Promise.all()} in line 13 will only be reached if all of the promises in \emph{nodePromises} resolve. If that is the case, the mutations to create links can be run.
+
 \subsection{AWS-Healthcheck}
+
+
 \subsection{Apollo Error-Codes}
 \subsection{Apollo Chrome Dev-Tools}
 I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not such a pleasant experience as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:

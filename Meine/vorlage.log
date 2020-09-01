@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  1 SEP 2020 12:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  1 SEP 2020 18:49
 entering extended mode
 **./vorlage.tex
 (vorlage.tex
@@ -894,7 +894,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 648--649
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 667--669
+Underfull \hbox (badness 10000) in paragraph at lines 667--670
 
  []
 
@@ -902,32 +902,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 667--669
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 676--677
+Underfull \hbox (badness 10000) in paragraph at lines 677--678
 
  []
 
-<Bilder/overview-fargate.png, id=651, 569.87906pt x 639.89063pt>
-File: Bilder/overview-fargate.png Graphic file (type png)
-<use Bilder/overview-fargate.png>
-Package pdftex.def Info: Bilder/overview-fargate.png  used on input line 682.
-(pdftex.def)             Requested size: 484.39948pt x 543.90959pt.
-
-Overfull \hbox (14.92892pt too wide) in paragraph at lines 682--683
- [][] 
- []
-
-
-Overfull \hbox (247.45432pt too wide) in paragraph at lines 678--685
-\T1/lmr/m/n/12 can be vi-su-ally put to-gether as shown in the fig-ure be-low. 
-(https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) 
- []
-
-[20] [21 <./Bilder/overview-fargate.png>]
+<Bilder/EcsStructure.png, id=650, 702.625pt x 778.91pt>
+File: Bilder/EcsStructure.png Graphic file (type png)
+<use Bilder/EcsStructure.png>
+Package pdftex.def Info: Bilder/EcsStructure.png  used on input line 682.
+(pdftex.def)             Requested size: 351.31163pt x 389.45406pt.
+[20 <./Bilder/EcsStructure.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 705--707
 
  []
 
-<Bilder/DockerVsVM.png, id=668, 593.21625pt x 234.1247pt>
+<Bilder/DockerVsVM.png, id=662, 593.21625pt x 234.1247pt>
 File: Bilder/DockerVsVM.png Graphic file (type png)
 <use Bilder/DockerVsVM.png>
 Package pdftex.def Info: Bilder/DockerVsVM.png  used on input line 712.
@@ -937,38 +926,38 @@ Overfull \hbox (5.10309pt too wide) in paragraph at lines 712--713
  [][] 
  []
 
-[22] [23 <./Bilder/DockerVsVM.png>]
+[21] [22 <./Bilder/DockerVsVM.png>]
 chapter 4.
-[24
+[23
 
 
-] [25] [26] [27] [28]
-<Bilder/BasicGraph.png, id=839, 572.89032pt x 93.34875pt>
+] [24] [25] [26] [27]
+<Bilder/BasicGraph.png, id=835, 572.89032pt x 93.34875pt>
 File: Bilder/BasicGraph.png Graphic file (type png)
 <use Bilder/BasicGraph.png>
 Package pdftex.def Info: Bilder/BasicGraph.png  used on input line 950.
 (pdftex.def)             Requested size: 458.31287pt x 74.6791pt.
- [29 <./Bilder/BasicGraph.png>]
-<Bilder/BasicGraphNeo1.png, id=857, 216.81pt x 192.72pt>
+ [28 <./Bilder/BasicGraph.png>]
+<Bilder/BasicGraphNeo1.png, id=853, 216.81pt x 192.72pt>
 File: Bilder/BasicGraphNeo1.png Graphic file (type png)
 <use Bilder/BasicGraphNeo1.png>
 Package pdftex.def Info: Bilder/BasicGraphNeo1.png  used on input line 972.
 (pdftex.def)             Requested size: 216.80946pt x 192.71951pt.
- [30 <./Bilder/BasicGraphNeo1.png>]
-<Bilder/BasicGraphNeo2.png, id=868, 197.98969pt x 220.57407pt>
+ [29 <./Bilder/BasicGraphNeo1.png>]
+<Bilder/BasicGraphNeo2.png, id=864, 197.98969pt x 220.57407pt>
 File: Bilder/BasicGraphNeo2.png Graphic file (type png)
 <use Bilder/BasicGraphNeo2.png>
 Package pdftex.def Info: Bilder/BasicGraphNeo2.png  used on input line 1010.
 (pdftex.def)             Requested size: 197.9892pt x 220.57352pt.
- [31]
-<Bilder/BasicGraphNeo3.png, id=880, 421.575pt x 155.83218pt>
+ [30]
+<Bilder/BasicGraphNeo3.png, id=876, 421.575pt x 155.83218pt>
 File: Bilder/BasicGraphNeo3.png Graphic file (type png)
 <use Bilder/BasicGraphNeo3.png>
 Package pdftex.def Info: Bilder/BasicGraphNeo3.png  used on input line 1018.
 (pdftex.def)             Requested size: 421.57396pt x 155.8318pt.
- [32 <./Bilder/BasicGraphNeo2.png> <./Bilder/BasicGraphNeo3.png>] [33] [34] [35
-] [36]
-<Bilder/Layout.png, id=1053, 1029.09468pt x 507.39563pt>
+ [31 <./Bilder/BasicGraphNeo2.png> <./Bilder/BasicGraphNeo3.png>] [32] [33] [34
+] [35]
+<Bilder/Layout.png, id=1049, 1029.09468pt x 507.39563pt>
 File: Bilder/Layout.png Graphic file (type png)
 <use Bilder/Layout.png>
 Package pdftex.def Info: Bilder/Layout.png  used on input line 1217.
@@ -978,18 +967,18 @@ Overfull \hbox (3.91875pt too wide) in paragraph at lines 1217--1218
 [][] 
  []
 
-[37 <./Bilder/Layout.png>]
-<Bilder/ScreenOfDeath.png, id=1060, 734.745pt x 118.19156pt>
+[36 <./Bilder/Layout.png>] [37] [38]
+<Bilder/ScreenOfDeath.png, id=1080, 734.745pt x 118.19156pt>
 File: Bilder/ScreenOfDeath.png Graphic file (type png)
 <use Bilder/ScreenOfDeath.png>
-Package pdftex.def Info: Bilder/ScreenOfDeath.png  used on input line 1245.
+Package pdftex.def Info: Bilder/ScreenOfDeath.png  used on input line 1302.
 (pdftex.def)             Requested size: 477.57858pt x 76.8236pt.
 
-Overfull \hbox (8.10803pt too wide) in paragraph at lines 1245--1246
+Overfull \hbox (8.10803pt too wide) in paragraph at lines 1302--1303
  [][] 
  []
 
-[38 <./Bilder/ScreenOfDeath.png>] [39]
+[39 <./Bilder/ScreenOfDeath.png>]
 chapter 5.
 [40
 
@@ -1215,10 +1204,10 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 111.
  ) 
 Here is how much of TeX's memory you used:
- 17089 strings out of 480756
- 322910 string characters out of 2893314
+ 17120 strings out of 480756
+ 323367 string characters out of 2893314
  765078 words of memory out of 3000000
- 32012 multiletter control sequences out of 15000+200000
+ 32022 multiletter control sequences out of 15000+200000
  587917 words of font info for 54 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  53i,20n,81p,10104b,1983s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1237,9 +1226,9 @@ grams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Daniel/AppData/Loca
 l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/Users/Daniel/AppData
 /Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Daniel/Ap
 pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt12.pfb>
-Output written on vorlage.pdf (53 pages, 785666 bytes).
+Output written on vorlage.pdf (53 pages, 778704 bytes).
 PDF statistics:
- 1518 PDF objects out of 1728 (max. 8388607)
- 815 named destinations out of 1000 (max. 500000)
+ 1544 PDF objects out of 1728 (max. 8388607)
+ 836 named destinations out of 1000 (max. 500000)
  374 words of extra memory for PDF output out of 10000 (max. 10000000)
 
