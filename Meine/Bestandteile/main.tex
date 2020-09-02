@@ -1152,7 +1152,7 @@ And the \emph{Query Variables} section contains the contents for \emph{props}:
 \end{lstlisting}
 
 \section{Making ApolloServer and ApolloClient communicate}
-After looking at how to run queries from the GraphQL-Playground and how they are resolved in the server, we not need to put those two parts together. The ApolloClient needs nothing more but a URI that points to the ApolloServer.
+After looking at Apollo hoks, how to run queries from the GraphQL-Playground and how they are resolved in the server, we now need to put those parts together. The ApolloClient needs nothing more but a URI that points to the ApolloServer.
 
 To then run the createNode mutation seen in \autoref{ex:RunCreateNode} we will make use of the \emph{useMutation} hook from Apollo shown in \autoref{ex:usingMutation}. To do so we first define the query object:
 
@@ -1177,10 +1177,12 @@ export const CREATE_NODE = gql`
 To use it we'll create a small functional component and pass the query to the hook:
 
 \begin{lstlisting}[caption={Using the Query in a Component}]
-import { CREATE_NODE } from './queries'
+import { CREATE_NODE } from './queries';
+import { useState } from 'react';
 
 const NodeCreationComponent = () => {
 	const [ runCreateNode ] = useMutation( CREATE_NODE );
+	const [ state, setState ] = useState( { ... } );
 	
 	const handleSubmit = ( e ) => {
 		e.stopPropagation();
@@ -1189,6 +1191,8 @@ const NodeCreationComponent = () => {
 		const variables = { id, label, nodeType, props: { story, synchronous, unreliable } }; 
 		runCreateNode( { variables } );
 	}
+
+	const onChange = ( e ) => { ... };
 	
 	const inputForm = () => { ... };
 	
@@ -1200,11 +1204,11 @@ const NodeCreationComponent = () => {
 	);
 }
 \end{lstlisting}
-In line 8 we retrieve the input fields from the form. To shorten the example the form is represented as JSX. This allows to save HTML or other react components in variables and render them by using curly braces.
+In line 10 we retrieve the input fields from the form which could be saved in the state of the form. As they are not relevant for the understanding the form is represented as JSX, the initialization of the state and the \emph{onChange} handler are not shown. JSX allows to save HTML or other react components in variables and render them by using curly braces.
 
-Line 10 contains the creation of the variables object we pass to the mutation in line 11. It will destructure the object and pass on all properties.
+Line 12 contains the creation of the variables object we pass to the mutation in line 13. It will destructure the object and pass on all properties directly.
 
-Line 14 contains the JSX definition of the form and we use it in line 18 by using curly braces.
+Line 18 contains the JSX definition of the form and we embed it in line 22 by using curly braces.
 
 \section{Building the UI}
 When building a React application its useful to think about the structure to get an idea of what components will be necessary. Furthermore if the application should be usable on mobile devices it might be a good idea to first create the layout for those. Moving then to a layout that is suitable for a PC screen is a lot easier than the other way around.
@@ -1268,7 +1272,7 @@ The order used at the moment is the following:
 \item[7.] \textbf{Reset Local Store} After that mark all items in the local store as up do date.
 \end{itemize}
 
-Here is a short piece of code to make the idea of promises better understandable:
+This code demonstrates the usage of \emph{Promise.all()} to make it more understandable:
 \begin{lstlisting}[caption={Usage of Promise.all()}]
 for ( let node of createdNodes ) {
 	const { id, label, story, synchronous, nodeType, unreliable } = node;
@@ -1291,12 +1295,29 @@ Promise.all( nodePromises )
 					.then( () => {	
 		...
 \end{lstlisting}
-In line 4 and 9 the promises are pushed into the array. All of the mutations are executed instantly. The \emph{then} branch of \emph{Promise.all()} in line 13 will only be reached if all of the promises in \emph{nodePromises} resolve. If that is the case, the mutations to create links can be run.
+In line 4 and 9 the node promises are pushed into the respective array. All of them are executed instantly. The \emph{then} branch of \emph{Promise.all()} in line 13 will only be reached if all of the promises in \emph{nodePromises} resolve. If that is the case, the mutations to create links can be run, which will also be saved in their array. Once those are resolved the next entity as mentioned above will be handled, etc.
 
 \subsection{AWS-Healthcheck}
+After deploying the backend to AWS ECS there was a problem that the server would often be down and couldn't be reached by the application. After looking at the event logs it turned out that the service would restart the task every 3 to 5 minutes due to failed \emph{Health Checks}. These ping a specified URL and compare the response to a pre-defined one. If the response should fail a certain amount of times to be equal to the one defined the service will restart the task as it assumes the task to be stopped, hung or broken in any other way. This lead to a really high CPU usage by the cluster and service and even worse, to the server not being reachable at any moment.
 
+Despite adjusting the settings for the health checks various times to ping the correct route the check would still fail with an error code of \emph{404 Not Found}. In the end the only workaround without having to spend too much time on AWS was to set the code deemed as successful to 404. While this is definitely not a best practice solution it solved the problem in this case. The server ran perfectly and CPU usage by cluster and service dropped significantly:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.6]{Bilder/AwsCpuReduction.png}
+\captionof{figure}{CPU Utilization in Percent of Service and Cluster}
+\end{figure}
 
 \subsection{Apollo Error-Codes}
+When writing the code to curve multiple links between two nodes a first version used the node data from the local cache to iterate through them and find connected links in the links array. While it worked perfectly on the local setup and \emph{most} of the time in the deployed versions, sometimes there appeared an error message: \\
+
+\centerline{Error in setLinks: Invariant Violation: 50 (see https://...)} 
+
+While this message contains something that is similar to an error code, it turned out that these change with every new update to the ApolloClient. This makes it hard to find help online as people who might have had the similar error code probably got it for a different reason. At some point the error also appeared on the local setup and there the ApolloClient serves an error message with a lot more information. 
+
+As it turned out, the source of the problem was that in the code to calculate the custom curvature reading the nodes from the cache would sometimes end in an error if the query for nodes hasn't returned data yet. However instead of returning undefined - which would have led to a typical JavaScript error that is easy to track down - Apollo throws an error itself. The reason for a different message between production and development environments is that in production environments Apollo strips these error messages to a minimum to reduce the bundle size. \\
+
+The solution to getting error messages with more information even in a production environment was to write a few wrapper methods that take a GraphQL query, the data to write into the cache and an error string that gets printed in case something goes wrong.
+
 \subsection{Apollo Chrome Dev-Tools}
 I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not such a pleasant experience as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
 \begin{figure}[H]

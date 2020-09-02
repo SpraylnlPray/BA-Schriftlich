@@ -43,20 +43,20 @@
 \contentsline {section}{\numberline {4.7}Problems}{37}{section.4.7}%
 \contentsline {subsection}{\numberline {4.7.1}Keeping the data consistent when saving changes}{37}{subsection.4.7.1}%
 \contentsline {subsection}{\numberline {4.7.2}AWS-Healthcheck}{39}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Apollo Error-Codes}{39}{subsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{39}{subsection.4.7.4}%
-\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{39}{subsection.4.7.5}%
-\contentsline {section}{\numberline {4.8}Graph-Layout}{39}{section.4.8}%
-\contentsline {subsubsection}{\nonumberline Tree-Layout}{39}{section*.28}%
-\contentsline {subsubsection}{\nonumberline Flower-Layout}{39}{section*.29}%
-\contentsline {section}{\numberline {4.9}Behavior Decisions}{39}{section.4.9}%
-\contentsline {section}{\numberline {4.10}Avoiding Data Corruption}{39}{section.4.10}%
-\contentsline {section}{\numberline {4.11}Detect Multiple Connections}{39}{section.4.11}%
-\contentsline {chapter}{\numberline {5}Looking back}{40}{chapter.5}%
-\contentsline {section}{\numberline {5.1}What was good}{40}{section.5.1}%
-\contentsline {section}{\numberline {5.2}What was not ideal}{40}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Documentation}{42}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Running the App locally}{42}{section.6.1}%
-\contentsline {chapter}{\numberline {7}Ideas for the Future}{43}{chapter.7}%
-\contentsline {chapter}{\nonumberline List of Figures}{44}{chapter*.30}%
-\contentsline {chapter}{\nonumberline List of Tables}{45}{chapter*.31}%
+\contentsline {subsection}{\numberline {4.7.3}Apollo Error-Codes}{40}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{40}{subsection.4.7.4}%
+\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{41}{subsection.4.7.5}%
+\contentsline {section}{\numberline {4.8}Graph-Layout}{41}{section.4.8}%
+\contentsline {subsubsection}{\nonumberline Tree-Layout}{41}{section*.29}%
+\contentsline {subsubsection}{\nonumberline Flower-Layout}{41}{section*.30}%
+\contentsline {section}{\numberline {4.9}Behavior Decisions}{41}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Avoiding Data Corruption}{41}{section.4.10}%
+\contentsline {section}{\numberline {4.11}Detect Multiple Connections}{41}{section.4.11}%
+\contentsline {chapter}{\numberline {5}Looking back}{42}{chapter.5}%
+\contentsline {section}{\numberline {5.1}What was good}{42}{section.5.1}%
+\contentsline {section}{\numberline {5.2}What was not ideal}{42}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Documentation}{44}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Running the App locally}{44}{section.6.1}%
+\contentsline {chapter}{\numberline {7}Ideas for the Future}{45}{chapter.7}%
+\contentsline {chapter}{\nonumberline List of Figures}{46}{chapter*.31}%
+\contentsline {chapter}{\nonumberline List of Tables}{47}{chapter*.32}%
