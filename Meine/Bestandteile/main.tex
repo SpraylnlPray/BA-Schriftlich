@@ -1456,10 +1456,6 @@ Here we will first look at a list of things that were positive in this project a
 In addition looking at how the app works at the moment it could easily be implemented using a REST-API. On the initial start the app fetches all nodes and links from the database. When the user hits save it will send modified links and nodes to the server where their ID is used to modify them in the database. As nodes and links are the only two types of entities in this application (and it'll most likely stay that way) using a REST-API might have been the better choice.
 \end{itemize}
 
-\chapter{Documentation}
-\label{chap:Doc}
-\section{Running the App locally}
-
 
 \chapter{Ideas for the Future}
 \section{Syntax Checking}
@@ -1468,5 +1464,54 @@ In addition looking at how the app works at the moment it could easily be implem
 %place connected nodes close?
 \section{Subscriptions}
 \section{User Logic}
+\section{Project Logic}
 \section{Refactor}
 \section{Improve Containers}
+
+\chapter{Documentation}
+\label{chap:Doc}
+This section will explain how to set up a local environment, as well as a short walk-through through the codebase.
+
+\section{Setting Up a Local Development Environment}
+\subsection{Neo4j Desktop}
+\label{chap:NeoDesktop}
+Download Neo4j Desktop from the official Neo4j download page \cite{NeoDownload} and install it. After the installation process start the application and enter the activation key from the download page.
+Create a new project by clicking \emph{New}. When clicking on \emph{Add Database} choose the option \emph{Create a Local Database}. Its important to write down the password as it is necessary to connect to the database. The version used while writing this is 4.1.0. Click on \emph{Create} and wait for the process to finish.
+Then under \emph{Plugins} click \emph{Add Plugin}, choose \emph{APOC}, confirm the installation for all graphs and close the window. The window should look similar to this:
+\begin{figure}[H]
+\label{ex:NeoDesktop}
+\centering
+\includegraphics[scale=.4]{Bilder/NeoDesktopInit.png}
+\captionof{figure}{Neo4j Desktop after Creating the Database}
+\end{figure}
+
+Next hit \emph{Start} to spin up the instance. When it is running click on \emph{Open} to start the Neo4j Browser. In this browser all Cypher queries can be executed directly on the database.
+
+\subsection{Backend}
+Install Node.js, clone the server \cite{GitServer} code from GitHub. Open a console window, navigate into the folder containing the server code and write \emph{npm install}. Inside the server folder, create a file called \emph{.env} with the following content:
+\begin{lstlisting}
+PORT=8080
+ENDPOINT=/graphql
+DB_DEV_PW=<YOUR_DB_PW>
+DB_USER=neo4j
+DB_DEV_HOST=localhost:7687
+NODE_ENV=development
+\end{lstlisting}
+This defines the port and path for the GraphQL Playground provided by the server. Furthermore it provides the endpoint where the server can reach the database. The port can be found by clicking on the 3 points on the right of \emph{SetupDB} in \autoref{ex:NeoDesktop} but is \emph{7687} by default. At \emph{DB\_DEV\_PW} make sure to put the password chosen in \autoref{chap:NeoDesktop}.
+Now type \emph{npm run start-dev} into the console to spin up the local development server. After loading for a short time the console window should state a message similar to \\
+"Server vX.X started at ... listening on http://localhost:8080/graphql" \\
+Visiting this URL will open the GraphQL Playground that can be used to test the resolvers of the server for example as shown in \autoref{ex:RunCreateNode}.
+
+\subsection{Frontend}
+Clone the client \cite{GitClient} code from GitHub, open a console window, navigate into the client folder and type \emph{npm install}. In the same folder, create a \emph{.env} file with the following content:
+\begin{lstlisting}
+REACT_APP_ENV=dev
+REACT_APP_DEV_HOST=http://localhost:8080/graphql
+\end{lstlisting}
+The first variable is used to define the favicon in the browser tab, the second one points to the URL of the server. Then running \emph{npm start} will create a production build with live updates at \emph{localhost:3000}.
+
+\subsection{Creating a Project Node}
+In order to be able to request editing rights and actually use the app, it is necessary to manually create a project node in the Neo4j Browser that contains a property called \emph{isBeingEdited} set to \emph{false}:
+\begin{lstlisting}
+CREATE (p:Project {isBeingEdited: false}) RETURN p
+\end{lstlisting}

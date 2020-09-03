@@ -54,14 +54,19 @@
 \contentsline {chapter}{\numberline {5}Looking back}{46}{chapter.5}%
 \contentsline {section}{\numberline {5.1}What was good}{46}{section.5.1}%
 \contentsline {section}{\numberline {5.2}What was not ideal}{46}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Documentation}{48}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Running the App locally}{48}{section.6.1}%
-\contentsline {chapter}{\numberline {7}Ideas for the Future}{49}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Syntax Checking}{49}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Improve Layout Algorithm}{49}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Subscriptions}{49}{section.7.3}%
-\contentsline {section}{\numberline {7.4}User Logic}{49}{section.7.4}%
-\contentsline {section}{\numberline {7.5}Refactor}{49}{section.7.5}%
-\contentsline {section}{\numberline {7.6}Improve Containers}{49}{section.7.6}%
-\contentsline {chapter}{\nonumberline List of Figures}{50}{chapter*.34}%
-\contentsline {chapter}{\nonumberline List of Tables}{51}{chapter*.35}%
+\contentsline {chapter}{\numberline {6}Ideas for the Future}{48}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Syntax Checking}{48}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Improve Layout Algorithm}{48}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Subscriptions}{48}{section.6.3}%
+\contentsline {section}{\numberline {6.4}User Logic}{48}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Project Logic}{48}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Refactor}{48}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Improve Containers}{48}{section.6.7}%
+\contentsline {chapter}{\numberline {7}Documentation}{49}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Setting Up a Local Development Environment}{49}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Neo4j Desktop}{49}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}Backend}{49}{subsection.7.1.2}%
+\contentsline {subsection}{\numberline {7.1.3}Frontend}{50}{subsection.7.1.3}%
+\contentsline {subsection}{\numberline {7.1.4}Creating a Project Node}{50}{subsection.7.1.4}%
+\contentsline {chapter}{\nonumberline List of Figures}{51}{chapter*.35}%
+\contentsline {chapter}{\nonumberline List of Tables}{52}{chapter*.36}%
