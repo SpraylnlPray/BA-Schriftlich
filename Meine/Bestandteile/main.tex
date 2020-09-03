@@ -1402,8 +1402,39 @@ Now to the flaws of this approach: The node in the top center intersects with ot
 In addition there are many more places where nodes or links could intersect. Also, if one or more nodes have a connection to another group of nodes, they might be placed very far from each other and their connections could intersect with many others.
 
 \section{Behavior Decisions}
+When implementing the user interface and the inner logic of the application there will often be the question \emph{How should the application behave if ...?}. Here are some that appeared in this project together with some options on what options were available:
+\begin{itemize}
+\item What should happen when a node that has links connected gets deleted? As visjs doesn't offer the option of simply leaving the link there, it needs to be connected to somewhere else:
+\begin{itemize}
+\item Deleting a node with connected links is not possible.
+\item The connected links snap to the node thats closest by.
+\item Each link snaps to the other node it is connected to, creating a circle.
+\end{itemize}
+In the end number 3 got implemented as it is the most usable and predictable behavior for this use case.
+
+\item What should happen if a \emph{Part-Of} link connects two collapsable nodes (containers or domains in this case) and clicks on \emph{Collapse} on one of them?
+\begin{itemize}
+\item Both collapsables should disappear together with their child-nodes.
+\item The collapsable that gets the collapse call stays visible but all connected collapsables disappear recursively.
+\item The creation of such connections should not be possible.
+\end{itemize}
+In this case the 2nd option got implemented as number 1 would make the application not usable and the third one might limit the user in the use of the application.
+
+\item How is a part-of relationship defined? In other words, which nodes should disappear if a collapsable gets collapsed?
+\begin{itemize}
+\item All nodes that the flower layout identifies as children of a collapsable.
+\item Only nodes with a direct part-of link to the collapsable will disappear
+\end{itemize}
+The second options was the one to go for, as in the first one it is almost impossible to algorithmically detect which node should be the last one to disappear if the user created connections between groups created by the flower layout algorithm. Nodes that are not part of the current group might disappear as well.
+
+\end{itemize}
+
 \section{Avoiding Data Corruption}
-\section{Detect Multiple Connections}
+After deploying the application a problem that hasn't appeared before suddenly came up: As there is no user logic yet and only one dataset, what happens if two people open the app at the same time and make changes to the data that are not compatible? Just imagine user 1 deleting a node in his editor, while user 2 creates a new link to that node. When merging these changes the database will most likely run into an error case and abort the commits.
+
+To avoid scenarios like this the user can't actually make changes right away when opening the app. Instead he has to request editing rights by clicking a button at the top of the screen. Should someone else have requested rights before he'll receive a message telling him so. Otherwise the app will sync with the database to fetch the latest changes and allow changes to the local dataset.
+
+This is implemented by having a \emph{project} node in Neo4j that contains a property called \emph{isBeingEdited}. When requesting the editing rights the server will fetch the node and check the value of this property. Should it be true the server will return false as in requesting editing rights was not successful. Otherwise it'll set the property to true and then return true to indicate a successful operation.
 
 \chapter{Looking back}
 \label{chap:LB}
@@ -1420,7 +1451,7 @@ Here we will first look at a list of things that were positive in this project a
 \begin{itemize}
 \item[Warmup time] Trying to get going as quickly as possible right in the beginning was not best choice. The reason for doing so was to have something to show to others early in the development and to avoid having time issues later on. However, it might have turned out to be quicker to first get a good overview of all the technologies and frameworks, especially Apollo. It offers a lot of functionality and taking more time in the beginning could have been faster and led to a cleaner code base in the end.
 
-\item[The tech-stack] Despite having it on the positive list it appears here as well, the reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency, but the app only makes use of very small and specific parts of it, the most important one being state management. While it is not bad at it there is no big advantage of it over using a pure state management library like Redux. Furthermore having to define a GraphQL query for fetching the local state creates many lines of code and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition to that it made development slower because many times it comes up later that another property, or even a few, are needed which have to be added to the query. In the end queries often turn out so similar that the only logical thing would be to use the same query for many different purposes.
+\item[The tech-stack] Despite having it on the positive list it appears here as well, the reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency and a lot to take in, but the app only makes use of very small and specific parts of it, the most important one being state management. While it is not bad at it there is no big advantage of it over using a pure state management library like Redux. Furthermore having to define a GraphQL query for fetching the local state creates many lines of code and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition to that it made development slower because many times later it turned out that another property, or even a few more, are needed which have to be added to the query. In the end queries often end up being so similar that the only logical thing would be to use the same query for many different purposes.
 
 In addition looking at how the app works at the moment it could easily be implemented using a REST-API. On the initial start the app fetches all nodes and links from the database. When the user hits save it will send modified links and nodes to the server where their ID is used to modify them in the database. As nodes and links are the only two types of entities in this application (and it'll most likely stay that way) using a REST-API might have been the better choice.
 \end{itemize}
@@ -1431,10 +1462,11 @@ In addition looking at how the app works at the moment it could easily be implem
 
 
 \chapter{Ideas for the Future}
+\section{Syntax Checking}
 \section{Improve Layout Algorithm}
 %spot system?
 %place connected nodes close?
 \section{Subscriptions}
-\section{User Management}
+\section{User Logic}
 \section{Refactor}
 \section{Improve Containers}
