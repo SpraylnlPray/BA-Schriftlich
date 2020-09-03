@@ -45,18 +45,23 @@
 \contentsline {subsection}{\numberline {4.7.2}AWS-Healthcheck}{39}{subsection.4.7.2}%
 \contentsline {subsection}{\numberline {4.7.3}Apollo Error-Codes}{40}{subsection.4.7.3}%
 \contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{40}{subsection.4.7.4}%
-\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{41}{subsection.4.7.5}%
+\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{40}{subsection.4.7.5}%
 \contentsline {section}{\numberline {4.8}Graph-Layout}{41}{section.4.8}%
-\contentsline {subsubsection}{\nonumberline Tree-Layout}{41}{section*.29}%
-\contentsline {subsubsection}{\nonumberline Flower-Layout}{41}{section*.30}%
-\contentsline {section}{\numberline {4.9}Behavior Decisions}{41}{section.4.9}%
-\contentsline {section}{\numberline {4.10}Avoiding Data Corruption}{41}{section.4.10}%
-\contentsline {section}{\numberline {4.11}Detect Multiple Connections}{41}{section.4.11}%
-\contentsline {chapter}{\numberline {5}Looking back}{42}{chapter.5}%
-\contentsline {section}{\numberline {5.1}What was good}{42}{section.5.1}%
-\contentsline {section}{\numberline {5.2}What was not ideal}{42}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Documentation}{44}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Running the App locally}{44}{section.6.1}%
-\contentsline {chapter}{\numberline {7}Ideas for the Future}{45}{chapter.7}%
-\contentsline {chapter}{\nonumberline List of Figures}{46}{chapter*.31}%
-\contentsline {chapter}{\nonumberline List of Tables}{47}{chapter*.32}%
+\contentsline {subsection}{\numberline {4.8.1}Tree-Layout}{41}{subsection.4.8.1}%
+\contentsline {subsection}{\numberline {4.8.2}Flower-Layout}{42}{subsection.4.8.2}%
+\contentsline {section}{\numberline {4.9}Behavior Decisions}{44}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Avoiding Data Corruption}{44}{section.4.10}%
+\contentsline {section}{\numberline {4.11}Detect Multiple Connections}{44}{section.4.11}%
+\contentsline {chapter}{\numberline {5}Looking back}{45}{chapter.5}%
+\contentsline {section}{\numberline {5.1}What was good}{45}{section.5.1}%
+\contentsline {section}{\numberline {5.2}What was not ideal}{45}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Documentation}{47}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Running the App locally}{47}{section.6.1}%
+\contentsline {chapter}{\numberline {7}Ideas for the Future}{48}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Improve Layout Algorithm}{48}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Subscriptions}{48}{section.7.2}%
+\contentsline {section}{\numberline {7.3}User Management}{48}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Refactor}{48}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Improve Containers}{48}{section.7.5}%
+\contentsline {chapter}{\nonumberline List of Figures}{49}{chapter*.34}%
+\contentsline {chapter}{\nonumberline List of Tables}{50}{chapter*.35}%

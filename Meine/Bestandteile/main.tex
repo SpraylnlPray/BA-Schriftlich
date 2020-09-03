@@ -1319,7 +1319,7 @@ As it turned out, the source of the problem was that in the code to calculate th
 The solution to getting error messages with more information even in a production environment was to write a few wrapper methods that take a GraphQL query, the data to write into the cache and an error string that gets printed in case something goes wrong.
 
 \subsection{Apollo Chrome Dev-Tools}
-I often said that Apollo is a great tool and offers a lot of functionality. Debugging however was not such a pleasant experience as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
+As often said, Apollo is a great tool and it offers a lot of functionality. Debugging however was not such a pleasant experience as the Dev Tools seemed to have only around a 50\% chance of being able to connect to the application:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.65]{Bilder/ScreenOfDeath.png}
@@ -1328,9 +1328,79 @@ I often said that Apollo is a great tool and offers a lot of functionality. Debu
 This became especially annoying when wanting to check the local state after completing certain steps and then having to re-load the page a few times.
 
 \subsection{CORS-problems}
+Something very useful when using AWS Amplify is that when creating a web app with it, marking the URL in the address bar as secure which makes the application appear more serious.
+
+But it comes with one problem. Amplify configures its applications in a way that it only accepts data from other resources marked as secure. As the backend did not have a certificate at that point any communication would be blocked by Amplify resulting in a CORS-error. \\
+
+So what exactly is CORS? It stands from \emph{Cross-origin resource sharing} and is a way to configure websites to accept data requested from another domain than their own. \\
+
+Even after spending a lot of time searching for a setting to disable this behavior from Amplify and configuring the ApolloClient according to the docs to allow CORS to make sure its not a configuration problem from the application, the results stayed the same.
+
+The only remedy to this issue was to get a certificate for the backend and by that mark it as a secure resource. After that all communication worked without any issues.
+
 \section{Graph-Layout}
-\subsubsection{Tree-Layout}
-\subsubsection{Flower-Layout}
+As mentioned in the introduction, the ability to create a graph on its own is a central aspect of the application. This part offers a lot of room for improvement as graph layout is its own field of research and the algorithms can become incredibly complex. Here are two approaches described together with their flaws and benefits.
+
+One main both tries face is that in order to allocate them, a start-node must be found that the others can use to orientate themselves on. But which node should be chosen to start? The one with the most connections? Where should nodes that are not children of the start-node be placed? 
+
+In these implementations nodes that can be collapsed (hide their direct descendant children) are placed in a grid-like manner. Then their children are placed relatively to them. After handling all child-nodes, the ones that were not part of a collapsable were handled. For those the ones with the most connections would be chosen as start-node.
+
+\subsection{Tree-Layout}
+In this approach each node would distribute its child nodes below it. Depending on the amount of children they'd be split into different layers of nodes.
+
+While the tree logic was relatively easy to implement and created at least acceptable images as seen in \autoref{ex:TreeGood}, it had a lot of flaws with the biggest one being overlapping edges or edges that move through the middle of nodes making it impossible to see the actual connections \autoref{ex:TreeBad}.
+
+\begin{figure}[H]
+\label{ex:TreeGood}
+\centering
+\includegraphics[scale=.7]{Bilder/TreeGood.png}
+\captionof{figure}{Layout created by the Tree Algorithm}
+\end{figure}
+
+\begin{figure}[H]
+\label{ex:TreeBad}
+\centering
+\includegraphics[scale=1]{Bilder/TreeBad.png}
+\captionof{figure}{Overlapping Edge}
+\end{figure}
+
+Furthermore if the trees grow very long they'll sooner or later intersect with each other. One option would be to iterate over all previously placed nodes and check their positions before placing another one and by that define an offset to the deepest one. However the performance would most likely make the app unusable once the graph becomes larger.
+
+\subsection{Flower-Layout}
+The name for this layout comes from the idea of creating flower shaped groups of nodes. The basic idea is to select one center-node as described above and place its direct descendants equally around it it creates a circular shape. Child-nodes of these descendants then use the direction vector of their parents link to place themselves accordingly.
+
+\begin{figure}[H]
+\label{ex:TreeBad}
+\centering
+\includegraphics[scale=.55]{Bilder/FlowerEx.png}
+\captionof{figure}{Basic Idea of the Flower Layout}
+\end{figure}
+
+This algorithm uses the available space a lot better and as it grows into all directions overlapping with other groups becomes less likely. Furthermore there are many parameters that can be adjusted. For example the distance to the parent-node can depend on the amount of child-nodes the current node itself has:
+
+\begin{figure}[H]
+\label{ex:TreeBad}
+\centering
+\includegraphics[scale=.4]{Bilder/FlowerDistEx.png}
+\captionof{figure}{Node with more Children is further away}
+\end{figure}
+
+While this approach sounds promising it of course also has flaws. To demonstrate those lets look at an example from testing data and explain whats happening:
+
+\begin{figure}[H]
+\label{ex:TreeBad}
+\centering
+\includegraphics[scale=.55]{Bilder/FlowerExBad.png}
+\captionof{figure}{Intersections in the Flower Layout}
+\end{figure}
+
+The container on the bottom is selected as "Center" as it is a collapsable. Its child nodes are distributed around it by equally sized angles. Its also clearly visible that the nodes \emph{node 2} and \emph{methodical server} have a greater distance to their parent-node than the other 3 as they have none or 1 child element.
+
+As \emph{test123} is a child of both \emph{node 2} and \emph{node 1} it takes into account two direction vectors: One from \emph{Container 1} to \emph{node 1} and the one it gets assigned from \emph{node 2}. Every node will allocate its child nodes within an angle of +-90° to its own direction vector. These two vectors get divided in two and the result will lead to the position of \emph{test123}. The reason for \emph{Server} being so far away from \emph{AWS-Amplify} is because it has 3 child-nodes.
+
+Now to the flaws of this approach: The node in the top center intersects with other, not related links. The reason for that is that as it is the only child element, it will simply extend its parents direction vector.
+In addition there are many more places where nodes or links could intersect. Also, if one or more nodes have a connection to another group of nodes, they might be placed very far from each other and their connections could intersect with many others.
+
 \section{Behavior Decisions}
 \section{Avoiding Data Corruption}
 \section{Detect Multiple Connections}
@@ -1359,4 +1429,12 @@ In addition looking at how the app works at the moment it could easily be implem
 \label{chap:Doc}
 \section{Running the App locally}
 
+
 \chapter{Ideas for the Future}
+\section{Improve Layout Algorithm}
+%spot system?
+%place connected nodes close?
+\section{Subscriptions}
+\section{User Management}
+\section{Refactor}
+\section{Improve Containers}
