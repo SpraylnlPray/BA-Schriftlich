@@ -1458,6 +1458,7 @@ In addition looking at how the app works at the moment it could easily be implem
 
 
 \chapter{Ideas for the Future}
+\label{chap:Future}
 \section{Syntax Checking}
 \section{Improve Layout Algorithm}
 %spot system?
@@ -1487,6 +1488,12 @@ Then under \emph{Plugins} click \emph{Add Plugin}, choose \emph{APOC}, confirm t
 
 Next hit \emph{Start} to spin up the instance. When it is running click on \emph{Open} to start the Neo4j Browser. In this browser all Cypher queries can be executed directly on the database.
 
+\subsection{Creating a Project Node}
+In order to be able to request editing rights and actually use the app, it is necessary to manually create a project node in the Neo4j Browser that contains a property called \emph{isBeingEdited} set to \emph{false}:
+\begin{lstlisting}
+CREATE (p:Project {isBeingEdited: false}) RETURN p
+\end{lstlisting}
+
 \subsection{Backend}
 Install Node.js, clone the server \cite{GitServer} code from GitHub. Open a console window, navigate into the folder containing the server code and write \emph{npm install}. Inside the server folder, create a file called \emph{.env} with the following content:
 \begin{lstlisting}
@@ -1494,7 +1501,8 @@ PORT=8080
 ENDPOINT=/graphql
 DB_DEV_PW=<YOUR_DB_PW>
 DB_USER=neo4j
-DB_DEV_HOST=localhost:7687
+DB_DEV_HOST=localhost
+DB_PORT=7687
 NODE_ENV=development
 \end{lstlisting}
 This defines the port and path for the GraphQL Playground provided by the server. Furthermore it provides the endpoint where the server can reach the database. The port can be found by clicking on the 3 points on the right of \emph{SetupDB} in \autoref{ex:NeoDesktop} but is \emph{7687} by default. At \emph{DB\_DEV\_PW} make sure to put the password chosen in \autoref{chap:NeoDesktop}.
@@ -1510,8 +1518,68 @@ REACT_APP_DEV_HOST=http://localhost:8080/graphql
 \end{lstlisting}
 The first variable is used to define the favicon in the browser tab, the second one points to the URL of the server. Then running \emph{npm start} will create a production build with live updates at \emph{localhost:3000}.
 
-\subsection{Creating a Project Node}
-In order to be able to request editing rights and actually use the app, it is necessary to manually create a project node in the Neo4j Browser that contains a property called \emph{isBeingEdited} set to \emph{false}:
-\begin{lstlisting}
-CREATE (p:Project {isBeingEdited: false}) RETURN p
-\end{lstlisting}
+\section{Backend}
+This section will quickly explain the contents of some of the server files and short explanations where it might be necessary.
+\begin{itemize}
+\item \textbf{index.js} The app first constructs the neo4j driver to communicate with the database. The required URL is taken from the environment variables. Next up is the creation of the ApolloServer-instance. It receives the neo4j driver in the context and the GraphQL schema. If the \emph{NODE\_ENV} variable is set to \emph{production} the server will deactivate the GraphQL Playground and introspection. This is a feature that allows the server to create a documentation of the queries and types the server offers and make it available in the Playground.
+
+The \emph{errorPlugin} is a small function that prints server errors in a more readable way than it'd be the case without it.
+
+The \emph{exitHandler} function makes sure that any open connections to the database are closed in case of the server shutting down due to an error or any other exit code.
+
+\item \textbf{resolvers.js} Contains all resolvers. To get the result from running a query the \emph{PrepareReturn} function in \emph{ResolverUtils.js} is used. The reason for doing so is that ApolloServer will throw an error if not all fields from a node exist, so the function checks if the fields exist and fills them with dummy data if not.
+
+\item \textbf{graphql-schema.js and schema.graphql} The first file converts the schema file into a string and allows to combine multiple schema files in case it spreads over more than one.
+
+\item \textbf{Dockerfile} These are used to deploy to AWS. They set a base environment and copy necessary data into a docker image and install the packages listed in \emph{package.json}. In the end it defines the necessary environment variables and runs the npm start commands.
+\end{itemize}
+
+\section{Frontend}
+This part will explain the most important files and parts of the client code.
+\begin{itemize}
+\item \textbf{ApolloProvider.js} This is the entry point for the application. It defines an \emph{InMemoryCache} that contains typePolicies, which are a way of telling Apollo how to fetch local fields. They are important to make sure the client doesn't return \emph{undefined} for a property if it doesn't exist as it would throw an error.
+
+Furthermore this file contains the local resolver functions inside the \emph{ApolloClient} object. In the end it defines an initial state object.
+
+\item \textbf{App.js} is the parent component for all other displayed on screen. It will fetch all links and nodes from the server. Once they get returned it passes them to a local resolver function to set all fields that are necessary for local state management.
+
+\item \textbf{components} The components folder contains almost all of the React components. \emph{CreateLink, CreateNode} and its counterparts for link entities are the forms dealing with user input. \emph{EditorPane} displays the canvas on screen. It contains queries listening for updates to the camera position, link and node changes, as well as a \emph{createNode} mutation to create nodes when the user presses Ctrl+V.
+
+Below that it contains the definition of visjs events:
+\begin{itemize}
+\item When the user clicks a link or node that item will be set as active. This will change the form displayed on the left side of the screen and fill it with the data from the entity clicked.
+\item  Zoom saves the position the user zoomed to.  In case he creates a new node it will appear at that position. The same counts for \emph{dragEnd} if no node was selected.
+\item If a node is selected the new position of it will be saved. If the user presses "recalculate graph" it gets reset.
+\item When clicking at a certain location without selecting a node or link the position gets saved for the next node creation.
+\end{itemize}
+
+\item \textbf{GraphSettingsPane} contains the fields to search for a node and filter links according to their label.
+
+\item \textbf{LogStream} is a small component that appears on the bottom right of the window. It contains error messages in case of such and general information about the process when the user clicks \emph{Save}.
+\end{itemize}
+
+\subsection{Local Resolvers}
+This section will talk in a bit more detail about the more complicated resolvers in \emph{ApolloResolver}. Something very important that counts for all of them is that data read from the cache is immutable and trying to modify it will result in an error. Thats why in most resolver as soon as data was read from the cache the code will create a \emph{deepCopy} of it.
+
+\subsubsection{setNodes, setLinks}
+When the nodes and links come from the database for example after the initial fetch or when syncing after requesting editing rights they are missing some data to be usable locally.
+
+To know whether local changes have happened each entity needs the properties \emph{edited, created, deleted}. In addition to that nodes receive a listIndex which makes sure their order does not get changed when making changes as this would lead to unpredictable graph layout updates. Furthermore nodes and links both have a property called \emph{needsCalculation}. If the user changes the nodes a link is connected to or a node changes its type this property gets set to true and the graph can be recalculated.
+
+\subsubsection{updateLink}
+This resolver is quite large as each node contains a list of IDs of the nodes it is connected to. If the user changes the connections of a link filtering and updating these lists takes a bit of effort.
+
+The function first gets the current connected nodes. Then it sets the new internal properties of the updated link and compare the IDs of the connected nodes to the ones previous to updating. Should they be different it'll update the previously mentioned lists of connected nodes.
+
+\subsubsection{collapseNode}
+When collapsing or expanding a container or domain node the respective property first gets inverted. Afterwards all nodes that are connected through a \emph{Part-Of} link get hidden. This also goes recursively, meaning that if a container has a domain connected via such a link it and its children will also get hidden.
+
+Then, all links that were connected to now hidden nodes will snap to the container that issued the collapse command to visualize that the actual partner node is hidden.
+
+As a last step links that now connect the same nodes as a result of the collapse command get a curvature to make sure they do not lay on top of each other.
+
+\subsubsection{setNodeLabelFilter}
+This sets the search string but doesn't actually execute the search. It just saves the value for the search input. Right afterwards the search function gets executed. This could be refactored, see \autoref{chap:Future}.
+
+\subsubsection{searchNodeByLabel}
+This function does the actual searching. It uses the \emph{Fuse} library that uses fuzzy-search to match strings \cite{Fuze}. After receiving a set of IDs of nodes that match the search string it will give each of the nodes a \emph{searchIndex}. This index is used to focus on the next or previous node when the user clicks on one of the arrows next to the search input.
