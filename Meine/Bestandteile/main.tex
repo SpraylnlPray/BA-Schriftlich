@@ -1459,15 +1459,71 @@ In addition looking at how the app works at the moment it could easily be implem
 
 \chapter{Ideas for the Future}
 \label{chap:Future}
-\section{Syntax Checking}
-\section{Improve Layout Algorithm}
-%spot system?
-%place connected nodes close?
-\section{Subscriptions}
-\section{User Logic}
-\section{Project Logic}
-\section{Refactor}
-\section{Improve Containers}
+This part contains a list of ideas about what could be added or modified in the project in possible further development together with some suggestions on how these could be approached.
+\begin{itemize}
+\item \textbf{UI/UX} improvements to make working with the application more comfortable.
+\begin{itemize}
+\item The \textbf{responsiveness} of the website. Maybe even re-creating the structure of the app using a mobile-first approach might be a good idea, otherwise adapting the css values would be the way to go.
+
+\item \textbf{Undo-redo} logic by using the command pattern. This can be added gradually for one action at a time. A good thing to start with might be the creation of nodes and links. Whenever the user completes such an action it gets added to a history object in the cache, containing the ID of the created item. Should the user then presses Ctrl+Z or clicks an undo button the item gets removed from the cache and the action from the history object.
+
+\item \textbf{Context actions} to create nodes and links by using the visjs \emph{oncontext} event and displaying a form on the screen at the position clicked. The coordinates can be extracted from the event object passed into the event handler.
+\end{itemize}
+
+\item \textbf{Syntax Checking} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked.
+% suggest somes rules that could be applied
+
+\item \textbf{Custom rules} for syntax checking. This would be a very big task as it involves the definition of some abstract language and a parser that can convert these into constructs the syntax checking algorithm can use.
+
+\item \textbf{Custom types} of nodes and links. The data about the types has to be stored in a database. Using GraphQL to fetch these might be difficult as all fields have to be defined in a schema. Loading the definitions from another source using a classic http request and converting the received definitions into a format that can be used by the application might be the best way to approach this problem.
+
+\item \textbf{Improve Layout Algorithm} to create a better looking image. Two ideas are
+\begin{itemize}
+\item A \textbf{distance system} that when calculating the position for a node first checks if this new place is close to other already placed nodes. If it is closer than a certain number the algorithm will search for a new position. The minimum distance can vary depending on the type of the node.
+\item Place \textbf{connected nodes} closer to each other. Connections could receive a weight and "pull" heavily connected nodes closer to each other.
+\end{itemize}
+
+\item \textbf{Subscriptions} to allow users to get real time updates to changes made to the data. Using a button the user could activate and deactivate the feature. This functionality could be implemented using the pubsub npm package, as recommended by Apollo.
+
+\item \textbf{User/Project Logic} to make the app usable for a broader amount of people. It would be enough to have a simply login screen when the app starts. Once successfully logged in there is a list of projects the user can choose from. Projects and users could be associated through respective nodes. One node per user and each user node could be connected to a variety of project nodes which in term again are connected to nodes that are part of it. This could lead to the database getting blown up quickly so it might be a good idea to create a new database every time a user signs up.
+
+\item \textbf{Refactor} the codebase.
+\begin{itemize}
+\item Starting with the GraphQL schema and removing the input types would make the preparation for dispatches to the database a lot cleaner. 
+\item Abstracting the input logic would allow to extract it into a React HOC and take a lot of code out of the forms used for creating and editing nodes and links.
+\item Shortly after the development phase of this project finished Apollo completely released the Apollo Client 3. Upgrading and making the whole project conform to the documentation and recommendations of Apollo would make the codebase cleaner.
+\item One might even consider to get rid of Apollo entirely and build the project using Redux, Neo4j, React and purely the \emph{graphql} npm package.
+\item A lot of the state management logic can be shortened if initially a graph like datastructure would be built and saved in the cache instead of sticking to a list of nodes that have a list of IDs they are connected to.
+\end{itemize}
+
+\item \textbf{Improve Collapsables} to increase the value they have to make the graphs cleaner. \autoref{ex:CollExpanded} shows how collapsables could look at some point when being expanded while \autoref{ex:CollColapsed} demonstrated a collapsed one.
+
+\begin{figure}
+\label{ex:CollExpanded}
+\centering
+\includegraphics[scale=.2]{Bilder/CollapsableEx.png}
+\captionof{figure}{Example Collapsable in Expanded State}
+\end{figure}
+
+\begin{figure}
+\label{ex:CollColapsed}
+\centering
+\includegraphics[scale=.3]{Bilder/CollapsableCol.png}
+\captionof{figure}{Example Collapsable in Collapsed State}
+\end{figure}
+
+Implementing this in visjs might not be the most enjoyable task as it does not natively offer functionality to draw a rectangle around a group of elements.
+
+One way would be to get the position of all part-of elements, calculate the middle of them and get the outer bounding box measurements to define the size of the box. 
+
+\item \textbf{Versioning} with Git to be able to version diagrams to track changes or export them to create backups.
+
+\item \textbf{References} to other diagrams or items of the same diagram. 
+It often happens that structures appear various times in project architecture. This functionality would apply changes made to one of them to all copies of the other in the current diagram.
+
+If a user has various diagrams it'd be useful if he could create a node that links to other diagrams and by clicking on them they open up in a new tab of the screen. 
+
+\end{itemize}
 
 \chapter{Documentation}
 \label{chap:Doc}
