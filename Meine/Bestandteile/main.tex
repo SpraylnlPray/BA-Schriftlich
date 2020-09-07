@@ -1583,3 +1583,140 @@ This sets the search string but doesn't actually execute the search. It just sav
 
 \subsubsection{searchNodeByLabel}
 This function does the actual searching. It uses the \emph{Fuse} library that uses fuzzy-search to match strings \cite{Fuze}. After receiving a set of IDs of nodes that match the search string it will give each of the nodes a \emph{searchIndex}. This index is used to focus on the next or previous node when the user clicks on one of the arrows next to the search input.
+
+
+\subsection{Layout Algorithms}
+When the nodes get all properties necessary for the local usage in \emph{setNodes} they also walk through a couple of functions to assign their positions. First all collapsables get assigned a position and all nodes connected to them in some way align themselves around them. Then nodes that have not been assigned a position get handled. Searching the one with most connections and treating it as the middle one, all connected ones will be allocated around it just like as if it were a collapsable. This continues until every node has a position assigned.
+
+\subsubsection{Collapsable Rule}
+All collapsables will be placed in a grid-like manner, creating a rectangle of collapsable nodes.
+
+To calculate the number of nodes per line the number of collapsables is used with the following algorithm:
+\begin{lstlisting}
+let elementCountUsed = collapsables.length;
+if ( isPrime( elementCountUsed ) {
+	elementCountUsed -= 1;
+}
+
+let limit = 0;
+for ( let i = 2; i < elementCountUsed / 2; i++ ) {
+	limit = Math.floor( elementCountUsed / i );
+	if ( isPrime( limit ) ) {
+		if ( limit < elementCountUsed / 2 ) {
+			return limit;
+		}
+	}
+	else {
+		if ( limit <= elementCountUsed / 3 ) {
+			return limit;
+		} 
+	}				
+}
+\end{lstlisting}
+
+It walks from 2 to the number of elements divided by 2. Every time it checks if the element count divided by the current number is a prime number. In case it is a prime number it checks if it is smaller than half of the element count to make sure the lines don't get too long.
+
+Afterwards the placement rule will use this limit to allocate the nodes in lines:
+\begin{lstlisting}
+export const CollaspableRule = ( node, allCollapsables, client, limit, minDist = 1000 ) => {
+	if ( isCollapsable( node ) ) {
+		const otherCollapsables = allCollapsables.filter( aNode => aNode.id !== node.id && !aNode.deleted );
+		const existingCoords = getExistingCoordinatesFor( otherCollapsables );
+		let newCoords = {};
+
+		loop1:
+		for ( let i = Math.floor( existingCoords.length / limit ); i <= limit + 1; i++ ) {
+			for ( let j = existingCoords.length % limit; j <= limit; j++ ) {
+				newCoords = { x: j * minDist, y: i * minDist };
+				if ( !coordsExist( newCoords, existingCoords ) ) {
+					node.position = newCoords;
+					break loop1;
+				}
+			}
+		} 
+	}
+}
+\end{lstlisting}
+This code does not include any comments or error handling to shorten it.
+
+\subsubsection{FlowerRule}
+Afterwards the nodes around the collapsables are placed. 
+
+If the parent has a level of \emph{0} it is a collapsable. The first position for a node is defined as the top-left (direction vector of \emph{(-1, -1)} from the parent). The delta angle between child nodes is calculated by dividing 360 by the number of children. Then it'll get the index of the current children in the list of childs the parent has and multiply the delta angle by this index. It then rotates the initial direction vector to get the one pointing at the position of the node. Multiplying it with the distance calculated in respect to the amount of other children leads to the position of the node.
+
+Should the parent be a node with a level other than 0 the new position depends on the parent's direction vector. All children can be placed within an angle of +-90 degrees in the direction of the parent's direction vector. The delta angle is again calculated by the total amount of child nodes. Calculating the new position works as with children of level 1. However as these nodes can have multiple parents the newly calculated position has to be added to the one the node might already have and get normalized afterwards.
+
+\begin{lstlisting}
+for ( let collapsable of collapsables ) {
+	const next = [].concat( collapsable.children );
+	FlowerRule( next, client );
+}
+
+export const FlowerRule = ( next, client, distanceToOther = 350, minDist = 150 ) => {
+	const nodeToCalculate = next.shift();
+	if ( nodeToCalculate ) {
+		for ( let parent of nodeToCalculate.parents ) {
+			if ( parent.level === 0 ) {
+				const initVec = { x: -1, y: -1 };
+				let normalized = normalizeVector( initVec );
+				let deltaAngle = 360 / parent.children.length;
+				// if there are just 2 nodes, reduce the angle as a connection between them might cover up labels
+				if ( parent.children.length === 2 ) {
+					deltaAngle = deltaAngle * 2 / 3;
+				}
+				const deltaRad = toRad( deltaAngle );
+				const index = parent.children.indexOf( nodeToCalculate );
+				normalized = rotateVector( normalized, index * deltaRad );
+				nodeToCalculate.dirVector = normalized;
+				if ( !nodeToCalculate.position ) {
+					nodeToCalculate.position = { x: 0, y: 0 };
+				}
+				const distance = calcDistance( nodeToCalculate );
+				const newCoords = {
+					x: parent.position.x + normalized.x * clamp( distance, minDist ),
+					y: parent.position.y + normalized.y * clamp( distance, minDist ),
+				};
+				nodeToCalculate.position = addVertex( nodeToCalculate.position, newCoords );
+			}
+			else {
+				const { dirVector } = parent;
+				const zeroVec = rotateVector( dirVector, toRad( -90 ) );
+				const deltaAngle = 180 / parent.children.length;
+				const deltaRad = toRad( deltaAngle );
+				const initVec = rotateVector( zeroVec, deltaRad / 2 );
+				let normalized = normalizeVector( initVec );
+				const index = parent.children.indexOf( nodeToCalculate );
+				normalized = rotateVector( normalized, index * deltaRad );
+				nodeToCalculate.dirVector = normalized;
+				if ( !nodeToCalculate.position ) {
+					nodeToCalculate.position = { x: 0, y: 0 };
+				}
+				const distance = calcDistance( nodeToCalculate );
+				const newCoords = {
+					x: parent.position.x + normalized.x * clamp( distance, minDist ),
+					y: parent.position.y + normalized.y * clamp( distance, minDist ),
+				};
+				nodeToCalculate.position = addVertex( nodeToCalculate.position, newCoords );
+				if ( !nodeToCalculate.dirVector ) {
+					nodeToCalculate.dirVector = { x: 0, y: 0 };
+				}
+				nodeToCalculate.dirVector = addVertex( nodeToCalculate.dirVector, normalized );
+			}
+		}
+		normalizeCoords( nodeToCalculate );
+
+		for ( let childNode of nodeToCalculate?.children ) {
+			if ( !next.includes( childNode ) ) {
+				next.push( childNode );
+			}
+		}
+		FlowerRule( next, client );
+	}
+};
+\end{lstlisting}
+This code does not include any comments or error handling to shorten it.
+
+\subsubsection{NonCollapsableRule}
+The last rule handles all nodes that are not connected to a collapsable in any way and thus have not received any coordinates yet and it works in a very similar manner.
+
+It'll find the node with most connections and place it on the top left of the collapsable at the origin. There is no specific reason for this position, it was simply defined like that. The next step is to create the parent-child hierarchy for this network and then apply the flower rule to it.
