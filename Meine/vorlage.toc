@@ -10,20 +10,20 @@
 \contentsline {subsubsection}{\nonumberline The Graph on Disk}{5}{section*.4}%
 \contentsline {subsubsection}{\nonumberline The Graph in Memory}{6}{section*.5}%
 \contentsline {subsubsection}{\nonumberline Traversing}{6}{section*.6}%
-\contentsline {subsubsection}{\nonumberline Adding Cypher}{6}{section*.7}%
+\contentsline {subsubsection}{\nonumberline Adding Cypher}{7}{section*.7}%
 \contentsline {section}{\numberline {2.4}Server - ApolloServer}{7}{section.2.4}%
 \contentsline {subsubsection}{\nonumberline Example Resolver}{7}{section*.8}%
 \contentsline {subsubsection}{\nonumberline Resolver Chain}{8}{section*.9}%
 \contentsline {subsubsection}{\nonumberline Cypher in GraphQL}{10}{section*.10}%
 \contentsline {section}{\numberline {2.5}Frontend - React}{11}{section.2.5}%
 \contentsline {subsubsection}{\nonumberline Components}{11}{section*.11}%
-\contentsline {subsubsection}{\nonumberline State}{12}{section*.12}%
+\contentsline {subsubsection}{\nonumberline State}{13}{section*.12}%
 \contentsline {subsubsection}{\nonumberline Updating Components}{14}{section*.13}%
 \contentsline {subsubsection}{\nonumberline Finding The Differences}{14}{section*.14}%
 \contentsline {subsubsection}{\nonumberline Stateless Functional Components}{15}{section*.15}%
 \contentsline {section}{\numberline {2.6}Client - ApolloClient}{15}{section.2.6}%
 \contentsline {subsubsection}{\nonumberline Hooks}{15}{section*.16}%
-\contentsline {subsubsection}{\nonumberline Apollo Hooks}{15}{section*.17}%
+\contentsline {subsubsection}{\nonumberline Apollo Hooks}{16}{section*.17}%
 \contentsline {subsubsection}{\nonumberline Local Resolvers}{17}{section*.18}%
 \contentsline {subsubsection}{\nonumberline The Apollo Cache}{18}{section*.19}%
 \contentsline {chapter}{\numberline {3}Deployment}{19}{chapter.3}%

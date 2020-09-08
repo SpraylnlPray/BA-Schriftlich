@@ -124,15 +124,14 @@ Neo4j is a so called graph database. The idea of graph databases is, compared to
 
 \subsubsection{Cypher}
 For matching all nodes connected to node A through a "Neighbor" relationship, we simply state
-\begin{exmp}
-\label{ex231}
-\emph{MATCH (n:Node \{label: "A"\})-[:Neighbor]-(n2:Node) RETURN n, n2 }
-\end{exmp}
+\lstset{language=Cypher}
+\begin{lstlisting}[label={ex213},caption={Matching Nodes Way 1}]
+MATCH (n:Node {label: "A"})-[:Neighbor]-(n2:Node) RETURN n, n2
+\end{lstlisting}
 Parentheses represent a node, square brackets a relationship. The naming works after the following pattern: <name>:<type>. In this example n is the name for the first node and n2 the name of the list of connected nodes. We didn't specify a name for the relationship as we did not want to retrieve data from it. By using curly braces we can specify certain properties a node or relationship should have. The other way of doing so would be 
-\begin{exmp}
-\label{ex232}
-\emph{MATCH (n:Node)-[:Neighbor]-(n2:Node) WHERE n.label = "A" RETURN n, n2 }
-\end{exmp}
+\begin{lstlisting}[label={ex232},caption={Matching Nodes Way 2}]
+{MATCH (n:Node)-[:Neighbor]-(n2:Node) WHERE n.label = "A" RETURN n, n2
+\end{lstlisting}
 which might look a bit cleaner. We could also return only specific values of n and n2 and give them names by stating \\
 \emph{ ...RETURN n.label AS Label1, n2.label AS Label2 }\\
 The following information about Neo4j internals is all from \cite{NeoInternals} and \cite{Neo4jInternalsPP}. Sadly, these sources are all old and probably outdated, yet there does not seem to be more updated information on the internet.
@@ -949,7 +948,7 @@ To get started with Neo4j we first want to create a small basic data set that sh
 This is the network we would like to display in the application. It is really helpful to first draw it on paper and then think of the individual components needed. As there will be one graph in the database and one in the application it is important to carefully separate them when talking about a node: This could refer to one either in the database or in the application. While the node in the app is always a node in the database, this is not necessarily the case the other way around as a node in the database could also represent data about a connection in the application.
 
 We will create the three nodes for DB, Backend and Frontend using the following code in the Neo4j Browser:
-\lstset{language=JavaScript}
+\lstset{language=Cypher}
 \begin{lstlisting}
 CREATE (:Node:AbstractUserInterface {id: randomUUID(), label: "Frontend", story: "Interaction point for the user", nodeType: "AbstractUserInterface"})
 CREATE (:Node:API {id: randomUUID(), label: "Backend", story: "Endpoint for requests, fetches from and mutates data on the DB", nodeType: "API"})
@@ -1017,14 +1016,13 @@ It is important to note that directions of the arrows here do not represent the 
 
 \section{Communicating with the DB through ApolloServer and GraphQL-Playground}
 The next step is to communicate with the database through the server. After we set up a small ApolloServer (more on setup in \autoref{chap:Doc}) we should create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning we might make many mistakes which can leave the dataset in a bad shape and fixing it manually would take a lot of time. In \autoref{mutations} in line 2 is the GraphQL definition. The resolver looks like the following:
+\lstset{language=JavaScript}
 \begin{lstlisting}
 const seedQuery = require( './seed' );
 async SeedDB( _, __, ctx ) {
 	try {
 		const session = ctx.driver.session();
-		const deleteQuery = `
-			MATCH (n) DETACH DELETE n
-		`;
+		const deleteQuery = 'MATCH (n) DETACH DELETE n';
 		await session.run( deleteQuery );
 		await session.run( seedQuery );
 		await session.close();
@@ -1542,12 +1540,14 @@ Next hit \emph{Start} to spin up the instance. When it is running click on \emph
 
 \subsection{Creating a Project Node}
 In order to be able to request editing rights and actually use the app, it is necessary to manually create a project node in the Neo4j Browser that contains a property called \emph{isBeingEdited} set to \emph{false}:
+\lstset{language=Cypher}
 \begin{lstlisting}
 CREATE (p:Project {isBeingEdited: false}) RETURN p
 \end{lstlisting}
 
 \subsection{Backend}
 Install Node.js, clone the server \cite{GitServer} code from GitHub. Open a console window, navigate into the folder containing the server code and write \emph{npm install}. Inside the server folder, create a file called \emph{.env} with the following content:
+\lstset{language=Docker}
 \begin{lstlisting}
 PORT=8080
 ENDPOINT=/graphql
@@ -1644,6 +1644,7 @@ When the nodes get all properties necessary for the local usage in \emph{setNode
 All collapsables will be placed in a grid-like manner, creating a rectangle of collapsable nodes.
 
 To calculate the number of nodes per line the number of collapsables is used with the following algorithm:
+\lstset{language=JavaScript}
 \begin{lstlisting}
 let elementCountUsed = collapsables.length;
 if ( isPrime( elementCountUsed ) {
@@ -1712,7 +1713,6 @@ export const FlowerRule = ( next, client, distanceToOther = 350, minDist = 150 )
 				const initVec = { x: -1, y: -1 };
 				let normalized = normalizeVector( initVec );
 				let deltaAngle = 360 / parent.children.length;
-				// if there are just 2 nodes, reduce the angle as a connection between them might cover up labels
 				if ( parent.children.length === 2 ) {
 					deltaAngle = deltaAngle * 2 / 3;
 				}
