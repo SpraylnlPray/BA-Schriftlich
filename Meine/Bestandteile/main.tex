@@ -1463,9 +1463,11 @@ This part contains a list of ideas about what could be added or modified in the 
 \item \textbf{Context actions} to create nodes and links by using the visjs \emph{oncontext} event and displaying a form on the screen at the position clicked. The coordinates can be extracted from the event object passed into the event handler.
 \end{itemize}
 
-\item \textbf{Syntax Checking} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked.
-SUGGEST RULES THAT COULD BE APPLIED
-% suggest somes rules that could be applied
+\item \textbf{Syntax Checking} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked. Two rules to start with could be:
+\begin{itemize}
+\item Collapsables can only have Part-Of links
+\item Loops between collapsables
+\end{itemize}
 
 \item \textbf{Custom rules} for syntax checking. This would be a very big task as it involves the definition of some abstract language and a parser that can convert these into constructs the syntax checking algorithm can use.
 
