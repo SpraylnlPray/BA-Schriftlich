@@ -1,5 +1,5 @@
 \chapter{Introduction}
-
+\label{chap:Intro}
 There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" \cite{JeffParker} or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end or they are bound to displaying hardware components.
 
 The idea for this project is to offer an online editor with CRUD-functionality for a network, consisting of components of software projects, as well as a first implementation of an algorithm that will, in most cases, create a nice looking layout on its own.
@@ -31,6 +31,7 @@ GraphQL aims to resolve all these issues: Reduce the amount of unnecessary data 
 
 It allows developers to get a lot of different data from a single endpoint. This means that instead the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com}, with a query similar to:\\ (todo: define graphql styles)
 \newpage
+\lstset{language=GraphQL}
 \begin{lstlisting}[caption={A GraphQL Query},label={ex211}]
 query {
 	user(id: 1) {
@@ -104,8 +105,7 @@ type Query {
 }
 \end{lstlisting}
 
-Here we describe a query that can be executed as shown in
-\textbf{\ref{ex211}} by providing an ID to the query and the correct query name, together with a collection set telling the server which fields to fetch. In the parentheses any query arguments are listed, in this example id must be provided. After the double dot the return type is named. 
+Here we describe a query that can be executed as shown in \autoref{ex211} by providing an ID to the query and the correct query name, together with a collection set telling the server which fields to fetch. In the parentheses any query arguments are listed, in this example id must be provided. After the double dot the return type is named. 
 \\
 The server will then make requests to the DB, fetch the requested data and return it to the user once all fields were filled with values.
 \\
@@ -140,6 +140,7 @@ The following information about Neo4j internals is all from \cite{NeoInternals} 
 Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. \citep[minute 08]{NeoInternals} \\
 Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node. \\
 In addition to the first property, each node knows about its first relationship. If a it is the \emph{first} one, is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four others to other relationships, which are best explained in an example traversal in pseudo code:
+\lstset{language=JavaScript}
 \begin{lstlisting}
 if node n has relationship pointer r: 
 	if n is start node of r: 
@@ -207,9 +208,9 @@ async CreateNode( _, args, ctx ) {
 
 Lets break down whats happening in this piece of code:
 \begin{itemize}
-\item Line 1 contains the function definition. "args" is an object that contains all data sent with the query from the frontend. "ctx" is the context object that contains the neo4j driver to communicate with the DB. The first argument "\_", which is a placeholder here as we do not need it, is the so called "parent" which is equal to the previous resolver in the resolver chain. (More about this later REMOVE THIS COMMENT)
+\item Line 1 contains the function definition. "args" is an object that contains all data sent with the query from the frontend. "ctx" is the context object that contains the neo4j driver to communicate with the DB. The first argument "\_", which is a placeholder here as we do not need it, is the so called "parent" which is equal to the previous resolver in the resolver chain. (More about this in the next section)
 \item In line 2 we acquire a session to communicate with the database. \cite{Neo4jDriver} Over this object we can send parameters that get executed right away.
-\item Lines 3 to 6 define a Cypher query which is similar to the ones shown in \exref{ex231} and \exref{ex232}. 
+\item Lines 3 to 6 define a Cypher query which is similar to the ones shown in \autoref{ex231} and \autoref{ex232}. 
 \item In line 4 we make use of the args object and embed the nodeType directly into the query string by using template strings. This is necessary because at this position of a cypher query we can't make use of query variables the same way we do in the rest of the query. Later in that line we can see that by using \$<variableName> we can access query variables we pass along.
 \item Line 5 demonstrates the usage of an object we can pass as query variable. This object can't only contain simple datatypes, but its really useful to set various values at once.
 \item Finally, in line 7 we send the specified query string together with the args object (that must contain all referenced variables) to the database. By using the ES6 await keyword we make sure that code execution doesn't continue until the results are returned.
@@ -219,6 +220,8 @@ Lets break down whats happening in this piece of code:
 \subsubsection{Resolver Chain}
 To explain the resolver chain we will take a look at the following example GraphQL query: 
 %(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
+\lstset{language=GraphQL}
+ADD SOURCE
 \begin{lstlisting}[label={ex242}]
 query GetBooksByLibrary {
 	libraries { 
@@ -235,6 +238,7 @@ query GetBooksByLibrary {
 
 which will be executed on this schema 
 %(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
+ADD SOURCE
 \begin{lstlisting}[caption={Schema Definition},label={ex243}]
 # A library has a branch and books 
 type Library { 
@@ -269,6 +273,8 @@ To resolve the query we need 4 resolvers:
 \noindent
 Assuming we have static arrays called "libraries", "books" and "authors" that are filled with data, the resolvers might look like the following: 
 %(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
+ADD SOURCE
+\lstset{language=JavaScript}
 \begin{lstlisting}[caption={Resolver Definition},label={ex244}]
 const resolvers = { 
 	Query: { 
@@ -277,30 +283,30 @@ const resolvers = {
 		} 
 	}, 
 	Library: { 
-		branch(parent) { 
+		branch( parent ) { 
 			return parent.branch; 
 		}, 
-		books(parent) { 
+		books( parent ) { 
 			return books.filter(book => book.branch === parent.branch); 
 		} 
 	}, 
 	Book: { 
-		title(parent) { 
+		title( parent ) { 
 			return parent.title; 
 		}, 
-		author(parent) { 
+		author( parent ) { 
 			return authors.find(author => author.name === parent.author.name); 
 		} 
 	}, 
 	Author: { 
-		name(parent) { 
+		name( parent ) { 
 			return parent.name; 
 		} 
 	}
 };
 \end{lstlisting}
 
-First, the Query resolver is hit and it will search for a defined key that is similar to the name mentioned in the highest level of the query object in \textbf{\ref{ex241}}, in this case "libraries". In the GraphQL schema under \textbf{\ref{ex243}} we defined that this query will return an array of Library objects. \\
+First, the Query resolver is hit and it will search for a defined key that is similar to the name mentioned in the highest level of the query object in \autoref{ex241}, in this case "libraries". In the GraphQL schema under \autoref{ex243} we defined that this query will return an array of Library objects. \\
 Knowing this, the server will now go through each object of this array and look for resolvers of the in the query specified fields. This object is passed as \emph{parent} into the next resolver in the resolver chain. \\
 For each library we want the branch and an array of books. As branch is a primitive type it does not need to be further resolved. Books however, returns an array of non-primitive types. To find out which books we need to return we can access the value \emph{parent.branch} and compare it to the branch of each book in the books array and return those who match. \\
 books is again an array of a non primitive type and has to be further resolved by iterating through the array and accessing the requested values title and author. Title is just a string, whereas author will get resolved further etc.
@@ -309,7 +315,7 @@ books is again an array of a non primitive type and has to be further resolved b
 Using GraphQL directives we can "annotate" our schema and specify precisely certain actions or checks the server should perform when accessing a field. \\
 We could create the following schema: 
 %(https://www.graphql-tools.com/docs/schema-directives/#implementing-schema-directives)
-
+\lstset{language=GraphQL}
 \begin{lstlisting}[caption={Example Directive Declaration}]
 directive @deprecated( 
 	reason: String = "No longer supported" 
@@ -337,7 +343,7 @@ type Node {
 
 The node that is currently being iterated over in the resolver chain is passed as \emph{this} to Neo4j. Then it'll look for other nodes that are connected through any relationship of type \emph{Link} and return these. In addition to this, ApolloServer can generate default resolvers for queries and mutations meaning we do not have to write a resolver for \emph{Node} on our own. This combination makes writing query resolvers a rare occasion when using the GRAND-stack. \\
 
-Please note that this feature is only available when \emph{APOC} is enabled on this Neo4j instance (more information about this in the end of chapter 3 and chapter 4).
+Please note that this feature is only available when \emph{APOC} is installed on this Neo4j instance.
 
 \section{Frontend - React}
 React is a JavaScript-Framework to create component-based user interfaces. Each component has to define a \emph{render} method which describes what appears on the screen. In this method the programmer writes basic HTML or can embed other react components. \\
@@ -346,9 +352,8 @@ The standard \emph{index.html} is pretty short when using react. The only code a
 
 \subsubsection{Components}
 In \emph{index.js} this root div will be referenced by the react-internal render method and recursively build the basic html out of the defined react components:
-
-\begin{lstlisting}[caption={Hello World in React},label={ex251}]
-// index.html:
+\lstset{language=HTML}
+\begin{lstlisting}[caption={index.html for Hello World},label={ex250}]
 <!DOCTYPE html>
 <html>
 <head>
@@ -358,7 +363,10 @@ In \emph{index.js} this root div will be referenced by the react-internal render
 	<div id="root"></div>
 </body>
 </html>
+\end{lstlisting}
 
+\lstset{language=JavaScript}
+\begin{lstlisting}[caption={Hello World in React},label={ex251}]
 // index.js:
 ReactDOM.render(
 	<App/>,
@@ -384,6 +392,7 @@ We define a class component by extending from \emph{React.Component}. Each class
 
 When we start the react app, open it in the browser and select inspect we will see the following in the "Elements" tab (ignoring a script for live updates in the head):
 
+\lstset{language=HTML}
 \begin{lstlisting}
 <html> 
 <head>
@@ -403,10 +412,11 @@ React starts traversing at whatever component is put into the \emph{ReactDOM.ren
 
 Every react class components can receive values from its parent element, by passing them like normal html properties (e.g. line 3 below). In the child they can be accessed through a variable called \emph{props} and using JSX we can embed the value of variables directly in the component (e.g. line 14 below):
 
+\lstset{language=JavaScript}
 \begin{lstlisting}[caption={Using Props},label={ex252}]
 // index.js:
 ReactDOM.render(
-	<App text={ 'Hello World' },
+	<App text={ 'Hello World' } />,
 	document.getElementById( 'root' ),
 );
 
@@ -424,19 +434,15 @@ class App extends React.Component {
 }
 export default App;
 \end{lstlisting}
-Both \textbf{\ref{ex251}} and \textbf{\ref{ex252}} will produce the exact same output.
+Both \autoref{ex251} and \autoref{ex252} will produce the exact same output.
 
 \subsubsection{State}
 React class components have a state which can be used to manage user actions on a component, as well as general application data. \emph{state} is a simple JavaScript object but should be treated as immutable and only be updated through the \emph{setState()} method. Modifying the state directly can lead to bugs and/or unexpected behavior of the application.
 
-To demonstrate this, we'll add a \emph{Counter} component to the application:
+To demonstrate this, we'll add a \emph{Counter} component to the application (code does not contain imports and exports):
 
 \begin{lstlisting}
 // index.js
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-
 ReactDOM.render(
 	<App text={ 'Hello World' }/>,
 	document.getElementById( 'root' ),
@@ -453,11 +459,8 @@ class App extends React.Component {
 		);
 	}
 }
-export default App;
 
 // Counter.js
-import React from 'react';
-
 class Counter extends React.Component {
 	constructor( props ) {
 		super( props );
@@ -490,12 +493,11 @@ class Counter extends React.Component {
 		);
 	}
 }
-export default Counter;
 \end{lstlisting}
 
-When defining a custom constructor for a class component it is necessary to call \emph{super( props )} first. To define an initial state of the component we can set \emph{this.state = \{ val: 0 \}}. This is the only place where state should modified directly. In comparison to that in lines 43 and 50 we first create a copy of the value we want to modify by using Object Destructuring and then use \emph{this.setState( \{ val \} )} to update it. By doing so we do not modify the state object directly.
+When defining a custom constructor for a class component it is necessary to call \emph{super( props )} first. To define an initial state of the component we can set \emph{this.state = \{ val: 0 \}}. This is the only place where state should modified directly. In comparison to that in lines 32 and 39 we first create a copy of the value we want to modify by using Object Destructuring and then \emph{this.setState( \{ val \} )} to update it. By doing so we do not modify the state object directly.
 
-In lines 31 and 32 we bind the this keyword on the increase and decrease functions. By leaving this step, accessing \emph{this.setState()} in any of the methods would crash the application as \emph{this} would be the global window object which doesn't have a \emph{setState} method defined.
+In lines 24 and 25 we bind the this keyword on the increase and decrease functions. By leaving this step, accessing \emph{this.setState()} in any of the methods would crash the application as \emph{this} would be the global window object which doesn't have a \emph{setState} method defined.
 
 The render method defines the output of the component. We'll render a paragraph telling the current score by accessing the state together with two buttons and their respective click handlers.
 
@@ -504,15 +506,14 @@ React is known for its good performance \cite{LinaSpukas} even in large applicat
 
 On the initial render React will create a component tree from which it'll then build the DOM that the browser converts into displayable objects and paints them on the screen. To show how react determines which part of the DOM it has to update, we'll quickly walk through the previous example:
 
-When clicking the increase or decrease button in the previous example we update the components state which will automatically trigger a re-render. In such a small component it wouldn't really matter if React simply rendered the whole component. In a component containing hundreds of lines and probably many other sub-components the decision to render all of just because, would take a long time and be fatal for performance especially if really all we'd have to do is re-render line 52.
+When clicking the increase or decrease button in the previous example we update the components state which will automatically trigger a re-render. In such a small component it wouldn't really matter if React simply rendered the whole component. In a component containing hundreds of lines and probably many other sub-components the decision to render all of it just because would take a long time and be fatal for performance. Especially if really all we'd have to do is re-render line 45.
 
-\subsubsection{Finding The Differences} (maybe when coming back to this check https://reactjs.org/docs/faq-internals.html https://reactjs.org/docs/reconciliation.html and https://github.com/acdlite/react-fiber-architecture  and THIS:: https://www.youtube.com/watch?v=RquK3TImY9U )
-To know which lines to update, React performs a few steps: 
+\subsubsection{Finding The Differences}
+To know what exactly to update, React performs something called \emph{Reconciliation}. This process is very complicated, so we'll leave out the details and explain it in a few steps: 
 \begin{itemize}
 \item The \emph{setState} function will mark the component and all its children as dirty. \cite{GethylGeorgeKurian}
-\item It'll recursively walk through all components marked as dirty, building them in the virtual DOM
-\item For each built element it compares it to the value in the actual DOM. If they differ it'll deduce if the item should be replaced, removed or updated and does so accordingly. 
-%https://overreacted.io/react-as-a-ui-runtime/#reconciliation
+\item It'll recursively walk through all components marked as dirty, building them in the virtual DOM \cite{GethylGeorgeKurian}
+\item For each built element it compares it to the value in the actual DOM. Depending on what changed (type, HTML attributes, keys, etc.) it will either destroy and replace or modify them.  \cite{ReactDocs} 
 \end{itemize}
 By doing so, instead of re-rendering the whole \emph{Counter} component it only re-renders
 \begin{lstlisting}
@@ -538,7 +539,7 @@ export default App;
 \end{lstlisting}
 Which is a lot shorter and has another big advantage: It protects from laziness. \cite{CoryHouse} As this component doesn't support local state it is not too tempting to quickly hack something new into it. Rather the programmer gets encouraged to think about the structure and create a proper component for a new feature together with its own state object that only that component needs.
 
-And of course visually the result is equal to the one in \textbf{\ref{ex251}} and \textbf{\ref{ex252}}.
+And of course visually the result is equal to the one in \autoref{ex251} and \autoref{ex252}.
 
 \section{Client - ApolloClient}
 ApolloClient is a state management library for JavaScript that manages data with GraphQL. It offers an all in one solution for fetching, caching and modifying application data and together with automatic UI updates upon events from the server. \cite{ApolloClientIntro}
@@ -550,7 +551,7 @@ ApolloClient 3 offers this by providing custom \textbf{hooks}. Hooks are a new a
 In addition to some built-in Hooks provided by React it is also possible to create them. Apollo implemented many own hooks, we will focus on \emph{useQuery}, \emph{useLazyQuery} and \emph{useMutation}.
 The first argument to all of these is a GraphQL string. A query for the first two, a mutation for the last one.
 
-The second argument is the options object. By adding properties to this the execution behavior can be influenced. Probably the most important argument is \emph{variables}. This is an object containing key-pair values that equal to the ones used in a GraphQL query as shown in \textbf{\ref{ex211}}. In addition to that there are \emph{onError} and \emph{onCompleted}. These are two callback functions that allow for executing actions upon completion or handling of possible errors. Imagine \emph{GET\_DATA} being a valid GraphQL query string:
+The second argument is the options object. By adding properties to this the execution behavior can be influenced. Probably the most important argument is \emph{variables}. This is an object containing key-pair values that equal to the ones used in a GraphQL query as shown in \autoref{ex211}. In addition to that there are \emph{onError} and \emph{onCompleted}. These are two callback functions that allow for executing actions upon completion or handling of possible errors. Imagine \emph{GET\_DATA} being a valid GraphQL query string:
 \begin{lstlisting}
 function Test() {
 	useQuery( GET_DATA, {
@@ -580,7 +581,7 @@ function Test() {
 In comparison to \emph{useQuery} the other two also return a function object that can be called when we wish to execute the query or mutation (see example below).
 
 The \emph{useMutation} hook is the only one of the three allowing for an \emph{update} argument in the options object. In this we can access the local cache and have access to the results returned from the mutation. This can be useful if we need to update internal data depending on the result of a server operation:
-\begin{lstlisting}[caption={Creating a Mutation},label={ex:usingMutation}]
+\begin{lstlisting}[caption={Creating a Mutation and defining a manual update function},label={ex:usingMutation}]
 function Mutate() {
 	const [ runMutation, { data, loading, error } ] = useMutation( DO_THING, {
 		update: ( cache, { data } ) => {
@@ -599,7 +600,7 @@ const client = new ApolloClient({
 	resolvers: {
 		Mutation: {
 			setData: ( _, variables, { cache } ) => {
-				// manage state update			
+				// manage local state update			
 			},
 			...		
 		},	
@@ -609,6 +610,7 @@ const client = new ApolloClient({
 \end{lstlisting}
 
 Just like on the server side we set up resolvers and can access query variables to it. To call it, we also define a GraphQL query like so:
+\lstset{language=GraphQL}
 \begin{lstlisting}
 const SET_DATA = gql`
 	mutation SetData($data: [String]!) {
@@ -616,14 +618,15 @@ const SET_DATA = gql`
 	}
 `;
 \end{lstlisting}
-The name in line 3 has to match with the one defined in the resolver in \textbf{\ref{ex253}} in line 5. But whats even more important is the \emph{@client} directive in the end of line 3. This tells Apollo to not contact the server, but rather resolve the mutation locally. We can then call the above defined mutation like this:
+The name in line 3 has to match with the one defined in the resolver in \autoref{ex253} in line 5. But whats even more important is the \emph{@client} directive in the end of line 3. This tells Apollo to not contact the server, but rather resolve the mutation locally. We can then call the above defined mutation like this:
+\lstset{language=JavaScript}
 \begin{lstlisting}
 const Test() {
 	const [ runSetData ] = useMutation( SET_DATA );
 	
 	const handleClick = e => {
 		e.stopPropagation();
-		runSetData(	{ variables: { x: 'test' } } );
+		runSetData(	{ variables: { data: 'test' } } );
 	}
 	
 	return (
@@ -664,30 +667,30 @@ Basically, an EC2 instance is a virtual machine that runs on an Amazon server. \
 %In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
 
 \subsection{AWS-ECS}
-RE-WRITE THIS
 ECS is a service to run automatically managed containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
 These are the most important terms when talking about AWS ECS: \\
 
-A \textbf{task definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
+A \textbf{Task Definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
 
-A \textbf{task} is an instance that is created following the specifications in the task definition. A task can run various Docker containers at once. A task is where an application actually gets executed.
+A \textbf{Task} is an instance that is created following the specifications in the task definition. A task can run various Docker containers at once. A task is where an application actually gets executed.
 
-A \textbf{service} is used to manage tasks. It is possible to specify a minimum and maximum number of running tasks and when to start new or stop running tasks to make sure the necessary calculation power is always necessary. A service can make use of a load balancer which will distribute network traffic equally over all running tasks in the service.
+A \textbf{Service Description} is the blueprint for a service. It contains for example the minimum and maximum number of tasks running at once, as well as thresholds to when changes to the number of running tasks should happen and other specifications.
+
+A \textbf{Service} is an instance that is created following the specifications in the Service Description. One service can run various tasks at once and use a load balancer to distribute networkk traffic equally over all running tasks.
 
 A \textbf{Cluster} is a logical grouping of services. \\
 
-These components can be visually put together as shown in the figure below.
+These components can be visually put together as shown in the figure below. \citep[with adaptions]{AwsEcs} 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=.5]{Bilder/EcsStructure.png}
+\includegraphics[scale=.45]{Bilder/EcsStructure.png}
 \captionof{figure}{Strucute of AWS ECS}
 \label{ex311}
 \end{figure}
 
-The orange square symbolizes ECS inside the big AWS infrastructure. We will ignore the square denoted with "VPC" as it is not relevant for further understanding.\\
-A task is created from a task definition and be placed in a service. The services are here shown as light blue squares labeled \emph{Fargate}. Fargate is a computation engine from Amazon which calculates which virtual machine to use according to the task definition and creates and starts it and then runs the docker image from a specified container registry automatically. \cite{AwsFargate} The orange square with dots and dashes is a cluster. This cluster contains 2 services, reach running 3 tasks. 
+A task is created from a task definition and placed in a service. Services can make use of AWS \emph{Fargate} which is a computation engine from Amazon which calculates which virtual machine to use for a task depending on the task definition. It will then create and start it and possibly run the docker image from a specified container registry. \cite{AwsFargate} The dashed box is a cluster. This cluster contains 2 services, reach running 4 tasks. 
 
-The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of a geological region.
+The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of one geological region to improve response time.
 
 \subsection{AWS-Amplify}
 Amplify is a services that aims to make the deployment as well as the development of applications as easy as possible. It comes with many advanced features that help setting up an app quickly. Some examples are: Authentication, API creation, Analytics, Push Notifications and many more \cite{AwsAmplify}. It creates a certificate for any deployed application, allowing for HTTPS connections. Further it is able to scan a connected GitHub repository and provide a template configuration based on the framework used.
@@ -710,17 +713,17 @@ While it is similar to a virtual machine, there are certain differences between 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.8]{Bilder/DockerVsVM.png}
-\captionof{figure}{Docker vs VM}
+\captionof{figure}{Virtual Machine vs. Docker}
 \label{ex312}
 \end{figure}
 \noindent
 \textbf{Security} Following the previous point, every VM has its own operating system and is strongly isolated in the host kernel. Docker containers all run on a single kernel. Furthermore docker resources are shared. If an attacker gets access to one container he'll be able to exploit  all containers in a cluster. \cite{GeekDocker}) \\
-\textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
+\textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll run the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
 
 \chapter{Development}
-In this chapter we will talk about the steps in development and explain some thought processes on the way. There might and probably will be parts with flaws in my work. This is intended to keep you from making the same mistakes when starting to develop an application with the GRANDstack. 
+This chapter will talk about the development process and explain some thought processes that lead to certain decisions. There are flaws in the resulting work, which is due to this chapter not being intended to be a "How to" kind of guide. Instead it should be read as a simple documentation the experiences made and to make the reader avoid what he might denote as not ideal.
 
-This chapter will also contain a few difficulties encountered together with a workaround found. Again, this part is not supposed to be a "How to" kind of guide - I was completely new to all of the technologies used when starting this project - but rather to document some decisions and the reasons why they were made.
+This chapter will also contain a few difficulties encountered together with a workaround found. These might in some cases not be considered best practice, but worked for this case and can be seen as suggestions if a similar problem should appear in similar projects.
 
 \section{Why the GRANDstack}
 To find out which tech stack to use, the first step was to analyze what the application should be able to do:
@@ -742,12 +745,13 @@ This will give a list of requirements our tech stack should fulfill:
 
 As we have looked at the individual parts of the GRANDstack, we can see quickly that it contains most of the things we imagined to be useful: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL will allows to only transmit the data needed in case of a lot of communication with the server. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Having a state management framework and a backend server that are designed to work together also promises for a trouble free development. The Apollo hooks make it very intuitive to update the UI according to state changes.
 
-Furthermore this stack contains many relatively young technologies and as mentioned in chapter 1 this project also serves to explore these.
+Furthermore this stack contains many relatively young technologies and as mentioned in \autoref{chap:Intro} this project also serves to explore these.
 
 \section{The GraphQL Schema}
 Development of applications that leverage GraphQL usually start by creating a schema to define how data looks like. The good thing about this is that it can be adapted if during the process we discover that we need to make some changes to it.
 
 Here we will take a brief look at the GraphQL schema this app uses and I'll mention a few things from a personal point of view that didn't work out as I thought they would.
+\lstset{language=GraphQL}
 \begin{lstlisting}[caption={GraphQL Enums},label={enums}]
 enum NodeType{
   API
@@ -793,9 +797,6 @@ These are the values an arrow on a link displayed in the application can have. T
 
 \begin{lstlisting}
 interface IDisplayable{
-  """
-  Minimal data necessary for the object to appear on screen
-  """
   id: ID!
   label: String
   story: URI
@@ -826,9 +827,9 @@ type Link implements ILink & IDisplayable{
 }
 
 \end{lstlisting}
-Coming from an Object Oriented background I wanted to use interfaces.  Having an ID, label and story object to be apparent on all entities that can be shown on screen makes sense. What I didn't know when creating the schema is that visjs requires each link to be connected to an x and y node, in other words: a link can't "float". This means that there are two more required fields in the ILink interface, making the IDisplayable interface more or less loosing its purpose of defining properties that are required to be displayed.
+Coming from an Object Oriented background using interfaces seemed intuitive. Having an ID, label and story object to be apparent on all entities that can be shown on screen makes sense. What was not known when creating the schema is that visjs requires each link to be connected to an x and y node, in other words: a link can't "float". This means that there are two more required fields in the ILink interface, making the IDisplayable interface more or less loosing its purpose of defining properties that are required to be displayed.
 
-To retrieve the links attached to the node we make use of the \emph{@cypher} directive we talked about earlier. This is an array which can be empty as nodes do not necessarily need be connected in any way. Same counts for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather that nodes. In the end I decided to place them on nodes as it made more sense to me that for example an event would be synchronous rather than the dispatch call for it.
+To retrieve the links attached to the node we make use of the \emph{@cypher} directive we talked about earlier. This is an array which can be empty as nodes do not necessarily need be connected in any way. Same counts for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather that nodes. In the end they got placed on nodes as it made more sense to me that for example an event would be synchronous rather than the dispatch call for it.
 
 \emph{optional} on link is a value that can be used to clarify that a link of a sequence will only be done in certain cases.
 
@@ -864,7 +865,6 @@ The input types are used to be able to pass an object into GraphQL queries or mu
 This schema could be improved by using GraphQL fragments and make it shorter by that, but the usage of these input types was not worth the effort. 
 
 \begin{lstlisting}[caption={Mutation Type Definition},label={mutations}]
-\label{exMutations}
 type Mutation{
   SeedDB: seedReturn
   CreateNode(id: ID!, label: String!, nodeType: NodeType!, props: NodeCreateInput): NodeOperationReturn
@@ -890,7 +890,7 @@ type Mutation{
 }
 \end{lstlisting}
 
-This is the definition of the root mutation type. It clarifies even more the previously made point of having a lot of trouble formatting the inputs for a mutation: When dispatching a \emph{CreateNode} mutation 2 (label and nodeType) of the form inputs have to be passed directly, while all others need to be put into an object called props that contains the fields defined in the respective input type. This makes the code for form handling a lot harder to re-use, especially as the input types vary for updating and creating.
+This is the definition of the root mutation type. It clarifies even more the previously made point of having a lot of trouble formatting the inputs for a mutation: When dispatching a \emph{CreateNode} mutation 2 of the form inputs (label and nodeType) have to be passed directly, while all others need to be put into an object called props that contains the fields defined in the respective input type. This makes the code for form handling a lot harder to re-use, especially as the input types vary for updating and creating.
 
 Lets talk about the return types defined for each operation:
 \begin{lstlisting}
@@ -955,7 +955,7 @@ To get started with Neo4j we first want to create a small basic data set that sh
 This is the network we would like to display in the application. It is really helpful to first draw it on paper and then think of the individual components needed. As there will be one graph in the database and one in the application it is important to carefully separate them when talking about a node: This could refer to one either in the database or in the application. While the node in the app is always a node in the database, this is not necessarily the case the other way around as a node in the database could also represent data about a connection in the application.
 
 We will create the three nodes for DB, Backend and Frontend using the following code in the Neo4j Browser:
-
+\lstset{language=JavaScript}
 \begin{lstlisting}
 CREATE (:Node:AbstractUserInterface {id: randomUUID(), label: "Frontend", story: "Interaction point for the user", nodeType: "AbstractUserInterface"})
 CREATE (:Node:API {id: randomUUID(), label: "Backend", story: "Endpoint for requests, fetches from and mutates data on the DB", nodeType: "API"})
@@ -1012,14 +1012,14 @@ This code will find a node with an \emph{API} label and one with a \emph{Persist
 \label{ex423}
 \end{figure}
 
-After adding the rest of the connection using the same approach the whole representation of \textbf{figure \ref{ex421}} on the data layer looks like:
+After adding the rest of the connection using the same approach the whole representation of \autoref{ex421} on the data layer looks like:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{Bilder/BasicGraphNeo3.png}
 \captionof{figure}{Whole graph in the DB}
-\label{ex423}
+\label{ex424}
 \end{figure}
-It is important to note that directions of the arrows here do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform we made all relationships to be outgoing from the link nodes.
+It is important to note that directions of the arrows here do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform all relationships were made to be outgoing from the link nodes.
 
 \section{Communicating with the DB through ApolloServer and GraphQL-Playground}
 The next step is to communicate with the database through the server. After we set up a small ApolloServer (more on setup in \autoref{chap:Doc}) we should create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning we might make many mistakes which can leave the dataset in a bad shape and fixing it manually would take a lot of time. In \autoref{mutations} in line 2 is the GraphQL definition. The resolver looks like the following:
@@ -1049,6 +1049,7 @@ async SeedDB( _, __, ctx ) {
 The \emph{seedQuery} is a long cypher query defined in an external file. After deleting all nodes and connections in the database using the \emph{deleteQuery} we run it to create new data to use. The reason why we can return success is that there is nowhere where the query could fail.
 
 To run this resolver and seed our database we will open the GraphQL Playground in the browser and execute the following GraphQL query:
+\lstset{language=GraphQL}
 \begin{lstlisting}[caption={Seeding the DB through GraphQL Playground}, label={exSeed}]
 mutation seedDB {
   SeedDB {
@@ -1111,6 +1112,7 @@ With the result being similar to:
 \end{lstlisting}
 
 Finally lets write a resolver to create a node. The reason for doing this by hand is that we want to have control over the Cypher query, to be sure that the properties would be assigned the way we want it:
+\lstset{language=JavaScript}
 \begin{lstlisting}
 		async CreateNode( _, args, ctx ) {
 			try {
@@ -1132,6 +1134,7 @@ Finally lets write a resolver to create a node. The reason for doing this by han
 		}
 \end{lstlisting}
 In line 5 we make use of ES6 template strings and use the \emph{args} parameter to create the correct label in the query string, as it is not possible to use query variables in labels in Cypher. This example also shows the usage of query variables in Cypher really well. The \emph{args} object will be destructured and its keys are available to the query by using the \emph{\$} sign. Furthermore it demonstrates how to use input types in line 6 to set various properties at once using Cypher. In the GraphQL Playground it can be used like the following:
+\lstset{language=GraphQL}
 \begin{lstlisting}[caption={Using the Create Node resolver},label={ex:RunCreateNode}]
 mutation createNode($props: NodeCreateInput) {
   CreateNode(id: "1", label: "new test", nodeType: Object, props: $props){
@@ -1176,6 +1179,7 @@ export const CREATE_NODE = gql`
 
 To use it we'll create a small functional component and pass the query to the hook:
 
+\lstset{language=JavaScript}
 \begin{lstlisting}[caption={Using the Query in a Component}]
 import { CREATE_NODE } from './queries';
 import { useState } from 'react';
@@ -1348,20 +1352,20 @@ In these implementations nodes that can be collapsed (hide their direct descenda
 \subsection{Tree-Layout}
 In this approach each node would distribute its child nodes below it. Depending on the amount of children they'd be split into different layers of nodes.
 
-While the tree logic was relatively easy to implement and created at least acceptable images as seen in \autoref{ex:TreeGood}, it had a lot of flaws with the biggest one being overlapping edges or edges that move through the middle of nodes making it impossible to see the actual connections \autoref{ex:TreeBad}.
+While the tree logic was relatively easy to implement and created at least acceptable images as seen in \autoref{ex:TreeGood}, it had a lot of flaws with the biggest one being overlapping edges or edges that move through the middle of nodes making it impossible to see the actual connections like in \autoref{ex:TreeBadEdge}.
 
 \begin{figure}[H]
-\label{ex:TreeGood}
 \centering
 \includegraphics[scale=.7]{Bilder/TreeGood.png}
 \captionof{figure}{Layout created by the Tree Algorithm}
+\label{ex:TreeGood}
 \end{figure}
 
-\begin{figure}[H]
-\label{ex:TreeBad}
+\begin{figure}[H] 
 \centering
 \includegraphics[scale=1]{Bilder/TreeBad.png}
-\captionof{figure}{Overlapping Edge}
+\caption{Edge moving directly through Node}
+\label{ex:TreeBadEdge}
 \end{figure}
 
 Furthermore if the trees grow very long they'll sooner or later intersect with each other. One option would be to iterate over all previously placed nodes and check their positions before placing another one and by that define an offset to the deepest one. However the performance would most likely make the app unusable once the graph becomes larger.
@@ -1370,7 +1374,6 @@ Furthermore if the trees grow very long they'll sooner or later intersect with e
 The name for this layout comes from the idea of creating flower shaped groups of nodes. The basic idea is to select one center-node as described above and place its direct descendants equally around it it creates a circular shape. Child-nodes of these descendants then use the direction vector of their parents link to place themselves accordingly.
 
 \begin{figure}[H]
-\label{ex:TreeBad}
 \centering
 \includegraphics[scale=.55]{Bilder/FlowerEx.png}
 \captionof{figure}{Basic Idea of the Flower Layout}
@@ -1379,7 +1382,6 @@ The name for this layout comes from the idea of creating flower shaped groups of
 This algorithm uses the available space a lot better and as it grows into all directions overlapping with other groups becomes less likely. Furthermore there are many parameters that can be adjusted. For example the distance to the parent-node can depend on the amount of child-nodes the current node itself has:
 
 \begin{figure}[H]
-\label{ex:TreeBad}
 \centering
 \includegraphics[scale=.4]{Bilder/FlowerDistEx.png}
 \captionof{figure}{Node with more Children is further away}
@@ -1451,7 +1453,7 @@ Here we will first look at a list of things that were positive in this project a
 \begin{itemize}
 \item[Warmup time] Trying to get going as quickly as possible right in the beginning was not best choice. The reason for doing so was to have something to show to others early in the development and to avoid having time issues later on. However, it might have turned out to be quicker to first get a good overview of all the technologies and frameworks, especially Apollo. It offers a lot of functionality and taking more time in the beginning could have been faster and led to a cleaner code base in the end.
 
-\item[The tech-stack] Despite having it on the positive list it appears here as well, the reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency and a lot to take in, but the app only makes use of very small and specific parts of it, the most important one being state management. While it is not bad at it there is no big advantage of it over using a pure state management library like Redux. Furthermore having to define a GraphQL query for fetching the local state creates many lines of code and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition to that it made development slower because many times later it turned out that another property, or even a few more, are needed which have to be added to the query. In the end queries often end up being so similar that the only logical thing would be to use the same query for many different purposes.
+\item[Apollo] Despite having it on the positive list it appears here as well, the reason being that in the short term the chosen technologies were over-kill in my opinion. Especially Apollo is a very big dependency and a lot to take in, but the app only makes use of very small and specific parts of it, the most important one being state management. While it is not bad at it there is no big advantage of it over using a pure state management library like Redux. Furthermore having to define a GraphQL query for fetching the local state creates many lines of code and the queries all ended up being almost similar which invalidates the argument of getting only the needed data. In addition to that it made development slower because many times later it turned out that another property, or even a few more, are needed which have to be added to the query. In the end queries often end up being so similar that the only logical thing would be to use the same query for many different purposes.
 
 In addition looking at how the app works at the moment it could easily be implemented using a REST-API. On the initial start the app fetches all nodes and links from the database. When the user hits save it will send modified links and nodes to the server where their ID is used to modify them in the database. As nodes and links are the only two types of entities in this application (and it'll most likely stay that way) using a REST-API might have been the better choice.
 \end{itemize}
@@ -1471,6 +1473,7 @@ This part contains a list of ideas about what could be added or modified in the 
 \end{itemize}
 
 \item \textbf{Syntax Checking} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked.
+SUGGEST RULES THAT COULD BE APPLIED
 % suggest somes rules that could be applied
 
 \item \textbf{Custom rules} for syntax checking. This would be a very big task as it involves the definition of some abstract language and a parser that can convert these into constructs the syntax checking algorithm can use.
@@ -1499,17 +1502,17 @@ This part contains a list of ideas about what could be added or modified in the 
 \item \textbf{Improve Collapsables} to increase the value they have to make the graphs cleaner. \autoref{ex:CollExpanded} shows how collapsables could look at some point when being expanded while \autoref{ex:CollColapsed} demonstrated a collapsed one.
 
 \begin{figure}
-\label{ex:CollExpanded}
 \centering
 \includegraphics[scale=.2]{Bilder/CollapsableEx.png}
 \captionof{figure}{Example Collapsable in Expanded State}
+\label{ex:CollExpanded}
 \end{figure}
 
 \begin{figure}
-\label{ex:CollColapsed}
 \centering
 \includegraphics[scale=.3]{Bilder/CollapsableCol.png}
 \captionof{figure}{Example Collapsable in Collapsed State}
+\label{ex:CollColapsed}
 \end{figure}
 
 Implementing this in visjs might not be the most enjoyable task as it does not natively offer functionality to draw a rectangle around a group of elements.

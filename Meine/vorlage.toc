@@ -23,7 +23,7 @@
 \contentsline {subsubsection}{\nonumberline Stateless Functional Components}{15}{section*.15}%
 \contentsline {section}{\numberline {2.6}Client - ApolloClient}{15}{section.2.6}%
 \contentsline {subsubsection}{\nonumberline Hooks}{15}{section*.16}%
-\contentsline {subsubsection}{\nonumberline Apollo Hooks}{16}{section*.17}%
+\contentsline {subsubsection}{\nonumberline Apollo Hooks}{15}{section*.17}%
 \contentsline {subsubsection}{\nonumberline Local Resolvers}{17}{section*.18}%
 \contentsline {subsubsection}{\nonumberline The Apollo Cache}{18}{section*.19}%
 \contentsline {chapter}{\numberline {3}Deployment}{19}{chapter.3}%

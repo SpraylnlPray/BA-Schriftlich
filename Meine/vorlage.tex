@@ -47,8 +47,9 @@
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{orange}{RGB}{173, 81, 53}
 \lstdefinelanguage{JavaScript}{
-  keywords={break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+  keywords={break, case, catch, continue, debugger, default, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with, class, const, async, await, extends, let},
   morecomment=[l]{//},
   morecomment=[s]{/*}{*/},
   morestring=[b]',
@@ -57,10 +58,25 @@
   keywordstyle=\color{blue}\bfseries,
   ndkeywordstyle=\color{gray}\bfseries,
   identifierstyle=\color{black},
-  commentstyle=\color{purple}\ttfamily,
-  stringstyle=\color{red}\ttfamily,
+  commentstyle=\color{dkgreen}\ttfamily,
+  stringstyle=\color{orange}\ttfamily,
   sensitive=true
 }
+\lstdefinelanguage{GraphQL}{
+  keywords={mutation, query, type, schema, directive, on, String, ID, Int, Float, client, enum, interface, implements, URI, @cypher, @deprecated, Boolean, input, const}, 
+  keywordstyle=\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  morecomment=[l]{\#},
+  morecomment=[s]{"""}{"""},
+  morestring=[b]',
+  morestring=[b]",
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{gray}\bfseries,
+  commentstyle=\color{dkgreen}\ttfamily,
+  stringstyle=\color{orange}\ttfamily,
+  sensitive=true
+}
+
 \lstset{
   frame=single,
   language=JavaScript,
@@ -76,7 +92,7 @@
   stringstyle=\color{mauve},
   breaklines=true,
   breakatwhitespace=true,
-  tabsize=3
+  tabsize=2
 }
 
 % Das Dokument selbst mit seinen Bestandteilen
