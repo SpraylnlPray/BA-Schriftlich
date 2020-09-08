@@ -218,10 +218,8 @@ Lets break down whats happening in this piece of code:
 \end{itemize}
 
 \subsubsection{Resolver Chain}
-To explain the resolver chain we will take a look at the following example GraphQL query: 
-%(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
+To explain the resolver chain we will take a look at the following example GraphQL query: \citep[with adaptions]{ApolloResChain}
 \lstset{language=GraphQL}
-ADD SOURCE
 \begin{lstlisting}[label={ex242}]
 query GetBooksByLibrary {
 	libraries { 
@@ -236,9 +234,7 @@ query GetBooksByLibrary {
 }
 \end{lstlisting}
 
-which will be executed on this schema 
-%(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
-ADD SOURCE
+which will be executed on this schema \citep[with adaptions]{ApolloResChain}
 \begin{lstlisting}[caption={Schema Definition},label={ex243}]
 # A library has a branch and books 
 type Library { 
@@ -272,8 +268,7 @@ To resolve the query we need 4 resolvers:
 
 \noindent
 Assuming we have static arrays called "libraries", "books" and "authors" that are filled with data, the resolvers might look like the following: 
-%(https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-chains) (with adaptions)
-ADD SOURCE
+\citep[with adaptions]{ApolloResChain}
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Resolver Definition},label={ex244}]
 const resolvers = { 
@@ -313,8 +308,8 @@ books is again an array of a non primitive type and has to be further resolved b
 
 \subsubsection{Cypher in GraphQL}
 Using GraphQL directives we can "annotate" our schema and specify precisely certain actions or checks the server should perform when accessing a field. \\
-We could create the following schema: 
-%(https://www.graphql-tools.com/docs/schema-directives/#implementing-schema-directives)
+We could create the following schema: \cite{GraphQlDir}
+
 \lstset{language=GraphQL}
 \begin{lstlisting}[caption={Example Directive Declaration}]
 directive @deprecated( 
@@ -328,8 +323,7 @@ type ExampleType {
 \end{lstlisting}
 
 Directives can be distinguished by the @-symbol and are placed after a field definition to annotate one. When querying \emph{oldField} on \emph{ExampleType} the server might only respond with "Use 'newField'" and not send any data. The exact behavior depends on how directive behavior is defined in the server. \\
-The use cases range from formatting strings, enforcing access permissions to value checking when the client sends data and many more. For information about how directives can be implemented please refer to
-%(https://www.graphql-tools.com/docs/schema-directives/#implementing-schema-directives)
+The use cases range from formatting strings, enforcing access permissions to value checking when the client sends data and many more. For information about how directives can be implemented please refer to \cite{GraphQlDir}
 \\
 In the GRAND-stack we can use a pre-defined directive called "@cypher" and through that use cypher statements directly in the schema definition file. A great and short example is getting all connected nodes for a specific node:
 
@@ -1246,7 +1240,6 @@ The child component of the \emph{InputPane} in cyan is called \textbf{GraphSetti
 This section will talk about difficulties or problems that appeared during development. For some of them there was a solution found, others are simply to document them.
 
 \subsection{Keeping the data consistent when saving changes}
-% In which order do the updates need to be executed?
 In the very beginning the process of saving local changes to the database was the following: Go through all created/edited/deleted entities and for each of them dispatch a call to the server. This often led to inconsistent data sets that could not be displayed by visjs. To explain this problem we need to look at a few examples of saving scenarios:
 \begin{itemize}
 \item[1] The user creates 2 nodes and connects them with a link.
