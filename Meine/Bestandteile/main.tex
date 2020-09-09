@@ -49,7 +49,7 @@ query {
 }
 \end{lstlisting}
 \citep[with adaptions]{GraphQLIntro}	
-Where the answer would be a JSON-string: (todo: define JSON style)
+Where the answer would be a JSON-string:
 \begin{lstlisting}[caption={Example Response Data},label={ex212}]
 { 
 	"data": {
@@ -74,7 +74,7 @@ The query can be as extensive as the developer needs it, it will return only the
 \\ \\
 The previously shown query then needs to be resolved by a server thats able to interpret GraphQL and resolve the query. All non primitive data types have to be defined following the GraphQL specification. An example for a user schema might be:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Type Definition in GraphQL}]
 type User {
 	id: ID! 
 	name: String! 
@@ -91,7 +91,7 @@ By putting a "!" behind a property the programmer marks it as required, meaning 
 \\
 To be able to run queries in the first place, we must first define a root type for all queries:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Root Type Definition}]
 schema {
 	query: Query
 }
@@ -99,7 +99,7 @@ schema {
 
 In this root type all possible queries must be described:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Defining Queries}]
 type Query { 
 	user(id: ID!): User 
 }
@@ -125,9 +125,10 @@ Neo4j is a so called graph database. The idea of graph databases is, compared to
 \subsubsection{Cypher}
 For matching all nodes connected to node A through a "Neighbor" relationship, we simply state
 \lstset{language=Cypher}
-\begin{lstlisting}[label={ex213},caption={Matching Nodes Way 1}]
+\begin{lstlisting}[label={ex231},caption={Matching Nodes Way 1}]
 MATCH (n:Node {label: "A"})-[:Neighbor]-(n2:Node) RETURN n, n2
 \end{lstlisting}
+
 Parentheses represent a node, square brackets a relationship. The naming works after the following pattern: <name>:<type>. In this example n is the name for the first node and n2 the name of the list of connected nodes. We didn't specify a name for the relationship as we did not want to retrieve data from it. By using curly braces we can specify certain properties a node or relationship should have. The other way of doing so would be 
 \begin{lstlisting}[label={ex232},caption={Matching Nodes Way 2}]
 {MATCH (n:Node)-[:Neighbor]-(n2:Node) WHERE n.label = "A" RETURN n, n2
@@ -136,11 +137,13 @@ which might look a bit cleaner. We could also return only specific values of n a
 \emph{ ...RETURN n.label AS Label1, n2.label AS Label2 }\\
 The following information about Neo4j internals is all from \cite{NeoInternals} and \cite{Neo4jInternalsPP}. Sadly, these sources are all old and probably outdated, yet there does not seem to be more updated information on the internet.
 \subsubsection{The Graph on Disk}
-Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. \citep[minute 08]{NeoInternals} \\
-Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node. \\
+Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. \citep[minute 08]{NeoInternals}
+
+Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node.
+
 In addition to the first property, each node knows about its first relationship. If a it is the \emph{first} one, is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four others to other relationships, which are best explained in an example traversal in pseudo code:
 \lstset{language=JavaScript}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Algorithm to Save Read the Graph from Disk}]
 if node n has relationship pointer r: 
 	if n is start node of r: 
 		if r has StartNext pointer sn: 
@@ -219,7 +222,7 @@ Lets break down whats happening in this piece of code:
 \subsubsection{Resolver Chain}
 To explain the resolver chain we will take a look at the following example GraphQL query: \citep[with adaptions]{ApolloResChain}
 \lstset{language=GraphQL}
-\begin{lstlisting}[label={ex242}]
+\begin{lstlisting}[label={ex242},caption={GraphQL query to fetch all books with their title and author name of all libraries}]
 query GetBooksByLibrary {
 	libraries { 
 		branch 
@@ -386,7 +389,7 @@ We define a class component by extending from \emph{React.Component}. Each class
 When we start the react app, open it in the browser and select inspect we will see the following in the "Elements" tab (ignoring a script for live updates in the head):
 
 \lstset{language=HTML}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Resulting HTML after building}]
 <html> 
 <head>
 	<title>Intro-App</title>
@@ -434,7 +437,7 @@ React class components have a state which can be used to manage user actions on 
 
 To demonstrate this, we'll add a \emph{Counter} component to the application (code does not contain imports and exports):
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Counter Component}]
 // index.js
 ReactDOM.render(
 	<App text={ 'Hello World' }/>,
@@ -509,13 +512,13 @@ To know what exactly to update, React performs something called \emph{Reconcilia
 \item For each built element it compares it to the value in the actual DOM. Depending on what changed (type, HTML attributes, keys, etc.) it will either destroy and replace or modify them.  \cite{ReactDocs} 
 \end{itemize}
 By doing so, instead of re-rendering the whole \emph{Counter} component it only re-renders
-\begin{lstlisting}
+\begin{lstlisting}[caption={Updated line}]
 <p>Current score: { this.state.val } </p>
 \end{lstlisting}
 
 \subsubsection{Stateless Functional Components}
 It is also possible to create stateless functional components. In their pure form they do not contain state and normally only show either static data or data they get passed through props. If we look at the \emph{App} component in the above examples we'll find that it does exactly that. Knowing this, we could re-write it:
-\begin{lstlisting}
+\begin{lstlisting}[caption={App as Functional Component}]
 // App.js
 import React from 'react';
 import Counter from './Counter';
@@ -545,7 +548,7 @@ In addition to some built-in Hooks provided by React it is also possible to crea
 The first argument to all of these is a GraphQL string. A query for the first two, a mutation for the last one.
 
 The second argument is the options object. By adding properties to this the execution behavior can be influenced. Probably the most important argument is \emph{variables}. This is an object containing key-pair values that equal to the ones used in a GraphQL query as shown in \autoref{ex211}. In addition to that there are \emph{onError} and \emph{onCompleted}. These are two callback functions that allow for executing actions upon completion or handling of possible errors. Imagine \emph{GET\_DATA} being a valid GraphQL query string:
-\begin{lstlisting}
+\begin{lstlisting}[caption={The useQuery Hook from Apollo}]
 function Test() {
 	useQuery( GET_DATA, {
 		variables: { id: 1 },
@@ -559,7 +562,7 @@ function Test() {
 For the rest of the arguments please refer to API reference form Apollo.
 
 To be able to use returned data and inform the user about the current status, all of these three hooks return a few other objects, the most important being \emph{data}, \emph{loading} and \emph{error}. These are boolean values and allow for conditional rendering inside a component, depending on their values: 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Demonstration of the useQuery Hook}]
 function Test() {
 	const { data, loading, error } = useQuery( GET_DATA, {
 		...	
@@ -604,7 +607,7 @@ const client = new ApolloClient({
 
 Just like on the server side we set up resolvers and can access query variables to it. To call it, we also define a GraphQL query like so:
 \lstset{language=GraphQL}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Query Definition for a Mutation in the Client}]
 const SET_DATA = gql`
 	mutation SetData($data: [String]!) {
 		setData(data: $data) @client	
@@ -613,7 +616,7 @@ const SET_DATA = gql`
 \end{lstlisting}
 The name in line 3 has to match with the one defined in the resolver in \autoref{ex253} in line 5. But whats even more important is the \emph{@client} directive in the end of line 3. This tells Apollo to not contact the server, but rather resolve the mutation locally. We can then call the above defined mutation like this:
 \lstset{language=JavaScript}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Using the Client Side Mutation}]
 const Test() {
 	const [ runSetData ] = useMutation( SET_DATA );
 	
@@ -769,10 +772,7 @@ enum LinkType{
   Mutate
   Generic
 }
-\end{lstlisting}
-The value of \emph{NodeType} or \emph{LinkType} when creating or updating a node or link sent to the server must be one of these. Any other value will result in an error.
 
-\begin{lstlisting}
 enum ArrowType{
   Default
   none
@@ -786,9 +786,11 @@ enum ArrowType{
   InvTriangle
 }
 \end{lstlisting}
-These are the values an arrow on a link displayed in the application can have. The actual values in this enum depend highly on the options from the canvas library used (in this example visjs).
+The value of \emph{NodeType} or \emph{LinkType} when creating or updating a node or link sent to the server must be one of these. Any other value will result in an error.
 
-\begin{lstlisting}
+The values an arrow on a link displayed in the application can have depend highly on the options from the canvas library used (in this app visjs).
+
+\begin{lstlisting}[caption={Usage of Interfaces in GraphQL}]
 interface IDisplayable{
   id: ID!
   label: String
@@ -826,7 +828,7 @@ To retrieve the links attached to the node we make use of the \emph{@cypher} dir
 
 \emph{optional} on link is a value that can be used to clarify that a link of a sequence will only be done in certain cases.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Input Type Definitions}]
 type SequenceProperty{
   group: String
   seq: Int
@@ -886,7 +888,7 @@ type Mutation{
 This is the definition of the root mutation type. It clarifies even more the previously made point of having a lot of trouble formatting the inputs for a mutation: When dispatching a \emph{CreateNode} mutation 2 of the form inputs (label and nodeType) have to be passed directly, while all others need to be put into an object called props that contains the fields defined in the respective input type. This makes the code for form handling a lot harder to re-use, especially as the input types vary for updating and creating.
 
 Lets talk about the return types defined for each operation:
-\begin{lstlisting}
+\begin{lstlisting}[caption={Return Types}]
 interface IReturnInfo{
   success: Boolean!
   message: String
@@ -920,7 +922,7 @@ Similar to how a project using a REST-API would implement it, this was the idea 
 
 Maybe it was due to missing experience, but it didn't seem intuitive at all to define custom responses from the ApolloServer to the client. Just by accident the manner to return custom error messages appeared, but it was already late in development process and there was not enough time left to build it into all places where it would've been necessary. More about this in \autoref{chap:LB}.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Root Type Definitions}]
 type Query{
   Nodes: [Node]
   Links: [Link]
@@ -949,7 +951,7 @@ This is the network we would like to display in the application. It is really he
 
 We will create the three nodes for DB, Backend and Frontend using the following code in the Neo4j Browser:
 \lstset{language=Cypher}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Cypher Statements to Create the Nodes}]
 CREATE (:Node:AbstractUserInterface {id: randomUUID(), label: "Frontend", story: "Interaction point for the user", nodeType: "AbstractUserInterface"})
 CREATE (:Node:API {id: randomUUID(), label: "Backend", story: "Endpoint for requests, fetches from and mutates data on the DB", nodeType: "API"})
 CREATE (:Node:Persistence {id: randomUUID(), label: "DB", story: "Saves data for the methodical designer", nodeType: "Persistence"})
@@ -989,7 +991,7 @@ The link-node would have direct connections to the components it connects. The s
 
 Having this in mind lets go on to create the link-nodes and attach them to their components. For now lets not create any sequence- or link-end-nodes to keep things simple:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Creating and Connecting the First Link}]
 MATCH (api:API) WHERE api.label = "Backend"
 MATCH (db:Persistence) WHERE db.label = "DB"
 CREATE (l:Link)
@@ -1017,7 +1019,7 @@ It is important to note that directions of the arrows here do not represent the 
 \section{Communicating with the DB through ApolloServer and GraphQL-Playground}
 The next step is to communicate with the database through the server. After we set up a small ApolloServer (more on setup in \autoref{chap:Doc}) we should create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning we might make many mistakes which can leave the dataset in a bad shape and fixing it manually would take a lot of time. In \autoref{mutations} in line 2 is the GraphQL definition. The resolver looks like the following:
 \lstset{language=JavaScript}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Seed Resolver}]
 const seedQuery = require( './seed' );
 async SeedDB( _, __, ctx ) {
 	try {
@@ -1105,7 +1107,7 @@ With the result being similar to:
 
 Finally lets write a resolver to create a node. The reason for doing this by hand is that we want to have control over the Cypher query, to be sure that the properties would be assigned the way we want it:
 \lstset{language=JavaScript}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Using returned Values from the Query}]
 		async CreateNode( _, args, ctx ) {
 			try {
 				const session = ctx.driver.session();
@@ -1140,7 +1142,7 @@ mutation createNode($props: NodeCreateInput) {
 \end{lstlisting}
 
 And the \emph{Query Variables} section contains the contents for \emph{props}:
-\begin{lstlisting}
+\begin{lstlisting}[caption={Query Variables}]
 {
   "props": {"synchronous": false, "unreliable": false, "story": "test"}
 }
@@ -1151,7 +1153,7 @@ After looking at Apollo hoks, how to run queries from the GraphQL-Playground and
 
 To then run the createNode mutation seen in \autoref{ex:RunCreateNode} we will make use of the \emph{useMutation} hook from Apollo shown in \autoref{ex:usingMutation}. To do so we first define the query object:
 
-\begin{lstlisting}[label={ex:DefQuery}]
+\begin{lstlisting}[label={ex:DefQuery},caption={Mutation to Create a Node in the Database}]
 export const CREATE_NODE = gql`
   mutation($id: ID!, $label: String!, $nodeType: NodeType!, $props: NodeCreateInput){
     CreateNode(id: $id, label: $label, nodeType: $nodeType, props: $props) {
@@ -1465,8 +1467,9 @@ This part contains a list of ideas about what could be added or modified in the 
 
 \item \textbf{Syntax Checking} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked. Two rules to start with could be:
 \begin{itemize}
-\item Collapsables can only have Part-Of links
+\item Collapsables can only have \emph{Part-Of} links
 \item Loops between collapsables
+\item Only \emph{Team} nodes can have \emph{Responsibility} links
 \end{itemize}
 
 \item \textbf{Custom rules} for syntax checking. This would be a very big task as it involves the definition of some abstract language and a parser that can convert these into constructs the syntax checking algorithm can use.
@@ -1543,14 +1546,14 @@ Next hit \emph{Start} to spin up the instance. When it is running click on \emph
 \subsection{Creating a Project Node}
 In order to be able to request editing rights and actually use the app, it is necessary to manually create a project node in the Neo4j Browser that contains a property called \emph{isBeingEdited} set to \emph{false}:
 \lstset{language=Cypher}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Creating the necessary Project Node}]
 CREATE (p:Project {isBeingEdited: false}) RETURN p
 \end{lstlisting}
 
 \subsection{Backend}
 Install Node.js, clone the server \cite{GitServer} code from GitHub. Open a console window, navigate into the folder containing the server code and write \emph{npm install}. Inside the server folder, create a file called \emph{.env} with the following content:
 \lstset{language=Docker}
-\begin{lstlisting}
+\begin{lstlisting}[caption={Environment Variables for the Server}]
 PORT=8080
 ENDPOINT=/graphql
 DB_DEV_PW=<YOUR_DB_PW>
@@ -1566,7 +1569,7 @@ Visiting this URL will open the GraphQL Playground that can be used to test the 
 
 \subsection{Frontend}
 Clone the client \cite{GitClient} code from GitHub, open a console window, navigate into the client folder and type \emph{npm install}. In the same folder, create a \emph{.env} file with the following content:
-\begin{lstlisting}
+\begin{lstlisting}[caption={Environment Variables for the Frontend}]
 REACT_APP_ENV=dev
 REACT_APP_DEV_HOST=http://localhost:8080/graphql
 \end{lstlisting}
@@ -1647,32 +1650,37 @@ All collapsables will be placed in a grid-like manner, creating a rectangle of c
 
 To calculate the number of nodes per line the number of collapsables is used with the following algorithm:
 \lstset{language=JavaScript}
-\begin{lstlisting}
-let elementCountUsed = collapsables.length;
-if ( isPrime( elementCountUsed ) {
-	elementCountUsed -= 1;
-}
+\begin{lstlisting}[caption={Algorithm to determine the number of Collapsables per Row}]
+export const calculateCollapsableBoundaries = ( allCollapsables ) => {
+	let elementCountUsed = allCollapsables.length;
+	if ( isPrime( elementCountUsed ) ) {
+		elementCountUsed -= 1;
+	}
 
-let limit = 0;
-for ( let i = 2; i < elementCountUsed / 2; i++ ) {
-	limit = Math.floor( elementCountUsed / i );
-	if ( isPrime( limit ) ) {
-		if ( limit < elementCountUsed / 2 ) {
-			return limit;
+	let limit = 0;
+	for ( let i = 2; i < elementCountUsed / 2; i++ ) {
+		limit = Math.floor( elementCountUsed / i );
+		if ( isPrime( limit ) ) {
+			if ( limit < elementCountUsed / 2 ) {
+				return limit;
+			}
+		}
+		else {
+			if ( limit <= elementCountUsed / 3 ) {
+				return limit;
+			}
 		}
 	}
-	else {
-		if ( limit <= elementCountUsed / 3 ) {
-			return limit;
-		} 
-	}				
+	return 3;
 }
 \end{lstlisting}
 
 It walks from 2 to the number of elements divided by 2. Every time it checks if the element count divided by the current number is a prime number. In case it is a prime number it checks if it is smaller than half of the element count to make sure the lines don't get too long.
 
-Afterwards the placement rule will use this limit to allocate the nodes in lines:
-\begin{lstlisting}
+Should the number not be a prime number it must be at least one third of the total number of collapsables. Should no number meet these conditions because the total number of nodes is too small the limit will be set to 3. These numbers were found heuristically.
+
+Afterwards the placement rule will use this limit to allocate the nodes in lines, starting at \emph{(0, 0)}.
+\begin{lstlisting}[caption={Placing all Collapsables}]
 export const CollaspableRule = ( node, allCollapsables, client, limit, minDist = 1000 ) => {
 	if ( isCollapsable( node ) ) {
 		const otherCollapsables = allCollapsables.filter( aNode => aNode.id !== node.id && !aNode.deleted );
@@ -1701,7 +1709,7 @@ If the parent has a level of \emph{0} it is a collapsable. The first position fo
 
 Should the parent be a node with a level other than 0 the new position depends on the parent's direction vector. All children can be placed within an angle of +-90 degrees in the direction of the parent's direction vector. The delta angle is again calculated by the total amount of child nodes. Calculating the new position works as with children of level 1. However as these nodes can have multiple parents the newly calculated position has to be added to the one the node might already have and get normalized afterwards.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Allocating Nodes around Collapsables}]
 for ( let collapsable of collapsables ) {
 	const next = [].concat( collapsable.children );
 	FlowerRule( next, client );
