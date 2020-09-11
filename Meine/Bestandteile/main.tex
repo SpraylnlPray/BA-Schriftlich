@@ -120,8 +120,9 @@ Neo4j is a so called graph database. The idea of graph databases is, compared to
 \begin{itemize}
 \item Unlike most relational databases, who store data through tables and joins, Neo4j stores data in the form of actual nodes and relationships between such \cite{Neo4jDevGuides}. In other DBMS relations between items generally are achieved through join-/lookup-tables which have to be generated. \cite{RelVsGraph}
 
-\item When running a query on a relation DB the server will run through a table and when it finds the searched item it might look for the ID of a related item and start indexing again. With a graph DB the server will index \citep[minute 32]{NeoInternals} once to find the initial node and can then directly access all connected items as they are stored through their relation with the current one. \cite{WhatGraphDB} These are stored as memory pointers which makes following them extremely efficient.
-\item Neo4j uses Cypher as query language. The Cypher syntax was supposed to visually represent the shape of the data a user wants to retrieve instead of describing how to get data, as well as offer the power and functionality other languages offer. \cite{Neo4jCypher} 
+\item When running a query on a graph DB the server will index only once to find the initial node \citep[minute 32]{NeoInternals}. All related nodes can be directly accessed through their relationship with the current one. \cite{WhatGraphDB} These are stored as memory pointers which makes following them extremely efficient.
+
+\item Neo4j uses Cypher as query language. The Cypher syntax visually represent the shape of the data a user wants to retrieve instead of describing how to get data, as well as offer the power and functionality other languages offer. \cite{Neo4jCypher} 
 \end{itemize}
 
 \subsubsection{Cypher}
@@ -130,7 +131,7 @@ For matching all nodes connected to node A through a "Neighbor" relationship, we
 \begin{lstlisting}[label={ex231},caption={Matching Nodes Way 1}]
 MATCH (n:Node {label: "A"})-[:Neighbor]-(n2:Node) RETURN n, n2
 \end{lstlisting}
-Parentheses represent a node, square brackets a relationship. The naming works after the following pattern: <name>:<type>. In this example n is the name for the first node and n2 the name of the list of connected nodes. Specifying a name for the relationship is was not necessary as no data will be retrieved from it. Specific properties a node or relationship should have can be specified within curly braces. Another query with the same result set would be
+Parentheses represent a node, square brackets a relationship. The naming works after the following pattern: <name>:<type>. In this example n is the name for the first node and n2 the name of the list of connected nodes. Specifying a name for the relationship is not necessary as no data will be retrieved from it. Specific properties a node or relationship should have can be specified within curly braces. Another query with the same result set would be
 \begin{lstlisting}[label={ex232},caption={Matching Nodes Way 2}]
 MATCH (n:Node)-[:Neighbor]-(n2:Node) WHERE n.label = "A" RETURN n, n2
 \end{lstlisting}
@@ -144,7 +145,7 @@ Internally, there are 3 types of records saved on the disk: node-, relationship-
 
 Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node.
 
-In addition to the first property, each node knows about its first relationship. If a it is the \emph{first} one, is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four more to other relationships, which are best explained in an example traversal in pseudo code:
+In addition to the first property, each node knows about its first relationship. If it is the \emph{first} one, it is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four more to other relationships, which are best explained in an example traversal in pseudo code:
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Algorithm to Save Read the Graph from Disk}]
 if node n has relationship pointer r: 
@@ -183,11 +184,12 @@ For finding a node to start traversing the graph, Neo4j uses traditional indexin
 \item \textbf{RelationshipExpanders} which will for a node return all relevant relationships to continue traversing from that node
 \item \textbf{Evaluators} which return if traversing should continue on this branch ($ \rightarrow $ expand) or not and if this node should be included in the result set or not.
 \end{enumerate}
-When accessing a node the first thing the system will try to do is fetch it from the cache. If it shouldn't be there, the next place that will be checked is the FS Cache. Should the region that contains the node be apparent here, the access is quick but blocking, meaning that the entire region is getting locked. In the case that the region is out of the FS cache the operation is blocking and slower. \\
+When accessing a node the first thing the system will try to do is fetch it from the cache. If it isn't be there, the next place that will be checked is the FS Cache. Should the region that contains the node be available there, the access is quick but blocking, meaning that the entire region is getting locked. In the case that the region is out of the FS cache the operation is blocking and slower. \\
 The locking is necessary to make sure that no other transaction will evict that area from the memory while the current one reads from it.
 
 \subsubsection{Adding Cypher}
-As Cypher describes the shape of the searched data, a searched query will be converted into a representative pattern graph that matches the searched structure. \\
+As Cypher describes the shape of the searched data, a searched query will be converted into a representative pattern graph. This is an internal representation of a valid result set that matches the searched structure. Found patterns will be compared to it to decide whether they should be included in the result set or not.
+
 When a query is run, the first thing that happens is that matching start-nodes are searched in the database (through indexing). When a node is found, traversing the database starts as described above. For Expanders and Evaluators to know what to return, they simply compare the pattern graph described through Cypher with the graph that was found so far and see if there is more data that matches. 
 
 \section{Server - ApolloServer}
@@ -214,7 +216,7 @@ async CreateNode( _, args, ctx ) {
 The following describes each step:
 \begin{itemize}
 \item Line 1 contains the function definition. "args" is an object that contains all data sent with the query from the frontend. "ctx" is the context object that contains the neo4j driver to communicate with the DB. The first argument "\_", which is a placeholder here as we do not need it, is the so called "parent" which is equal to the previous resolver in the resolver chain. (More about this in the next section)
-\item Line 2 acquires a session to communicate with the database. \cite{Neo4jDriver} This object allows to send Cypher queries to the database that get executed right away.
+\item Line 2 acquires a session to communicate with the database. \cite{Neo4jDriver} This object allows sending Cypher queries to the database that get executed right away.
 \item Lines 3 to 6 define a Cypher query which is similar to the ones shown in \autoref{ex231} and \autoref{ex232}. 
 \item In line 4 makes use of the args object and embeds the nodeType directly into the query string by using template strings. This is necessary because at this position of a cypher query it is not possible to make use of query variables as in the rest of the query. This line also shows that by using \$<variableName> query variables that were passed along can be accessed.
 \item Line 5 demonstrates the usage of an object we can pass as query variable. This object can't only contain simple datatypes, but its really useful to set various values at once.
@@ -501,7 +503,7 @@ class Counter extends React.Component {
 
 When defining a custom constructor for a class component it is necessary to call \emph{super( props )} first. Defining an initial state can be done by setting \emph{this.state = \{ val: 0 \}}. This is the only place where state should modified directly. In comparison to that before updating state in lines 32 and 39 the app first creates a copy of the value it will modify by using Object Destructuring and then call \emph{this.setState( \{ val \} )} to update it. By doing so it does not modify the state object directly.
 
-Lines 24 and 25 bind the this keyword on the increase and decrease functions. By leaving this step, accessing \emph{this.setState()} in any of the methods would crash the application as \emph{this} would be the global window object which doesn't have a \emph{setState} method defined.
+Lines 24 and 25 bind the this keyword on the increase and decrease functions. Not doing so and accessing \emph{this.setState()} in any of the methods would crash the application as \emph{this} would be the global window object which doesn't have a \emph{setState} method defined.
 
 The render method defines the output of the component. It'll render a paragraph telling the current score by accessing the state together with two buttons and their respective click handlers.
 
@@ -552,7 +554,7 @@ ApolloClient is a state management library for JavaScript that manages data with
 ApolloClient 3 offers this by providing custom \textbf{hooks}. Hooks are a new addition to React since React 16.8 and were introduced to improve stateless functional components \cite{ReactHooksIntro} and can only be used in such. \cite{ReactHooksOverview} There were a few reasons that led to the introduction of hooks like the appearance of complex class components that couldn't be split into smaller ones, not re-usable stateful logic and classes being not ideal for future optimization. \cite{ReactHooksIntro} Hooks allow for example the usage of state in functional components.
 
 \subsubsection{Apollo Hooks}
-In addition to some built-in Hooks provided by React it is also possible to create them. Apollo implemented many own hooks, we will focus on \emph{useQuery}, \emph{useLazyQuery} and \emph{useMutation}.
+In addition to some built-in Hooks provided by React it is also possible to create them. Apollo implemented many of its own hooks, we will focus on \emph{useQuery}, \emph{useLazyQuery} and \emph{useMutation}.
 The first argument to all of these is a GraphQL string. A query for the first two, a mutation for the last one.
 
 The second argument is the options object. By adding properties to this the execution behavior can be influenced. Probably the most important argument is \emph{variables}. This is an object containing key-pair values that equal to the ones used in a GraphQL query as shown in \autoref{ex211}. In addition to that there are \emph{onError} and \emph{onCompleted}. These are two callback functions that allow for executing actions upon completion or handling of possible errors. Imagine \emph{GET\_DATA} being a valid GraphQL query string:
@@ -584,7 +586,7 @@ function Test() {
 
 In comparison to \emph{useQuery} the other two also return a function object that can be called upon specific a action to execute the query or mutation (see example below).
 
-The \emph{useMutation} hook is the only one of the three allowing for an \emph{update} argument in the options object. In this it is possible to access the local cache and have access to the results returned from the mutation. This can be useful if internal data needs to be updated depending on the result of a server operation:
+The \emph{useMutation} hook is the only one of the three allowing for an \emph{update} argument in the options object. In this it is possible to access the local cache and have access to the results returned from the mutation. This can be useful if local data in the cache needs to be updated depending on the result of a server operation:
 \begin{lstlisting}[caption={Creating a Mutation and defining a manual update function},label={ex:usingMutation}]
 function Mutate() {
 	const [ runMutation, { data, loading, error } ] = useMutation( DO_THING, {
@@ -597,7 +599,7 @@ function Mutate() {
 This approach works well and is more or less the only way of handling return results from external mutations. 
 
 \subsubsection{Local Resolvers}
-The same could be done for local state changes, but as these functions can become long it might clutter the component with a lot of code that is not actually for it. To get rid of this problem the client allows to define local resolvers:
+The same could be done for local state changes, but as these functions can become long it might clutter the component with a lot of code that is not actually for it. To get rid of this problem the client allows the definition of local resolvers:
 \begin{lstlisting}[caption={Local Resolvers},label={ex253}]
 const client = new ApolloClient({
 	...,
@@ -622,7 +624,7 @@ const SET_DATA = gql`
 	}
 `;
 \end{lstlisting}
-The name in line 3 has to match with the one defined in the resolver in \autoref{ex253} in line 5. But whats even more important is the \emph{@client} directive in the end of line 3. This tells Apollo to not contact the server, but rather resolve the mutation locally. The above defined mutation can be called like this:
+The name in line 3 has to match with the one defined in the resolver in \autoref{ex253} in line 5. But whats even more important is the \emph{@client} directive at the end of line 3. This tells Apollo to not contact the server, but rather resolve the mutation locally. The above defined mutation can be called like this:
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Using the Client Side Mutation}]
 const Test() {
@@ -640,7 +642,7 @@ const Test() {
 \end{lstlisting}
 
 \subsubsection{The Apollo Cache}
-A unique feature of Apollo is its smart cache. Once a query to the server has been executed, the results are saved in the cache and should the exact same query be executed again, the cache will first check if it has results for this query saved locally. If so, it'll return them from there, reducing network traffic and improving performance of the whole application. 
+A feature of Apollo is its smart cache. Once a query to the server has been executed, the results are saved in the cache and should the exact same query be executed again, the cache will first check if it has results for this query saved locally. If so, it'll return them from there, reducing network traffic and improving performance of the whole application. 
 
 Of course in some cases it might be necessary to always have the newest data from the cache. The exact behavior can be specified through the \emph{options} object passed to a query or mutation.
 
@@ -648,54 +650,9 @@ Of course in some cases it might be necessary to always have the newest data fro
 
 While developing in a local environment it is also important to test the application in a production environment as early as possible. Many frameworks make optimizations to improve performance. This might lead to errors that can't be seen in a local setup. Often they also change error behavior. While during development an error might only lead to a warning message, in production the same error might cause the application to crash.
 
-Another reason to go for early deployment is to allow other people to see, use and test the application. Someone who sees the app for the first time or at least doesn't know how things were thought to work will make completely different use of it than a programmer. New issues with the workflow can be discovered and problems that a developer would never have thought of be reported. Further the layout will be tested on different screens, browsers and devices, unveiling unknown layout troubles. Issues discovered early are much easier to fix than those who are integrated deeply into the codebase. \\
+Another reason to go for early deployment is to allow other people to see, use and test the application. Someone who sees the app for the first time or at least doesn't know how things were thought to work will make completely different use of it than a programmer. New issues with the workflow can be discovered and problems that a developer would never have thought of may be discovered. Further the layout will be tested on different screens, browsers and devices, unveiling unknown layout troubles. Issues discovered early are much easier to fix than those who are integrated deeply into the codebase. \\
 
-This chapter we will introduce the tools that were used to deploy the application to a publicly available domain.
-
-\section{AWS}
-AWS is a cloud platform from Amazon that offers over 175 different services in 24 different geographic regions around the world to allow for high availability all around the world. \cite{WhatIsAws}\\
-AWS was launched in 2002 only offering SOAP (a messaging protocol used in distributed systems to exchange information) and XML interfaces. \cite{HistoryAwsMedia} In 2003 the idea of a big system offering services and tools was born as the leadership realized that one of the company's strengths was building and running effective, reliable and scalable data centers. After developing a more precise idea of how this strengths could be used to fulfill a lot of companies' needs the first public launch was in 2006 with \emph{Simple Storage Service} (S3), the \emph{Elastic Compute Cloud} (EC2) and a \emph{Simple Queue Service} (SQS) following shortly after. \cite{HistoryAwsTech}
-
-Since then the services offered by AWS keep growing and other companies like Google, Microsoft or IBM started to compete in the business. In a 2019 research from Gartner AWS was found as one of the leading cloud Infrastructure as a Service providers world wide (IaaS) \cite{Gartner} 
-regarding \emph{Completeness of Vision} and \emph{Ability to execute}. 
-
-\subsection{AWS-EC2}
-EC2 is a service that allows the creation of virtual machines with over 300 different variations of computational capacities like the number of CPUs, Memory, Storage and Network Performance. \cite{AwsEc2} 
-Available configurations that can run on an instance are called Amazon Machine Images (AMIs) and include various Linux based distributions like Ubuntu, Debian or fedora as well as Windows. In addition to empty operating systems Amazon and different communities also provides images with certain pre-installed software making sure that instances can be set up quickly.
-Basically, an EC2 instance is a virtual machine that runs on an Amazon server. \cite{Ec2VirtualMachine}
-
-%In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
-
-\subsection{AWS-ECS}
-ECS is a service to run automatically managed containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
-These are the most important terms when talking about AWS ECS: \\
-
-A \textbf{Task Definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
-
-A \textbf{Task} is an instance that is created following the specifications in the task definition. A task can run various Docker containers at once. A task is where an application actually gets executed.
-
-A \textbf{Service Description} is the blueprint for a service. It contains for example the minimum and maximum number of tasks running at once, as well as thresholds to when changes to the number of running tasks should happen and other specifications.
-
-A \textbf{Service} is an instance that is created following the specifications in the Service Description. One service can run various tasks at once and use a load balancer to distribute networkk traffic equally over all running tasks.
-
-A \textbf{Cluster} is a logical grouping of services. \\
-
-These components can be visually put together as shown in the figure below. \citep[with adaptions]{AwsEcs} 
-\begin{figure}[H]
-\centering
-\includegraphics[scale=.45]{Bilder/EcsStructure.png}
-\captionof{figure}{Strucute of AWS ECS}
-\label{ex311}
-\end{figure}
-
-A task is created from a task definition and placed in a service. Services can make use of AWS \emph{Fargate} which is a computation engine from Amazon which calculates which virtual machine to use for a task depending on the task definition. It will then create and start it and possibly run the docker image from a specified container registry. \cite{AwsFargate} The dashed box is a cluster. This cluster contains 2 services, reach running 4 tasks. 
-
-The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of one geological region to improve response time.
-
-\subsection{AWS-Amplify}
-Amplify is a services that aims to make the development as well as the deployment of applications as easy as possible. It comes with many advanced features that help setting up an app quickly. Some examples are: Authentication, API creation, Analytics, Push Notifications and many more \cite{AwsAmplify}. It creates a certificate for any deployed application, allowing for HTTPS connections. Further it is able to scan a connected GitHub repository and provide a template configuration based on the framework used.
-
-Another really nice feature is the easy deployment flow: For each application it is possible to connect various branches. Each branch will have its unique URL and once a developer pushes to a connected branch, Amplify will build the newest status of the application. This is a great feature for testing new features in a production environment without having to deploy to a master environment directly.
+This chapter we will introduce the tools that were used to deploy the application to a publicly available cloud platform that allows it to be used and tested by anyone, anywhere.
 
 \section{Docker}
 Docker is a platform that provides the ability to a developer to create any environment in which he wants to execute code in.
@@ -720,10 +677,59 @@ While it is similar to a virtual machine, there are certain differences between 
 \textbf{Security} Following the previous point, every VM has its own operating system and is strongly isolated in the host kernel. Docker containers all run on a single kernel. Furthermore docker resources are shared. If an attacker gets access to one container he'll be able to exploit  all containers in a cluster. \cite{GeekDocker}) \\
 \textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll run the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
 
-\chapter{Development}
-This chapter will talk about the development process and explain some thought processes that lead to certain decisions. There are flaws in the resulting work, which is due to this chapter not being intended to be a "How to" kind of guide. Instead it should be read as a simple documentation the experiences made and to make the reader avoid what he might denote as not ideal.
+\section{AWS}
+AWS is a cloud platform from Amazon that offers over 175 different services in 24 different geographic regions around the world to allow for high availability all around the world. \cite{WhatIsAws}\\
+AWS was launched in 2002 only offering SOAP (a messaging protocol used in distributed systems to exchange information) and XML interfaces. \cite{HistoryAwsMedia} In 2003 the idea of a big system offering services and tools was born as the leadership realized that one of the company's strengths was building and running effective, reliable and scalable data centers. After developing a more precise idea of how this strengths could be used to fulfill a lot of companies' needs the first public launch was in 2006 with \emph{Simple Storage Service} (S3), the \emph{Elastic Compute Cloud} (EC2) and a \emph{Simple Queue Service} (SQS) following shortly after. \cite{HistoryAwsTech}
 
-This chapter will also contain a few difficulties encountered together with a workaround found. These should not be considered best practice, but worked for this case and can be seen as suggestions if a similar problem should appear in similar projects.
+Since then the services offered by AWS keep growing and other companies like Google, Microsoft or IBM started to compete in the business. In a 2019 research from Gartner AWS was found as one of the leading cloud Infrastructure as a Service providers world wide (IaaS) \cite{Gartner} 
+regarding \emph{Completeness of Vision} and \emph{Ability to execute}. 
+
+\subsection{AWS-EC2}
+EC2 is a service that allows the creation of virtual machines with over 300 different variations of computational capacities like the number of CPUs, Memory, Storage and Network Performance. \cite{AwsEc2} 
+Available configurations that can run on an instance are called Amazon Machine Images (AMIs) and include various Linux based distributions like Ubuntu, Debian or fedora as well as Windows. In addition to empty operating systems Amazon and different communities also provides images with certain pre-installed software making sure that instances can be set up quickly.
+Basically, an EC2 instance is a virtual machine that runs on an Amazon server. \cite{Ec2VirtualMachine}
+
+%In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
+
+\subsection{AWS-ECS}
+ECS is a service to run automatically managed docker containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
+These are the most important terms when talking about AWS ECS: \\
+
+A \textbf{Task Definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
+
+A \textbf{Task} is an instance that is created following the specifications in the task definition. A task can run various Docker containers at once. A task is where an application actually gets executed.
+
+A \textbf{Service Description} is the blueprint for a service. It contains for example the minimum and maximum number of tasks running at once, as well as thresholds to when changes to the number of running tasks should happen and other specifications.
+
+A \textbf{Service} is an instance that is created following the specifications in the Service Description. One service can run various tasks at once and use a load balancer to distribute network traffic equally over all running tasks.
+
+A \textbf{Cluster} is a logical grouping of services. \\
+
+These components can be visually put together as shown in the figure below. \citep[with adaptions]{AwsEcs} 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.45]{Bilder/EcsStructure.png}
+\captionof{figure}{Structure of AWS ECS}
+\label{ex311}
+\end{figure}
+
+A task is created from a task definition and placed in a service. It is possible to allow AWS to automatically manage all Docker and VM resources and then run the docker image directly. The dashed box is a cluster. This cluster contains 2 services, reach running 4 tasks. 
+
+The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of one geological region to improve response time.
+
+\subsection{AWS-Amplify}
+Amplify is a service that aims to make the development as well as the deployment of applications as easy as possible. It comes with many advanced features that help setting up an app quickly. Some examples are: Authentication, API creation, Analytics, Push Notifications and many more \cite{AwsAmplify}. It creates a certificate for any deployed application, allowing for HTTPS connections. Further it is able to scan a connected GitHub repository and provide a template configuration based on the framework used.
+
+Another really nice feature is the easy deployment flow: For each application it is possible to connect various branches. Each branch will have its unique URL and once a developer pushes to a connected branch, Amplify will build the newest status of the application. This is a great feature for testing new features in a production environment without having to deploy to a master environment directly.
+
+\chapter{Development}
+This discussion is not a "how to" guide because in the course of this work some mistakes were made. This section describes key architectural decisions and reports equally on those which turned out well and those which turned out badly.
+
+Workarounds found for certain problems should not be considered best practice but rather as hint to a solution if one of these problems should appear in similar projects.
+
+The examples in this chapter are taken from the actual application, unless stated otherwise. \\
+
+For the rest of this chapter the word \emph{graph} refers to a network of nodes that are connected through links. Nodes must not be connected to links, but each link must be connected to a node (it can be the same one twice) on each end. This means that there can be various not connected networks of nodes and links in one graph.
 
 \section{Why the GRANDstack}
 To find out which tech stack to use, the first step was to analyze what the application should be able to do:
@@ -732,25 +738,27 @@ To find out which tech stack to use, the first step was to analyze what the appl
 \item The user will create, modify and delete data
 \item Local changes made to data can be saved permanently
 \item Data must be displayed as graph
-\item At some point we might want to be able to implement real time updates for changes made by another user
+\item At some point we might want to be able to implement real time updates that show changes made by another user
 \end{itemize}
 This will give a list of requirements our tech stack should fulfill:
 \begin{itemize}
-\item Updating the DOM should be done efficiently as the layout will change depending on user actions
+\item Updating the DOM should be done efficiently as the layout needs to update with almost every user action
 \item A local state management will be needed to keep track of local changes
 \item A database will be necessary to permanently save changes
 \item An intuitive way for saving graph data
 \item Communication with the server should be lightweight and easy to implement
 \end{itemize}
 
-As we have looked at the individual parts of the GRANDstack, we can see quickly that it contains most of the things we imagined to be useful: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL will allows to only transmit the data needed in case of a lot of communication with the server. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Having a state management framework and a backend server that are designed to work together also promises for a trouble free development. The Apollo hooks make it very intuitive to update the UI according to state changes.
+As we have looked at the individual parts of the GRANDstack, we can see quickly that it contains most of the things we imagined to be useful: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL only transmits the data needed when communicating with the server. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Subscriptions are a way of keeping a communication channel between server and client, making sure the server can inform all listening clients about an incoming event.
 
-Furthermore this stack contains many relatively young technologies and as mentioned in \autoref{chap:Intro} this project also serves to explore these.
+Having a state management framework and a backend server that are designed to work together also promises for a trouble free development. The Apollo hooks make it very intuitive to update the UI according to state changes.
+
+Furthermore this stack contains many relatively new an immature technologies and as mentioned in \autoref{chap:Intro} this project also serves to explore these.
 
 \section{The GraphQL Schema}
-Development of applications that leverage GraphQL usually start by creating a schema to define how data looks like. The good thing about this is that it can be adapted if during the process we discover that we need to make some changes to it.
+Development of applications that leverage GraphQL usually start by creating a schema to define the shape of data. The good thing about this is that it can be adapted if during the process it comes up that we it actually needs some changes.
 
-Here we will take a brief look at the GraphQL schema this app uses and I'll mention a few things from a personal point of view that didn't work out as I thought they would.
+This part will take a brief look at the GraphQL schema this app uses and mention a few things that didn't work out as expected when creating it.
 \lstset{language=GraphQL}
 \begin{lstlisting}[caption={GraphQL Enums},label={enums}]
 enum NodeType{
@@ -790,9 +798,7 @@ enum ArrowType{
   InvTriangle
 }
 \end{lstlisting}
-The value of \emph{NodeType} or \emph{LinkType} when creating or updating a node or link sent to the server must be one of these. Any other value will result in an error.
-
-The values an arrow on a link displayed in the application can have depend highly on the options from the canvas library used (in this app visjs).
+Any node will have a type from the \emph{NodeType} enum above. The type decides how the node will be displayed in the application. What values are part of this enum depends on what the app should display. The same counts for links and the \emph{LinkType} enum. Furthermore every link can have arrows of different shape on each end. As this app uses a canvas library to take care of the drawings on the screen the values that are part of this enum depend on what the library offers.
 
 \begin{lstlisting}[caption={Usage of Interfaces in GraphQL}]
 interface IDisplayable{
@@ -826,11 +832,11 @@ type Link implements ILink & IDisplayable{
 }
 
 \end{lstlisting}
-Coming from an Object Oriented background using interfaces seemed intuitive. Having an ID, label and story object to be apparent on all entities that can be shown on screen makes sense. What was not known when creating the schema is that visjs requires each link to be connected to an x and y node, in other words: a link can't "float". This means that there are two more required fields in the ILink interface, making the IDisplayable interface more or less loosing its purpose of defining properties that are required to be displayed.
+Coming from an Object Oriented background using interfaces seemed intuitive. Having an ID, label and story object to be apparent on all entities that can be shown on screen makes sense. What was not known when creating the schema is that visjs requires each link to be connected to an x and y node, in other words: a link can't "float". This means that there are two more required fields in the ILink interface, making the IDisplayable interface conflict with its purpose of defining properties that are required to be displayed.
 
-To retrieve the links attached to the node we make use of the \emph{@cypher} directive we talked about earlier. This is an array which can be empty as nodes do not necessarily need be connected in any way. Same counts for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather that nodes. In the end they got placed on nodes as it made more sense to me that for example an event would be synchronous rather than the dispatch call for it.
+To retrieve the links attached to the node we make use of the \emph{@cypher} directive we talked about earlier. This is an array which can be empty as nodes do not necessarily need be connected in any way. The same idea holds for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather than nodes to annotate them.
 
-\emph{optional} on link is a value that can be used to clarify that a link of a sequence will only be done in certain cases.
+\emph{optional} on link is a value that would have been used for template functionality that is not implemented yet in the application.
 
 \begin{lstlisting}[caption={Input Type Definitions}]
 type SequenceProperty{
@@ -857,11 +863,9 @@ type LinkEnd{
   arrow: ArrowType
 }
 \end{lstlisting}
-Every sequence on a link can contain a string identifying the sequence group it belongs to as well as a sequence number to display the order in which steps will be executed. Each link end can contain a note about how the component on the respective end perceives the incoming connection.
+If more than one link connects the same pair of nodes a sequence property can be used to assign a group id to each link and an order within that group. Because of that each sequence on a link contains a string identifying the sequence group it belongs to as well as a sequence number to display the order in which steps will be executed. Each link end can contain a note about how the component on the respective end perceives the incoming connection.
 
-The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as we can just pass all input objects from a form to the query. But as we can see in the above code snippet there is one input type for creating and one for updating nodes. The reason for that is that we'd pass all optional parameters as an input object and the required ones manually. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types.
-
-This schema could be improved by using GraphQL fragments and make it shorter by that, but the usage of these input types was not worth the effort. 
+The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as we can just pass all input objects from a form to the query. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types which is why the usage of these input types was not worth the effort. In this case it would've been better to put all input values directly into a \emph{variables} object that gets sent to the server.
 
 \begin{lstlisting}[caption={Mutation Type Definition},label={mutations}]
 type Mutation{
@@ -889,7 +893,7 @@ type Mutation{
 }
 \end{lstlisting}
 
-This is the definition of the root mutation type. It clarifies even more the previously made point of having a lot of trouble formatting the inputs for a mutation: When dispatching a \emph{CreateNode} mutation 2 of the form inputs (label and nodeType) have to be passed directly, while all others need to be put into an object called props that contains the fields defined in the respective input type. This makes the code for form handling a lot harder to re-use, especially as the input types vary for updating and creating.
+This is the definition of the root mutation type. It clarifies even more the previously made point of having a lot of trouble formatting the inputs for a mutation: When dispatching a \emph{CreateNode} mutation two of the form inputs (label and nodeType) have to be passed directly, while all others need to be put into an object called props that contains the fields defined in the respective input type. This makes the code for form handling a lot harder to re-use, especially as the input types vary for updating and creating.
 
 Lets talk about the return types defined for each operation:
 \begin{lstlisting}[caption={Return Types}]
@@ -947,11 +951,11 @@ To get started with Neo4j its a good idea to first create a small basic data set
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.8]{Bilder/BasicGraph.png}
-\captionof{figure}{A small network of software components}
+\captionof{figure}{A small network of software components used for testing}
 \label{ex421}
 \end{figure}
 
-The goal is to display this network in the application. It is really helpful to first draw it on paper and then think of the individual components needed. As there will be one graph in the database and one in the application it is important to carefully separate them when talking about a node: This could refer to one either in the database or in the application. While the node in the app is always a node in the database, this is not necessarily the case the other way around as a node in the database could also represent data about a connection in the application.
+The goal is to display this graph in the application. It is really helpful to first draw it on paper and then think of the individual components needed. As there will be one graph in the database and one in the application it is important to carefully separate them when talking about a node: While a node in the app is always a node in the database, this is not necessarily the case the other way around as a node in the database could also represent data about a connection in the application.
 
 This code will create the three nodes for DB, Backend and Frontend:
 \lstset{language=Cypher}
@@ -963,7 +967,8 @@ CREATE (:Node:Persistence {id: randomUUID(), label: "DB", story: "Saves data for
 
 Everything between the parentheses of a create statement defines a new node in Neo4j. By using colons we define labels for a node. These can be used to filter for a certain type of node and can improve performance when traversing. 
 
-All of them are of type node and each of them has its own specific label, marking them as different node types. Curly braces are used to define properties on each of them: A unique ID for each node by using Neo4j's \emph{randomUUID()} function, a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore we give each node a nodeType. This might seem a bit counter intuitive as this was already defined in the labels for the node. However later when retrieving the nodes from the database it'd only be possible to retrieve \emph{all} labels of a node by using Neo4j's \emph{RETURN labels(n)} function. This would return a list, but for displaying them we only need one which is why we will include this information in the node's properties as well.
+All of them are of type node and each of them has its own specific label, marking them as different node types. Curly braces are used to define properties on each of them: A unique ID for each node by using Neo4j's \emph{randomUUID()} function, a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore we give each node a nodeType. This might seem a bit counter intuitive as this was already defined in the Neo4j labels for the node.
+Later on when retrieving the nodes from the database its only possible to get all of those, which would be a list like \emph{[Node, API]}. For displaying it however there is only one of them necessary. To be able to easily extract it, it has its own property on each node.
 
 This is how the created graph looks like in the Neo4j Browser:
 \begin{figure}[H]
@@ -1011,14 +1016,25 @@ This code will find a node with an \emph{API} label and one with a \emph{Persist
 \label{ex423}
 \end{figure}
 
-After adding the rest of the connection using the same approach the whole representation of \autoref{ex421} on the data layer looks like:
+After adding the rest of the connections using the same approach the whole representation on the data layer looks like:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{Bilder/BasicGraphNeo3.png}
 \captionof{figure}{Whole graph in the DB}
 \label{ex424}
 \end{figure}
-It is important to note that directions of the arrows here do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform all relationships were made to be outgoing from the link nodes.
+
+To make this more clear lets compare it to the graph to be displayed in the app:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.8]{Bilder/BasicGraph.png}
+\captionof{figure}{A small network of software components used for testing}
+\label{ex:GraphSideBySide}
+\end{figure}
+
+The yellow, pink and blue circles represent the nodes that are also shown as nodes on the frontend. The connections and all data they contain have turned into the green circles. It is important to note that directions of the arrows in \autoref{ex424} do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform all relationships were made to be outgoing from the link nodes.
+
+To shorten the example the information about the arrows in \autoref{ex:GraphSideBySide} does not exist in \autoref{ex424}. 
 
 \section{Communicating with the DB through ApolloServer and GraphQL-Playground}
 The next step is to communicate with the database through the server. After setting up ApolloServer (more on setup in \autoref{chap:Doc}) a first step would be to create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning we might make many mistakes which can leave the dataset in a bad shape and fixing it manually would take a lot of time. In \autoref{mutations} in line 2 is the GraphQL definition. The resolver looks like the following:
@@ -1178,7 +1194,7 @@ export const CREATE_NODE = gql`
 This small functional component demonstrates how to pass the query to the hook and use it:
 
 \lstset{language=JavaScript}
-\begin{lstlisting}[caption={Using the Query in a Component}]
+\begin{lstlisting}[caption={Using the Query in a Component (no actual application code)}]
 import { CREATE_NODE } from './queries';
 import { useState } from 'react';
 

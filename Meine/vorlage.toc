@@ -27,50 +27,50 @@
 \contentsline {subsubsection}{\nonumberline Local Resolvers}{17}{section*.18}%
 \contentsline {subsubsection}{\nonumberline The Apollo Cache}{18}{section*.19}%
 \contentsline {chapter}{\numberline {3}Deployment}{19}{chapter.3}%
-\contentsline {section}{\numberline {3.1}AWS}{19}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}AWS-EC2}{19}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}AWS-ECS}{20}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}AWS-Amplify}{21}{subsection.3.1.3}%
-\contentsline {section}{\numberline {3.2}Docker}{21}{section.3.2}%
+\contentsline {section}{\numberline {3.1}Docker}{19}{section.3.1}%
+\contentsline {section}{\numberline {3.2}AWS}{20}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}AWS-EC2}{20}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}AWS-ECS}{21}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}AWS-Amplify}{22}{subsection.3.2.3}%
 \contentsline {chapter}{\numberline {4}Development}{23}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Why the GRANDstack}{23}{section.4.1}%
 \contentsline {section}{\numberline {4.2}The GraphQL Schema}{24}{section.4.2}%
 \contentsline {section}{\numberline {4.3}Getting started with Neo4j}{28}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Communicating with the DB through ApolloServer and GraphQL-Playground}{31}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Making ApolloServer and ApolloClient communicate}{34}{section.4.5}%
+\contentsline {section}{\numberline {4.4}Communicating with the DB through ApolloServer and GraphQL-Playground}{32}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Making ApolloServer and ApolloClient communicate}{35}{section.4.5}%
 \contentsline {section}{\numberline {4.6}Building the UI}{36}{section.4.6}%
 \contentsline {subsection}{\numberline {4.6.1}Components}{36}{subsection.4.6.1}%
-\contentsline {section}{\numberline {4.7}Problems}{37}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Keeping the data consistent when saving changes}{37}{subsection.4.7.1}%
+\contentsline {section}{\numberline {4.7}Problems}{38}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Keeping the data consistent when saving changes}{38}{subsection.4.7.1}%
 \contentsline {subsection}{\numberline {4.7.2}AWS-Healthcheck}{39}{subsection.4.7.2}%
 \contentsline {subsection}{\numberline {4.7.3}Apollo Error-Codes}{40}{subsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{40}{subsection.4.7.4}%
-\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{40}{subsection.4.7.5}%
+\contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{41}{subsection.4.7.4}%
+\contentsline {subsection}{\numberline {4.7.5}CORS-problems}{41}{subsection.4.7.5}%
 \contentsline {section}{\numberline {4.8}Graph-Layout}{41}{section.4.8}%
-\contentsline {subsection}{\numberline {4.8.1}Tree-Layout}{41}{subsection.4.8.1}%
-\contentsline {subsection}{\numberline {4.8.2}Flower-Layout}{42}{subsection.4.8.2}%
-\contentsline {section}{\numberline {4.9}Behavior Decisions}{44}{section.4.9}%
-\contentsline {section}{\numberline {4.10}Avoiding Data Corruption}{45}{section.4.10}%
-\contentsline {chapter}{\numberline {5}Looking back}{46}{chapter.5}%
-\contentsline {section}{\numberline {5.1}What was good}{46}{section.5.1}%
-\contentsline {section}{\numberline {5.2}What was not ideal}{46}{section.5.2}%
-\contentsline {chapter}{\numberline {6}Ideas for the Future}{47}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Documentation}{51}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Setting Up a Local Development Environment}{51}{section.7.1}%
-\contentsline {subsection}{\numberline {7.1.1}Neo4j Desktop}{51}{subsection.7.1.1}%
-\contentsline {subsection}{\numberline {7.1.2}Creating a Project Node}{51}{subsection.7.1.2}%
-\contentsline {subsection}{\numberline {7.1.3}Backend}{52}{subsection.7.1.3}%
-\contentsline {subsection}{\numberline {7.1.4}Frontend}{52}{subsection.7.1.4}%
-\contentsline {section}{\numberline {7.2}Backend}{52}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Frontend}{53}{section.7.3}%
-\contentsline {subsection}{\numberline {7.3.1}Local Resolvers}{54}{subsection.7.3.1}%
-\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{54}{section*.37}%
-\contentsline {subsubsection}{\nonumberline updateLink}{54}{section*.38}%
-\contentsline {subsubsection}{\nonumberline collapseNode}{54}{section*.39}%
-\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{55}{section*.40}%
-\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{55}{section*.41}%
-\contentsline {subsection}{\numberline {7.3.2}Layout Algorithms}{55}{subsection.7.3.2}%
-\contentsline {subsubsection}{\nonumberline Collapsable Rule}{55}{section*.42}%
-\contentsline {subsubsection}{\nonumberline FlowerRule}{56}{section*.43}%
-\contentsline {subsubsection}{\nonumberline NonCollapsableRule}{58}{section*.44}%
-\contentsline {chapter}{\nonumberline List of Figures}{59}{chapter*.45}%
+\contentsline {subsection}{\numberline {4.8.1}Tree-Layout}{42}{subsection.4.8.1}%
+\contentsline {subsection}{\numberline {4.8.2}Flower-Layout}{43}{subsection.4.8.2}%
+\contentsline {section}{\numberline {4.9}Behavior Decisions}{45}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Avoiding Data Corruption}{46}{section.4.10}%
+\contentsline {chapter}{\numberline {5}Looking back}{47}{chapter.5}%
+\contentsline {section}{\numberline {5.1}What was good}{47}{section.5.1}%
+\contentsline {section}{\numberline {5.2}What was not ideal}{47}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Ideas for the Future}{48}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Documentation}{52}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Setting Up a Local Development Environment}{52}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Neo4j Desktop}{52}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}Creating a Project Node}{52}{subsection.7.1.2}%
+\contentsline {subsection}{\numberline {7.1.3}Backend}{53}{subsection.7.1.3}%
+\contentsline {subsection}{\numberline {7.1.4}Frontend}{53}{subsection.7.1.4}%
+\contentsline {section}{\numberline {7.2}Backend}{53}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Frontend}{54}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Local Resolvers}{55}{subsection.7.3.1}%
+\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{55}{section*.38}%
+\contentsline {subsubsection}{\nonumberline updateLink}{55}{section*.39}%
+\contentsline {subsubsection}{\nonumberline collapseNode}{55}{section*.40}%
+\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{56}{section*.41}%
+\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{56}{section*.42}%
+\contentsline {subsection}{\numberline {7.3.2}Layout Algorithms}{56}{subsection.7.3.2}%
+\contentsline {subsubsection}{\nonumberline Collapsable Rule}{56}{section*.43}%
+\contentsline {subsubsection}{\nonumberline FlowerRule}{57}{section*.44}%
+\contentsline {subsubsection}{\nonumberline NonCollapsableRule}{59}{section*.45}%
+\contentsline {chapter}{\nonumberline List of Figures}{60}{chapter*.46}%
