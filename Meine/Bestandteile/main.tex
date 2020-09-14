@@ -1,11 +1,34 @@
 \chapter{Introduction}
 \label{chap:Intro}
-There are many tools on the internet for building graphs to visualize data. Famous examples are "ConceptDraw Pro", "Lucidchart" \cite{JeffParker} or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end.
+There are many tools on the internet that help with visualizing data. Some of them also help to create networks to show relations between numerous items. Famous examples are "ConceptDraw Pro", "Lucidchart" \cite{JeffParker} or "draw.io". However when using these the user spends a lot of time on creating a nice looking diagram, centering important components etc., to get a pleasant looking result in the end.
 
 The idea for this project is to offer an online editor with CRUD-functionality for a network, consisting of components of software projects, as well as a first implementation of an algorithm that will, in most cases, create a nice looking layout on its own.
 
 \section{Purpose}
 The purpose is to try out and test a combination of technologies. This software, or variations of it, might later be incorporated into a bigger project or adapted to fit another use case. The experiences and impressions during development can be of help when thinking about what technology stack to use, which is why a big part of this paper is dedicated to documenting this process.
+
+\section{The Endresult}
+To give the reader a better understanding of the context lets quickly look at the end result of this project.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.35]{Bilder/AppOverview.png}
+\captionof{figure}{The Endresult}
+\label{pic:AppOverview}
+\end{figure}
+
+The top bar contains buttons that communicate with the server. Initially it is not possible to make changes to the data. Another person might currently be editing the graph and two people editing the graph at the same time might lead to not compatible changes. When clicking the \emph{Request Now} button the server will check if editing rights for the project are already taken. If not the server will send the newest data from the database to make sure the latest changes are shown to the user, otherwise the user will be informed.
+
+Should he make local changes the two buttons on the top right become clickable and allow to permanently save changes to the database or discard all changes and reset the local set to the one in the database.
+
+The left pane contains buttons for the user to interact with the application. Clicking the buttons to create nodes and links will display the respective form.
+Furthermore there are fields to search nodes and filter the links that are displayed in the canvas on the right and a button that will re-calculate the layout of the graph when the data has changed.
+
+When selecting a node or link the pane on the left will show a form containing all saved data. Should the user have editing rights he can also make changes and save them. There are different node and link types, where each can but must not have a different syntactical meaning.
+
+\section{Definitions}
+The word \emph{graph} refers to a network of nodes that are connected through links. Nodes must not be connected to links, but each link must be connected to a node (it can be the same one twice) on each end. This means that there can be various not connected networks of nodes and links in one graph.
+
+A \emph{collapsable} is a node that can hide (collapse) its children and show (expand) them if they should have a \emph{Part-Of} link to such node. In this nodes of two types have this functionality: Containers and Domains. The button to do so appears in the form on the left if the user selects a collapsable node.
 
 \chapter{Backend to Frontend}
 
@@ -19,7 +42,7 @@ GraphQL is a data query language as well as specification. Its development was s
 
 After their application suffered from poor performance on mobile devices, they took a new implementation using natively implemented models and views. This required a new API for their news feed as it was previously delivered as pure HTML. \cite{EngineeringFB}
 
-After evaluating different common options like RESTful-APIs and FQL they often saw the same problems:  The ratio of data actually used compared to the one fetched was very small, the number of requests \cite{GraphQLIntro} and the amount of code on both server and client side to prepare the data was big. \cite{EngineeringFB}
+After evaluating different common options like RESTful-APIs and Facebook Query Language (FQL) they often saw the same problems:  The ratio of data actually used compared to the one fetched was very small, the number of requests \cite{GraphQLIntro} and the amount of code on both server and client side to prepare the data was big. \cite{EngineeringFB}
 
 For example, for loading the start page of a single user, there would have been a lot of different requests necessary:
 \begin{itemize}
@@ -107,7 +130,7 @@ type Query {
 }
 \end{lstlisting}
 
-This describes a query that can be executed as shown in \autoref{ex211} by providing an ID to the query and the correct query name, together with a collection set telling the server which fields to fetch. In the parentheses any query arguments are listed, in this example id must be provided. After the double dot the return type is named. 
+This describes a query that can be executed as shown in \autoref{ex211} by providing an ID to the query and the correct query name, together with a collection set telling the server which fields to fetch. In the parentheses any query arguments are listed, in this example id must be provided. After the colon the return type is named. 
 
 The server will then make requests to the DB, fetch the requested data and return it to the user once all fields were filled with values.
 
@@ -727,9 +750,7 @@ This discussion is not a "how to" guide because in the course of this work some 
 
 Workarounds found for certain problems should not be considered best practice but rather as hint to a solution if one of these problems should appear in similar projects.
 
-The examples in this chapter are taken from the actual application, unless stated otherwise. \\
-
-For the rest of this chapter the word \emph{graph} refers to a network of nodes that are connected through links. Nodes must not be connected to links, but each link must be connected to a node (it can be the same one twice) on each end. This means that there can be various not connected networks of nodes and links in one graph.
+The examples in this chapter are taken from the actual application, unless stated otherwise.
 
 \section{Why the GRANDstack}
 To find out which tech stack to use, the first step was to analyze what the application should be able to do:
@@ -1169,7 +1190,7 @@ And the \emph{Query Variables} section contains the contents for \emph{props}:
 \end{lstlisting}
 
 \section{Making ApolloServer and ApolloClient communicate}
-After looking at Apollo hoks, how to run queries from the GraphQL-Playground and how they are resolved in the server, those parts now need to be put together. The ApolloClient needs nothing more but a URI that points to the ApolloServer.
+After looking at Apollo hooks, how to run queries from the GraphQL-Playground and how they are resolved in the server, those parts now need to be put together. The ApolloClient needs nothing more than a URI that points to the ApolloServer.
 
 To then run the createNode mutation seen in \autoref{ex:RunCreateNode} the \emph{useMutation} hook from Apollo can be used as shown in \autoref{ex:usingMutation}. To do so lets first define the query object:
 
@@ -1222,7 +1243,7 @@ const NodeCreationComponent = () => {
 	);
 }
 \end{lstlisting}
-Line 10 retrieves the input fields from the form which could be saved in the state of the form. As they are not relevant for the understanding the form is represented as JSX, the initialization of the state and the \emph{onChange} handler are not shown. JSX allows to save HTML or other react components in variables and render them by using curly braces.
+Line 10 retrieves the input fields from the form which could be saved in the state of the form. As they are not relevant for the understanding the form is represented as JSX, the initialization of the state and the \emph{onChange} handler are not shown. JSX can to save HTML or other react components in variables and render them by using curly braces.
 
 Line 12 contains the creation of the variables object, passed to the mutation in line 13. It will destructure the object and pass on all properties directly.
 
@@ -1234,7 +1255,7 @@ When building a React application its useful to think about the structure to get
 \subsection{Components}
 Lets think about what will appear on the screen:
 
-The application should have a big canvas to display the graph and allow interaction with it. There needs to be space to show information about a clicked link or node, as well as options to search/filter the view. A button to save data to the database and also to discard local changes should be apparent. So lets take a look at the app and at the components it consists of:
+The application should have a big canvas to display the graph and allow interaction with it. There needs to be space to show information about a selected link or node, as well as options to search/filter the view. A button to save data to the database and also to discard local changes should be apparent. So lets take a look at the app and at the components it consists of:
 \begin{figure}[H]
 \includegraphics[scale=.46]{Bilder/Layout.png}
 \captionof{figure}{The Components in the UI}
@@ -1257,7 +1278,7 @@ Their child components in green:
 The child component of the \emph{InputPane} in cyan is called \textbf{GraphSettingsPane}. In the future there will be more options on manipulating data shown in the graph, like filtering for certain types, special layout algorithms etc. What component is displayed here varies depending on what the user last clicked. There are 2 more forms for creating and editing a node or a link.
 
 \section{Problems}
-This section will talk about difficulties or problems that appeared during development. For some of them there was a solution found, others are simply to document them.
+This section will talk about difficulties or problems that appeared during development. For some of them there was a solution found, others are simply to document them for future consideration.
 
 \subsection{Keeping the data consistent when saving changes}
 In the very beginning the process of saving local changes to the database was the following: Go through all created/edited/deleted entities and for each of them dispatch a call to the server. This often led to inconsistent data sets that could not be displayed by visjs. To explain this problem consider these few examples of saving scenarios:
@@ -1272,7 +1293,7 @@ Deleting such a node will also automatically lead to the deletion of the link. W
 
 \item[3] The user deletes a link that has a sequence and link-end property.
 
-As discussed previously, these two exist as their own nodes in Neo4j. Simply deleting the link won't work as it has connected relationships. Using \emph{DETACH DELETE} to delete the node will at least not throw an error, but leave the sequence- and link-end-node fly around in the database with not chance to ever get deleted again except someone looks through the database and does so by hand.
+As discussed previously, these two exist as their own nodes in Neo4j. Simply deleting the link won't work as it has connected relationships. Using \emph{DETACH DELETE} to delete the node will at least not throw an error, but leave the sequence- and link-end-node fly around in the database with no references. They will not be deleted unless the database is inspected and garbage collected using other tools.
 \end{itemize}
 
 There are many more cases where the execution order of queries is critical for keeping the database clean and there might be multiple ways of doing so. At the moment the application makes use of the ES6 function \emph{Promise.all()}. There is an array for each type of operation (creating node, creating link, deleting node, etc.). When the application finds an entity that needs to be sent to the server it will push the return value from the Apollo mutation hook into the respective array. Using \emph{Promise.all( iterable )} it waits for all promises of that type to resolve and only if that is the case it will continue the saving process.
@@ -1315,7 +1336,7 @@ Promise.all( nodePromises )
 In line 4 and 9 the node promises are pushed into the respective array. All of them are executed instantly. The \emph{then} branch of \emph{Promise.all()} in line 13 will only be reached if all of the promises in \emph{nodePromises} resolve. If that is the case, the mutations to create links can be run, which will also be saved in their array. Once those are resolved the next entity as mentioned above will be handled, etc.
 
 \subsection{AWS-Healthcheck}
-After deploying the backend to AWS ECS there was a problem that the server would often be down and couldn't be reached by the application. After looking at the event logs it turned out that the service would restart the task every 3 to 5 minutes due to failed \emph{Health Checks}. These ping a specified URL and compare the response to a pre-defined one. If the response should fail a certain amount of times to be equal to the one defined the service will restart the task as it assumes the task to be stopped, hung or broken in any other way. This lead to a really high CPU usage by the cluster and service and even worse, to the server not being reachable at any moment.
+After deploying the backend to AWS ECS there was a problem that the server would often be down and couldn't be reached by the application. After looking at the event logs it turned out that the service would restart the task every 3 to 5 minutes due to failed \emph{Health Checks}. These ping a specified URL and compare the response to a pre-defined one. If the response should fail a certain amount of times to be equal to the one defined the service will restart the task as it assumes the task to be stopped, hung or broken in some other way. This lead to a really high CPU usage by the cluster and service and even worse, to the server not being reachable at any moment.
 
 Despite adjusting the settings for the health checks various times to ping the correct route the check would still fail with an error code of \emph{404 Not Found}. In the end the only workaround without having to spend too much time on AWS was to set the code deemed as successful to 404. While this is definitely not a best practice solution it solved the problem in this case. The server ran perfectly and CPU usage by cluster and service dropped significantly:
 \begin{figure}[H]
@@ -1358,9 +1379,9 @@ The only remedy to this issue was to get a certificate for the backend and by th
 \section{Graph-Layout}
 As mentioned in the introduction, the ability to create a graph on its own is a central aspect of the application. This part offers a lot of room for improvement as graph layout is its own field of research and the algorithms can become incredibly complex. Here are two approaches described together with their flaws and benefits.
 
-One main both tries face is that in order to allocate them, a start-node must be found that the others can use to orientate themselves on. But which node should be chosen to start? The one with the most connections? Where should nodes that are not children of the start-node be placed? 
+One main problem both tries face is that in order to allocate them, a start-node must be found that the others can use to orientate themselves on. But which node should be chosen to start? The one with the most connections? Where should nodes that are not children of the start-node be placed? 
 
-In these implementations nodes that can be collapsed (hide their direct descendant children) are placed in a grid-like manner. Then their children are placed relatively to them. After handling all child-nodes, the ones that were not part of a collapsable were handled. For those the ones with the most connections would be chosen as start-node.
+Nodes that can be collapsed (hide their direct descendant children) are placed in a grid-like manner. Then their children are placed relatively to them. After handling all child-nodes, the ones that were not part of a collapsable were handled. For those the ones with the most connections would be chosen as start-node.
 
 \subsection{Tree-Layout}
 In this approach each node would distribute its child nodes below it. Depending on the amount of children they'd be split into different layers of nodes.
@@ -1409,17 +1430,19 @@ While this approach sounds promising it of course also has flaws. To demonstrate
 \captionof{figure}{Intersections in the Flower Layout}
 \end{figure}
 
-The container on the bottom is selected as "Center" as it is a collapsable. Its child nodes are distributed around it by equally sized angles. Its also clearly visible that the nodes \emph{node 2} and \emph{methodical server} have a greater distance to their parent-node than the other 3 as they have none or 1 child element.
+The container on the bottom is selected as "Center" as it is a collapsable. Its child nodes are distributed around it by equally sized angles. Its also clearly visible that the nodes \emph{node 2} and \emph{methodical server} have a greater distance to their parent-node than the other 3 as they have zero or 1 child element.
 
 As \emph{test123} is a child of both \emph{node 2} and \emph{node 1} it takes into account two direction vectors: One from \emph{Container 1} to \emph{node 1} and the one it gets assigned from \emph{node 2}. Every node will allocate its child nodes within an angle of +-90° to its own direction vector. These two vectors get divided in two and the result will lead to the position of \emph{test123}. The reason for \emph{Server} being so far away from \emph{AWS-Amplify} is because it has 3 child-nodes.
 
 Now to the flaws of this approach: The node in the top center intersects with other, not related links. The reason for that is that as it is the only child element, it will simply extend its parents direction vector.
 In addition there are many more places where nodes or links could intersect. Also, if one or more nodes have a connection to another group of nodes, they might be placed very far from each other and their connections could intersect with many others.
 
+As this approach in many cases lead to more promising results than the tree layout algorithm it is the one currently in use. 
+
 \section{Behavior Decisions}
-When implementing the user interface and the inner logic of the application there will often be the question \emph{How should the application behave if ...?}. Here are some that appeared in this project together with some options on what options were available:
+When implementing the user interface and the inner logic of the application there will often be the question \emph{How should the application behave if ...?}. Here are some that appeared in this project together with some ideas on what options were available:
 \begin{itemize}
-\item What should happen when a node that has links connected gets deleted? As visjs doesn't offer the option of simply leaving the link there, it needs to be connected to somewhere else:
+\item What should happen when a node that has links connected gets deleted? As visjs doesn't offer the option of simply leaving the link there, solutions similar to the following have to be considered:
 \begin{itemize}
 \item Deleting a node with connected links is not possible.
 \item The connected links snap to the node thats closest by.
@@ -1427,13 +1450,27 @@ When implementing the user interface and the inner logic of the application ther
 \end{itemize}
 In the end number 3 got implemented as it is the most usable and predictable behavior for this use case.
 
-\item What should happen if a \emph{Part-Of} link connects two collapsable nodes (containers or domains in this case) and clicks on \emph{Collapse} on one of them?
+\item What should happen if a \emph{Part-Of} link connects two collapsables and the user clicks \emph{Collapse} on one of them?
 \begin{itemize}
 \item Both collapsables should disappear together with their child-nodes.
-\item The collapsable that gets the collapse call stays visible but all connected collapsables disappear recursively.
+\item If the collapsable that issues the collapse call is the parent in the connection, the other one disappears. Otherwise both stay visible.
 \item The creation of such connections should not be possible.
 \end{itemize}
-In this case the 2nd option got implemented as number 1 would make the application not usable and the third one might limit the user in the use of the application.
+In this case the second option got implemented as number 1 would make the application not usable and the third one might limit the user in the use of the application.
+
+To demonstrate this, lets take a look at this picture:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.55]{Bilder/CollapseExBefore.png}
+\captionof{figure}{Two Collapsables Connected Through a Part-Of link. \emph{Container 1} is the child of \emph{Container 2}}
+\end{figure}
+
+If the user clicks \emph{Collapse} on \emph{Container 1} the image will change to the following:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.55]{Bilder/CollapseExAfter.png}
+\captionof{figure}{The child nodes of \emph{Container 1} disappeared. \emph{Container 2} is still visible as it is defined as parent in the link connecting the two containers.}
+\end{figure}
 
 \item How is a part-of relationship defined? In other words, which nodes should disappear if a collapsable gets collapsed?
 \begin{itemize}
@@ -1457,7 +1494,7 @@ This chapter will shorty list some things that were positive in this project and
 
 \section{What was good}
 \begin{itemize}
-\item \textbf{It works!} Despite many problems especially with Apollo and the configuration during the deployment phase the application works and runs stable on a public domain without any known bugs in the functionality which is a big success.
+\item \textbf{It works!} Despite many problems especially with Apollo and the configuration during the deployment phase the application works and runs stable on a publicly shared cloud platform without any known bugs in the functionality which is a big success. Deploying as early as possible allowed others to use and test the system from an early stage on an provide valuable feedback during development.
 
 \item \textbf{Interesting} Learning all of the technologies from scratch at the beginning of the project was of course a lot to take in. But with time came more understanding of every part and it was interesting to take a deep dive into this area of software development and get to explore profoundly all parts of it.
 \end{itemize}
@@ -1485,16 +1522,16 @@ This part contains a list of ideas about what could be added or modified in the 
 \item \textbf{Context actions} to create nodes and links by using the visjs \emph{oncontext} event and displaying a form on the screen at the position clicked. The coordinates can be extracted from the event object passed into the event handler.
 \end{itemize}
 
-\item \textbf{Syntax Checking} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked. Two rules to start with could be:
+\item A \textbf{Syntax Checker} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked. Rules to start with could be:
 \begin{itemize}
 \item Collapsables can only have \emph{Part-Of} links
 \item Loops between collapsables
 \item Only \emph{Team} nodes can have \emph{Responsibility} links
 \end{itemize}
 
-\item \textbf{Custom rules} for syntax checking. This would be a very big task as it involves the definition of some abstract language and a parser that can convert these into constructs the syntax checking algorithm can use.
+\item Allow the user to define \textbf{Custom Rules} for the syntax checker. This would be a very big task as it involves the definition of some abstract language and a parser that can convert these into constructs the syntax checking algorithm can use.
 
-\item \textbf{Custom types} of nodes and links. The data about the types has to be stored in a database. Using GraphQL to fetch these might be difficult as all fields have to be defined in a schema. Loading the definitions from another source using a classic http request and converting the received definitions into a format that can be used by the application might be the best way to approach this problem.
+\item Allow the user to define \textbf{Custom Types} of nodes and links. This and the previous point require implementing a way of uploading and saving these definitions in the application.
 
 \item \textbf{Improve Layout Algorithm} to create a better looking image. Two ideas are
 \begin{itemize}
@@ -1504,7 +1541,7 @@ This part contains a list of ideas about what could be added or modified in the 
 
 \item \textbf{Subscriptions} to allow users to get real time updates to changes made to the data. Using a button the user could activate and deactivate the feature. This functionality could be implemented using the pubsub npm package, as recommended by Apollo.
 
-\item \textbf{User/Project Logic} to make the app usable for a broader amount of people. It would be enough to have a simply login screen when the app starts. Once successfully logged in there is a list of projects the user can choose from. Projects and users could be associated through respective nodes. One node per user and each user node could be connected to a variety of project nodes which in term again are connected to nodes that are part of it. This could lead to the database getting blown up quickly so it might be a good idea to create a new database every time a user signs up.
+\item \textbf{User/Project Logic} to make the app usable for a broader amount of people. It would be enough to have a simple login screen when the app starts. Once successfully logged in there is a list of projects the user can choose from. Projects and users could be associated through respective nodes. One node per user and each user node could be connected to a variety of project nodes which in term again are connected to nodes that are part of it. This could lead to the database getting blown up quickly so it might be a good idea to create a new database every time a user signs up.
 
 \item \textbf{Refactor} the codebase.
 \begin{itemize}
@@ -1535,7 +1572,7 @@ Implementing this in visjs might not be the most enjoyable task as it does not n
 
 One way would be to get the position of all part-of elements, calculate the middle of them and get the outer bounding box measurements to define the size of the box. 
 
-\item \textbf{Versioning} with Git to be able to version diagrams to track changes or export them to create backups.
+\item \textbf{Versioning} with Git to be able to version graphs to track changes or export them to create backups. This would require to define an algorithm that can convert graph data into for example JSON or XML files. These files could then be stored in GitHub. 
 
 \item \textbf{References} to other diagrams or items of the same diagram. 
 It often happens that structures appear various times in project architecture. This functionality would apply changes made to one of them to all copies of the other in the current diagram.
@@ -1571,7 +1608,7 @@ CREATE (p:Project {isBeingEdited: false}) RETURN p
 \end{lstlisting}
 
 \subsection{Backend}
-Install Node.js, clone the server \cite{GitServer} code from GitHub. Open a console window, navigate into the folder containing the server code and write \emph{npm install}. Inside the server folder, create a file called \emph{.env} with the following content:
+Install Node.js, clone the server \cite{GitServer} code from GitHub. Open a console window, navigate into the folder containing the server code and execute \emph{npm install}. Inside the server folder, create a file called \emph{.env} with the following content:
 \lstset{language=Docker}
 \begin{lstlisting}[caption={Environment Variables for the Server}]
 PORT=8080
@@ -1588,7 +1625,7 @@ Now type \emph{npm run start-dev} into the console to spin up the local developm
 Visiting this URL will open the GraphQL Playground that can be used to test the resolvers of the server for example as shown in \autoref{ex:RunCreateNode}.
 
 \subsection{Frontend}
-Clone the client \cite{GitClient} code from GitHub, open a console window, navigate into the client folder and type \emph{npm install}. In the same folder, create a \emph{.env} file with the following content:
+Clone the client \cite{GitClient} code from GitHub, open a console window, navigate into the client folder and execute \emph{npm install}. In the same folder, create a \emph{.env} file with the following content:
 \begin{lstlisting}[caption={Environment Variables for the Frontend}]
 REACT_APP_ENV=dev
 REACT_APP_DEV_HOST=http://localhost:8080/graphql
@@ -1625,14 +1662,14 @@ Furthermore this file contains the local resolver functions inside the \emph{Apo
 Below that it contains the definition of visjs events:
 \begin{itemize}
 \item When the user clicks a link or node that item will be set as active. This will change the form displayed on the left side of the screen and fill it with the data from the entity clicked.
-\item  Zoom saves the position the user zoomed to.  In case he creates a new node it will appear at that position. The same counts for \emph{dragEnd} if no node was selected.
+\item  Zoom saves the coordinates the user zoomed to.  In case he creates a new node it will appear at that position. The same counts for \emph{dragEnd} if no node was selected.
 \item If a node is selected the new position of it will be saved. If the user presses "recalculate graph" it gets reset.
 \item When clicking at a certain location without selecting a node or link the position gets saved for the next node creation.
 \end{itemize}
 
 \item \textbf{GraphSettingsPane} contains the fields to search for a node and filter links according to their label.
 
-\item \textbf{LogStream} is a small component that appears on the bottom right of the window. It contains error messages in case of such and general information about the process when the user clicks \emph{Save}.
+\item \textbf{LogStream} is a small component that appears on the bottom right of the window. It displays error messages and general information.
 \end{itemize}
 
 \subsection{Local Resolvers}
@@ -1641,7 +1678,7 @@ This section will talk in a bit more detail about the more complicated resolvers
 \subsubsection{setNodes, setLinks}
 When the nodes and links come from the database for example after the initial fetch or when syncing after requesting editing rights they are missing some data to be usable locally.
 
-To know whether local changes have happened each entity needs the properties \emph{edited, created, deleted}. In addition to that nodes receive a listIndex which makes sure their order does not get changed when making changes as this would lead to unpredictable graph layout updates. Furthermore nodes and links both have a property called \emph{needsCalculation}. If the user changes the nodes a link is connected to or a node changes its type this property gets set to true and the graph can be recalculated.
+To know whether local changes have happened each entity needs the properties \emph{edited, created, deleted}. In addition to that nodes receive a listIndex which makes sure their order does not get changed when making changes as this would lead to unpredictable graph layout updates. Furthermore nodes and links both have a property called \emph{needsCalculation}. If the user changes the nodes a link is connected to or a node changes its type this property gets set to true and the button to recalculate the graph layout becomes clickable.
 
 \subsubsection{updateLink}
 This resolver is quite large as each node contains a list of IDs of the nodes it is connected to. If the user changes the connections of a link filtering and updating these lists takes a bit of effort.
@@ -1663,7 +1700,7 @@ This function does the actual searching. It uses the \emph{Fuse} library that us
 
 
 \subsection{Layout Algorithms}
-When the nodes get all properties necessary for the local usage in \emph{setNodes} they also walk through a couple of functions to assign their positions. First all collapsables get assigned a position and all nodes connected to them in some way align themselves around them. Then nodes that have not been assigned a position get handled. Searching the one with most connections and treating it as the middle one, all connected ones will be allocated around it just like as if it were a collapsable. This continues until every node has a position assigned.
+When the nodes get all properties necessary for the local usage in \emph{setNodes} they also walk through a couple of functions to assign their positions. First all collapsables get assigned a position and all nodes connected to them align themselves around them. Then nodes that have not been assigned a position get handled. Searching the one with most connections and treating it as the middle one, all connected ones will be allocated around it just like as if it were a collapsable. This continues until every node has a position assigned.
 
 \subsubsection{Collapsable Rule}
 All collapsables will be placed in a grid-like manner, creating a rectangle of collapsable nodes.
