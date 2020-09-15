@@ -149,7 +149,7 @@ Neo4j is a so called graph database. The idea of graph databases is, compared to
 \end{itemize}
 
 \subsubsection{Cypher}
-For matching all nodes connected to node A through a "Neighbor" relationship, we simply state
+For matching all nodes connected to node A through a "Neighbor" relationship, simply state
 \lstset{language=Cypher}
 \begin{lstlisting}[label={ex231},caption={Matching Nodes Way 1}]
 MATCH (n:Node {label: "A"})-[:Neighbor]-(n2:Node) RETURN n, n2
@@ -220,7 +220,7 @@ When a query is run, the first thing that happens is that matching start-nodes a
 %maybe some general information about Apollo?
 Apollo Server is a spec-compliant GraphQL server. It can be embedded into Node.js middleware like Express or Fastify \cite{ApolloServerIntro} and will listen for connections on a defined port. \\
 When it receives one it will read the query and call the respective route, or resolvers as they are called. \\
-In addition to that the server will deliver, together with some more, a \emph{context} object to each route that contains a driver which connects to a database, which is Neo4j in our case. Using this object together with a specified Cypher query we can manipulate the DB. 
+In addition to that the server will deliver, together with some more, a \emph{context} object to each route that contains a driver which connects to a database, which is Neo4j in our case. Using this object together with a specified Cypher query allows the manipulation of the DB. 
 
 \subsubsection{Example Resolver}
 A resolver to create a node might look like the following:
@@ -239,11 +239,11 @@ async CreateNode( _, args, ctx ) {
 
 The following describes each step:
 \begin{itemize}
-\item Line 1 contains the function definition. "args" is an object that contains all data sent with the query from the frontend. "ctx" is the context object that contains the neo4j driver to communicate with the DB. The first argument "\_", which is a placeholder here as we do not need it, is the so called "parent" which is equal to the previous resolver in the resolver chain. (More about this in the next section)
+\item Line 1 contains the function definition. "args" is an object that contains all data sent with the query from the frontend. "ctx" is the context object that contains the neo4j driver to communicate with the DB. The first argument "\_", which is a placeholder here as it is not needed, is the so called "parent" which is equal to the previous resolver in the resolver chain. (More about this in the next section)
 \item Line 2 acquires a session to communicate with the database. \cite{Neo4jDriver} This object allows sending Cypher queries to the database that get executed right away.
 \item Lines 3 to 6 define a Cypher query which is similar to the ones shown in \autoref{ex231} and \autoref{ex232}. 
 \item In line 4 makes use of the args object and embeds the nodeType directly into the query string by using template strings. This is necessary because at this position of a cypher query it is not possible to make use of query variables as in the rest of the query. This line also shows that by using \$<variableName> query variables that were passed along can be accessed.
-\item Line 5 demonstrates the usage of an object we can pass as query variable. This object can't only contain simple datatypes, but its really useful to set various values at once.
+\item Line 5 demonstrates the usage of an object that can be passed as query variable. This object can't only contain simple datatypes, but its really useful to set various values at once.
 \item Finally, line 7 sends the specified query string together with the args object (that must contain all referenced variables) to the database. Using the ES6 await keyword makes sure that code execution doesn't continue until the results are returned.
 \item The last line iterates over the record set and retrieves any properties by the in the query specified name. Using only the first element of the array is specific to this case, as CreateNode is defined to return a single node, not an array of such.
 \end{itemize}
@@ -443,7 +443,7 @@ When starting the react app, opening it in the browser and selecting inspect the
 
 React starts traversing at whatever component is put into the \emph{ReactDOM.render} method and repeats the process for each component until primitive html elements that can be rendered directly are reached.
 
-Every React class component can receive values from its parent element, by passing them like normal html property (e.g. line 3 below). In the child they can be accessed through a variable called \emph{props} and using JSX we can embed the value of variables directly in the component (e.g. line 14 below):
+Every React class component can receive values from its parent element, by passing them like normal html property (e.g. line 3 below). In the child they can be accessed through a variable called \emph{props} and with JSX it is possible to embed the value of variables directly in the component (e.g. line 14 below):
 
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Using Props},label={ex252}]
@@ -539,7 +539,7 @@ React is known for its good performance \cite{LinaSpukas} even in large applicat
 
 On the initial render React will create a component tree from which it'll then build the DOM that the browser converts into displayable objects and paints them on the screen. To show how react determines which part of the DOM it has to update, lets quickly walk through the previous example:
 
-When clicking the increase or decrease button in the previous example we update the components state which will automatically trigger a re-render. In such a small component it wouldn't really matter if React simply rendered the whole component. In a component containing hundreds of lines and probably many other sub-components the decision to render all of it just because would take a long time and be fatal for performance. Especially if really all it'd have to do is re-render line 45.
+When clicking the increase or decrease button in the previous example the components state gets updated which will automatically trigger a re-render. In such a small component it wouldn't really matter if React simply rendered the whole component. In a component containing hundreds of lines and probably many other sub-components the decision to render all of it just because would take a long time and be fatal for performance. Especially if really all it'd have to do is re-render line 45.
 
 \subsubsection{Finding The Differences}
 To know what exactly to update, React performs something called \emph{Reconciliation}. This process is very complicated, so this explanation leaves out the details and explain it in a few steps: 
@@ -582,7 +582,7 @@ ApolloClient is a state management library for JavaScript that manages data with
 ApolloClient 3 offers this by providing custom \textbf{hooks}. Hooks are a new addition to React since React 16.8 and were introduced to improve stateless functional components \cite{ReactHooksIntro} and can only be used in such. \cite{ReactHooksOverview} There were a few reasons that led to the introduction of hooks like the appearance of complex class components that couldn't be split into smaller ones, not re-usable stateful logic and classes being not ideal for future optimization. \cite{ReactHooksIntro} Hooks allow for example the usage of state in functional components.
 
 \subsubsection{Apollo Hooks}
-In addition to some built-in Hooks provided by React it is also possible to create them. Apollo implemented many of its own hooks, we will focus on \emph{useQuery}, \emph{useLazyQuery} and \emph{useMutation}.
+In addition to some built-in Hooks provided by React it is also possible to create them. Apollo implemented many of its own hooks, the focus here will be on \emph{useQuery}, \emph{useLazyQuery} and \emph{useMutation}.
 The first argument to all of these is a GraphQL string. A query for the first two, a mutation for the last one.
 
 The second argument is the options object. By adding properties to this the execution behavior can be influenced. Probably the most important argument is \emph{variables}. This is an object containing key-pair values that equal to the ones used in a GraphQL query as shown in \autoref{ex211}. In addition to that there are \emph{onError} and \emph{onCompleted}. These are two callback functions that allow for executing actions upon completion or handling of possible errors. Imagine \emph{GET\_DATA} being a valid GraphQL query string:
@@ -681,17 +681,17 @@ While developing in a local environment it is also important to test the applica
 
 Another reason to go for early deployment is to allow other people to see, use and test the application. Someone who sees the app for the first time or at least doesn't know how things were thought to work will make completely different use of it than a programmer. New issues with the workflow can be discovered and problems that a developer would never have thought of may be discovered. Further the layout will be tested on different screens, browsers and devices, unveiling unknown layout troubles. Issues discovered early are much easier to fix than those who are integrated deeply into the codebase. \\
 
-This chapter we will introduce the tools that were used to deploy the application to a publicly available cloud platform that allows it to be used and tested by anyone, anywhere.
+This chapter will introduce the tools that were used to deploy the application to a publicly available cloud platform that allows it to be used and tested by anyone, anywhere.
 
 \section{Docker}
 Docker is a platform that provides the ability to a developer to create any environment in which he wants to execute code in.
-Before comparing it to a virtual machine we'll take a look at the basic terminology:
+Before comparing it to a virtual machine lets take a look at the basic terminology:
 
 A \emph{Docker File} is a text file containing instructions that tell the Docker Engine how to build a \emph{Docker Image}. \cite{NickDocker}
 
 This \emph{Docker Image} is a file containing necessary data to execute a given program. The in the docker file specified libraries are saved, folders from the local machine are copied, environment variables are set etc.. 
 
-When running the image, we will get a \emph{Docker Container}. It will execute specified commands and by that for example download node modules. This container is an instance executed by the \emph{Docker Engine} which runs on top of the Host OS of an actual machine.
+Running the image will start a \emph{Docker Container}. It will execute specified commands and by that for example download node modules. This container is an instance executed by the \emph{Docker Engine} which runs on top of the Host OS of an actual machine.
 
 \newpage
 While it is similar to a virtual machine, there are certain differences between them: \\
@@ -762,7 +762,7 @@ To find out which tech stack to use, the first step was to analyze what the appl
 \item The user will create, modify and delete data
 \item Local changes made to data can be saved permanently
 \item Data must be displayed as graph
-\item At some point we might want to be able to implement real time updates that show changes made by another user
+\item At some point one might want to be able to implement real time updates that show changes made by another user
 \end{itemize}
 This will give a list of requirements our tech stack should fulfill:
 \begin{itemize}
@@ -773,14 +773,14 @@ This will give a list of requirements our tech stack should fulfill:
 \item Communication with the server should be lightweight and easy to implement
 \end{itemize}
 
-As we have looked at the individual parts of the GRANDstack, we can see quickly that it contains most of the things we imagined to be useful: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL only transmits the data needed when communicating with the server. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Subscriptions are a way of keeping a communication channel between server and client, making sure the server can inform all listening clients about an incoming event.
+Having looked at the individual parts of the GRANDstack, it becomes clear that it contains many things that could be useful: Neo4j is a graph database, actually saves a graph on disk and is extremely performant. GraphQL only transmits the data needed when communicating with the server. Together with Apollo, which offers a lot of help when implementing subscriptions, live updates should not be too hard to realize. Subscriptions are a way of keeping a communication channel between server and client, making sure the server can inform all listening clients about an incoming event.
 
 Having a state management framework and a backend server that are designed to work together also promises for a trouble free development. The Apollo hooks make it very intuitive to update the UI according to state changes.
 
 Furthermore this stack contains many relatively new an immature technologies and as mentioned in \autoref{chap:Intro} this project also serves to explore these.
 
 \section{The GraphQL Schema}
-Development of applications that leverage GraphQL usually start by creating a schema to define the shape of data. The good thing about this is that it can be adapted if during the process it comes up that we it actually needs some changes.
+Development of applications that leverage GraphQL usually start by creating a schema to define the shape of data. The good thing about this is that it can be adapted if during the process it comes up that actually changes are necessary.
 
 This part will take a brief look at the GraphQL schema this app uses and mention a few things that didn't work out as expected when creating it.
 \lstset{language=GraphQL}
@@ -858,7 +858,7 @@ type Link implements ILink & IDisplayable{
 \end{lstlisting}
 Coming from an Object Oriented background using interfaces seemed intuitive. Having an ID, label and story object to be apparent on all entities that can be shown on screen makes sense. What was not known when creating the schema is that visjs requires each link to be connected to an x and y node, in other words: a link can't "float". This means that there are two more required fields in the ILink interface, making the IDisplayable interface conflict with its purpose of defining properties that are required to be displayed.
 
-To retrieve the links attached to the node we make use of the \emph{@cypher} directive we talked about earlier. This is an array which can be empty as nodes do not necessarily need be connected in any way. The same idea holds for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather than nodes to annotate them.
+The \emph{@cypher} directive shown earlier can be used to easily retrieve the links attached to the node. This is an array which can be empty as nodes do not necessarily need be connected in any way. The same idea holds for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather than nodes to annotate them.
 
 \emph{optional} on link is a value that would have been used for template functionality that is not implemented yet in the application.
 
@@ -889,7 +889,7 @@ type LinkEnd{
 \end{lstlisting}
 If more than one link connects the same pair of nodes a sequence property can be used to assign a group id to each link and an order within that group. Because of that each sequence on a link contains a string identifying the sequence group it belongs to as well as a sequence number to display the order in which steps will be executed. Each link end can contain a note about how the component on the respective end perceives the incoming connection.
 
-The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as we can just pass all input objects from a form to the query. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types which is why the usage of these input types was not worth the effort. In this case it would've been better to put all input values directly into a \emph{variables} object that gets sent to the server.
+The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as one can just pass all input objects from a form to the query. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types which is why the usage of these input types was not worth the effort. In this case it would've been better to put all input values directly into a \emph{variables} object that gets sent to the server.
 
 \newpage
 \begin{lstlisting}[caption={Mutation Type Definition},label={mutations}]
@@ -972,7 +972,7 @@ schema {
 The end of the schema contains the definition for the query type and the root schema.
 
 \section{Getting started with Neo4j}
-To get started with Neo4j its a good idea to first create a small basic data set that shouldn't be too complicated so we can easily experiment with it. So lets try to create a representation of the following graph in the database:
+To get started with Neo4j its a good idea to first create a small basic data set that shouldn't be too complicated to be able to easily experiment with it. So lets try to create a representation of the following graph in the database:
 
 \begin{figure}[H]
 \centering
@@ -991,10 +991,10 @@ CREATE (:Node:API {id: randomUUID(), label: "Backend", story: "Endpoint for requ
 CREATE (:Node:Persistence {id: randomUUID(), label: "DB", story: "Saves data for the methodical designer", nodeType: "Persistence"})
 \end{lstlisting}
 
-Everything between the parentheses of a create statement defines a new node in Neo4j. By using colons we define labels for a node. These can be used to filter for a certain type of node and can improve performance when traversing. 
+Everything between the parentheses of a create statement defines a new node in Neo4j. By using colons one defines labels for a node. These can be used to filter for a certain type of node and can improve performance when traversing. 
 
-All of them are of type node and each of them has its own specific label, marking them as different node types. Curly braces are used to define properties on each of them: A unique ID for each node by using Neo4j's \emph{randomUUID()} function, a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore we give each node a nodeType. This might seem a bit counter intuitive as this was already defined in the Neo4j labels for the node.
-Later on when retrieving the nodes from the database its only possible to get all of those, which would be a list like \emph{[Node, API]}. For displaying it however there is only one of them necessary. To be able to easily extract it, it has its own property on each node.
+All of them are of type node and each of them has its own specific label, marking them as different node types. Curly braces are used to define properties on each of them: A unique ID for each node by using Neo4j's \emph{randomUUID()} function, a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore each node receives a nodeType. This might seem a bit counter intuitive as this was already defined in the Neo4j labels for the node.
+Later on when retrieving the nodes from the database its only possible to get all of those, which would be a list like \emph{[Node, API]}. For displaying it however only one of them is necessary. To be able to easily extract it, it has its own property on each node.
 
 \newpage
 This is how the created graph looks like in the Neo4j Browser:
@@ -1065,7 +1065,7 @@ The yellow, pink and blue circles represent the nodes that are also shown as nod
 To shorten the example the information about the arrows in \autoref{ex:GraphSideBySide} does not exist in \autoref{ex424}. 
 
 \section{Communicating with the DB through ApolloServer and GraphQL-Playground}
-The next step is to communicate with the database through the server. After setting up ApolloServer (more on setup in \autoref{chap:Doc}) a first step would be to create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning we might make many mistakes which can leave the dataset in a bad shape and fixing it manually would take a lot of time. Line 2 in \autoref{mutations} contains the GraphQL definition. 
+The next step is to communicate with the database through the server. After setting up ApolloServer (more on setup in \autoref{chap:Doc}) a first step would be to create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning making mistakes which can leave the dataset in a bad shape is common and fixing it manually would take a lot of time. Line 2 in \autoref{mutations} contains the GraphQL definition. 
 \newpage
 The resolver looks like the following:
 \lstset{language=JavaScript}
@@ -1090,7 +1090,7 @@ async SeedDB( _, __, ctx ) {
 },
 \end{lstlisting}
 
-The \emph{seedQuery} is a long cypher query defined in an external file. After deleting all nodes and connections in the database using the \emph{deleteQuery} we run it to create new data to use.
+The \emph{seedQuery} is a long cypher query defined in an external file. After deleting all nodes and connections in the database using the \emph{deleteQuery} it gets executed to create new data to use.
 
 To run this resolver and seed our database the following GraphQL query can be used in the GraphQL Playground:
 \lstset{language=GraphQL}
@@ -1101,7 +1101,7 @@ mutation seedDB {
   }
 }
 \end{lstlisting}
-The name in line 1 is completely optional. What matters is line 2 as this string will be used to identify the correct resolver. Using the curly braces we define a result set. After hitting the play button the expected result gets returned:
+The name in line 1 is completely optional. What matters is line 2 as this string will be used to identify the correct resolver. Tthe curly braces are used to define a result set. After hitting the play button the expected result gets returned:
 \begin{lstlisting}[caption={Seeding Result}, label={exResSeed}]
 {
   "data": {
