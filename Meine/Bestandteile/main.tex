@@ -54,10 +54,10 @@ For example, for loading the start page of a single user, there would have been 
 
 GraphQL aims to resolve all these issues: Reduce the amount of unnecessary data transferred, reduce the number of requests and increase the developer productivity by making it easier to use fetched data. \cite{EngineeringFB}
 
-It allows developers to get a lot of different data from a single endpoint. This means that instead the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com}, with a query similar to:\\ (todo: define graphql styles)
+It allows developers to get a lot of different data from a single endpoint. This means that instead the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com}, with a query similar to:\\
 \newpage
 \lstset{language=GraphQL}
-\begin{lstlisting}[caption={A GraphQL Query},label={ex211}]
+\begin{lstlisting}[caption={A GraphQL Query to Fetch User Data},label={ex211}]
 query {
 	user(id: 1) {
 		name
@@ -98,7 +98,7 @@ Where the answer would be a JSON-string:
 The query can be as extensive as the developer needs it, it will return only the data requested and the answer string can be directly accessed like a JSON-object. By that GraphQL fulfills all its design goals.
 \\ \\
 The previously shown query then needs to be resolved by a server thats able to interpret GraphQL and resolve the query. All non primitive data types have to be defined following the GraphQL specification. An example for a user schema might be:
-
+\newpage
 \begin{lstlisting}[caption={Type Definition in GraphQL}]
 type User {
 	id: ID! 
@@ -169,6 +169,7 @@ Internally, there are 3 types of records saved on the disk: node-, relationship-
 Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node.
 
 In addition to the first property, each node knows about its first relationship. If it is the \emph{first} one, it is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four more to other relationships, which are best explained in an example traversal in pseudo code:
+\newpage
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Algorithm to Save Read the Graph from Disk}]
 if node n has relationship pointer r: 
@@ -264,6 +265,7 @@ query GetBooksByLibrary {
 }
 \end{lstlisting}
 
+\newpage
 which will be executed on this schema \citep[with adaptions]{ApolloResChain}
 \begin{lstlisting}[caption={Schema Definition},label={ex243}]
 # A library has a branch and books 
@@ -299,6 +301,7 @@ To resolve the query there are 4 resolvers necessary:
 \noindent
 Assuming that there are static arrays called "libraries", "books" and "authors" available that are filled with data, the resolvers might look like the following: 
 \citep[with adaptions]{ApolloResChain}
+\newpage
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Resolver Definition},label={ex244}]
 const resolvers = { 
@@ -338,7 +341,7 @@ Knowing this, the server will now go through each object of this array and look 
 For each library the server has to get the branch and an array of books. As branch is a primitive type it does not need to be further resolved. Books however, returns an array of non-primitive types. To find out which books need to be returned it is enough to use the value of \emph{parent.branch} and compare it to the branch of each book in the books array and return those who match.
 
 Books is again an array of a non primitive type and has to be further resolved by iterating through the array and accessing the requested values title and author. Title is just a string, whereas author will get resolved further, etc.
-
+\newpage
 \subsubsection{Cypher in GraphQL}
 Using GraphQL directives it is possible to "annotate" our schema and specify precisely certain actions or checks the server should perform when accessing a field. \\
 The following schema shows the definition and usage of a directive: \cite{GraphQlDir}
@@ -374,6 +377,7 @@ The node that is currently being iterated over in the resolver chain is passed a
 
 Please note that this feature of using the cypher queries in the schema is only available when \emph{APOC} is installed on this Neo4j instance.
 
+\newpage
 \section{Frontend - React}
 React is a JavaScript-Framework to create component-based user interfaces. Each component has to define a \emph{render} method which describes what appears on the screen. In this method the programmer writes basic HTML or can embed other react components. \\
 The standard \emph{index.html} is pretty short when using react. The only code a programmer writes there is normally in the header area to include CDNs or other resources. The body contains only one element: \\
@@ -570,6 +574,7 @@ Which is a lot shorter and has another big advantage: It protects from laziness.
 
 And of course visually the result is equal to the one in \autoref{ex251} and \autoref{ex252}.
 
+\newpage
 \section{Client - ApolloClient}
 ApolloClient is a state management library for JavaScript that manages data with GraphQL. It offers an all in one solution for fetching, caching and modifying application data and together with automatic UI updates upon events from the server. \cite{ApolloClientIntro}
 
@@ -594,7 +599,8 @@ function Test() {
 
 %For the rest of the arguments please refer to API reference form Apollo.
 
-To be able to use returned data and inform the user about the current status, all of these three hooks return a few other objects, the most important being \emph{data}, \emph{loading} and \emph{error}. These are boolean values and allow for conditional rendering inside a component, depending on their values: 
+To be able to use returned data and inform the user about the current status, all of these three hooks return a few other objects, the most important being \emph{data}, \emph{loading} and \emph{error}. These are boolean values and allow for conditional rendering inside a component, depending on their values:
+\newpage
 \begin{lstlisting}[caption={Demonstration of the useQuery Hook}]
 function Test() {
 	const { data, loading, error } = useQuery( GET_DATA, {
@@ -686,8 +692,8 @@ A \emph{Docker File} is a text file containing instructions that tell the Docker
 This \emph{Docker Image} is a file containing necessary data to execute a given program. The in the docker file specified libraries are saved, folders from the local machine are copied, environment variables are set etc.. 
 
 When running the image, we will get a \emph{Docker Container}. It will execute specified commands and by that for example download node modules. This container is an instance executed by the \emph{Docker Engine} which runs on top of the Host OS of an actual machine.
-\\
 
+\newpage
 While it is similar to a virtual machine, there are certain differences between them: \\
 \textbf{Operating System} Every VM comes with its own operating system, making it heavy in terms of memory and processing power they require. Docker containers in turn all share the hosts operating system and only require the docker engine to be installed on the machine: \cite{GeekDocker}
 \begin{figure}[H]
@@ -709,7 +715,7 @@ Available configurations that can run on an instance are called Amazon Machine I
 Basically, an EC2 instance is a virtual machine that runs on an Amazon server. \cite{Ec2VirtualMachine}
 
 %In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
-
+\newpage
 \subsection{AWS-ECS}
 ECS is a service to run automatically managed docker containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
 These are the most important terms when talking about AWS ECS: \\
@@ -724,10 +730,11 @@ A \textbf{Service} is an instance that is created following the specifications i
 
 A \textbf{Cluster} is a logical grouping of services. \\
 
-These components can be visually put together as shown in the figure below. \citep[with adaptions]{AwsEcs} 
-\begin{figure}[H]
+These components can be visually put together as shown in \autoref{ex311}. \citep[with adaptions]{AwsEcs} \\
+
+\begin{figure}[h]
 \centering
-\includegraphics[scale=.6]{Bilder/EcsStructure.png}
+\includegraphics[scale=.8]{Bilder/EcsStructure.png}
 \captionof{figure}{Structure of AWS ECS}
 \label{ex311}
 \end{figure}
@@ -884,6 +891,7 @@ If more than one link connects the same pair of nodes a sequence property can be
 
 The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as we can just pass all input objects from a form to the query. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types which is why the usage of these input types was not worth the effort. In this case it would've been better to put all input values directly into a \emph{variables} object that gets sent to the server.
 
+\newpage
 \begin{lstlisting}[caption={Mutation Type Definition},label={mutations}]
 type Mutation{
   SeedDB: seedReturn
@@ -912,6 +920,7 @@ type Mutation{
 
 This is the definition of the root mutation type. It clarifies even more the previously made point of having a lot of trouble formatting the inputs for a mutation: When dispatching a \emph{CreateNode} mutation two of the form inputs (label and nodeType) have to be passed directly, while all others need to be put into an object called props that contains the fields defined in the respective input type. This makes the code for form handling a lot harder to re-use, especially as the input types vary for updating and creating.
 
+\newpage
 Lets talk about the return types defined for each operation:
 \begin{lstlisting}[caption={Return Types}]
 interface IReturnInfo{
@@ -987,6 +996,7 @@ Everything between the parentheses of a create statement defines a new node in N
 All of them are of type node and each of them has its own specific label, marking them as different node types. Curly braces are used to define properties on each of them: A unique ID for each node by using Neo4j's \emph{randomUUID()} function, a label which will be displayed in the application and a story which shortly describes its functionality for each node. Furthermore we give each node a nodeType. This might seem a bit counter intuitive as this was already defined in the Neo4j labels for the node.
 Later on when retrieving the nodes from the database its only possible to get all of those, which would be a list like \emph{[Node, API]}. For displaying it however there is only one of them necessary. To be able to easily extract it, it has its own property on each node.
 
+\newpage
 This is how the created graph looks like in the Neo4j Browser:
 \begin{figure}[H]
 \centering
@@ -1033,6 +1043,7 @@ This code will find a node with an \emph{API} label and one with a \emph{Persist
 \label{ex423}
 \end{figure}
 
+\newpage
 After adding the rest of the connections using the same approach the whole representation on the data layer looks like:
 \begin{figure}[H]
 \centering
@@ -1054,7 +1065,9 @@ The yellow, pink and blue circles represent the nodes that are also shown as nod
 To shorten the example the information about the arrows in \autoref{ex:GraphSideBySide} does not exist in \autoref{ex424}. 
 
 \section{Communicating with the DB through ApolloServer and GraphQL-Playground}
-The next step is to communicate with the database through the server. After setting up ApolloServer (more on setup in \autoref{chap:Doc}) a first step would be to create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning we might make many mistakes which can leave the dataset in a bad shape and fixing it manually would take a lot of time. In \autoref{mutations} in line 2 is the GraphQL definition. The resolver looks like the following:
+The next step is to communicate with the database through the server. After setting up ApolloServer (more on setup in \autoref{chap:Doc}) a first step would be to create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning we might make many mistakes which can leave the dataset in a bad shape and fixing it manually would take a lot of time. Line 2 in \autoref{mutations} contains the GraphQL definition. 
+\newpage
+The resolver looks like the following:
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Seed Resolver}]
 const seedQuery = require( './seed' );
@@ -1142,6 +1155,7 @@ With the result being similar to:
 }
 \end{lstlisting}
 
+\newpage
 Finally lets write a resolver to create a node. The reason for doing this by hand is to have control over the Cypher query, to be sure that the properties would be assigned the desired way (especially the input object):
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Using returned Values from the Query}]
@@ -1207,11 +1221,10 @@ export const CREATE_NODE = gql`
   }
 `;
 \end{lstlisting}
-
-This small functional component demonstrates how to pass the query to the hook and use it:
-
+\noindent
+The small functional component shown in \autoref{ex:useQueryFuncComp} demonstrates how to pass the query to the hook and use it:
 \lstset{language=JavaScript}
-\begin{lstlisting}[caption={Using the Query in a Component (no actual application code)}]
+\begin{lstlisting}[caption={Using the Query in a Component (no actual application code)},label={ex:useQueryFuncComp},float=h]
 import { CREATE_NODE } from './queries';
 import { useState } from 'react';
 
@@ -1372,6 +1385,7 @@ Even after spending a lot of time searching for a setting to disable this behavi
 
 The only remedy to this issue was to get a certificate for the backend and by that mark it as a secure resource. After that all communication worked without any issues.
 
+\newpage
 \section{Graph-Layout}
 As mentioned in the introduction, the ability to create a graph on its own is a central aspect of the application. This part offers a lot of room for improvement as graph layout is its own field of research and the algorithms can become incredibly complex. Here are two approaches described together with their flaws and benefits.
 
@@ -1442,7 +1456,7 @@ As this approach in many cases lead to more promising results than the tree layo
 \label{ex:ComparisonTreeFlower}
 \end{figure}
 
-
+\newpage
 \section{Behavior Decisions}
 When implementing the user interface and the inner logic of the application there will often be the question \emph{How should the application behave if ...?}. Here are some that appeared in this project together with some ideas on what options were available:
 \begin{itemize}
@@ -1482,9 +1496,9 @@ If the user clicks \emph{Collapse} on \emph{Container 1} the image will change t
 \item Only nodes with a direct part-of link to the collapsable will disappear
 \end{itemize}
 The second options was the one to go for, as in the first one it is almost impossible to algorithmically detect which node should be the last one to disappear if the user created connections between groups created by the flower layout algorithm. Nodes that are not part of the current group might disappear as well.
-
 \end{itemize}
 
+\newpage
 \section{Avoiding Data Corruption}
 After deploying the application a problem that hasn't appeared before suddenly came up: As there is no user logic yet and only one dataset, what happens if two people open the app at the same time and make changes to the data that are not compatible? Just imagine user 1 deleting a node in his editor, while user 2 creates a new link to that node. When merging these changes the database will most likely run into an error case and abort the commits.
 
@@ -1558,20 +1572,6 @@ This part contains a list of ideas about what could be added or modified in the 
 
 \item \textbf{Improve Collapsables} to increase the value they have to make the graphs cleaner. \autoref{ex:CollExpanded} shows how collapsables could look at some point when being expanded while \autoref{ex:CollColapsed} demonstrated a collapsed one.
 
-\begin{figure}
-\centering
-\includegraphics[scale=.2]{Bilder/CollapsableEx.png}
-\captionof{figure}{Example Collapsable in Expanded State}
-\label{ex:CollExpanded}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[scale=.3]{Bilder/CollapsableCol.png}
-\captionof{figure}{Example Collapsable in Collapsed State}
-\label{ex:CollColapsed}
-\end{figure}
-
 Implementing this in visjs might not be the most enjoyable task as it does not natively offer functionality to draw a rectangle around a group of elements.
 
 One way would be to get the position of all part-of elements, calculate the middle of them and get the outer bounding box measurements to define the size of the box. 
@@ -1582,8 +1582,18 @@ One way would be to get the position of all part-of elements, calculate the midd
 It often happens that structures appear various times in project architecture. This functionality would apply changes made to one of them to all copies of the other in the current diagram.
 
 If a user has various diagrams it'd be useful if he could create a node that links to other diagrams and by clicking on them they open up in a new tab of the screen. 
-
 \end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.35]{Bilder/CollapsableEx.png}
+\captionof{figure}{Example Collapsable in Expanded State}
+\label{ex:CollExpanded}
+
+\includegraphics[scale=.4]{Bilder/CollapsableCol.png}
+\captionof{figure}{Example Collapsable in Collapsed State}
+\label{ex:CollColapsed}
+\end{figure}
 
 \chapter{Documentation}
 \label{chap:Doc}
@@ -1604,6 +1614,7 @@ Then under \emph{Plugins} click \emph{Add Plugin}, choose \emph{APOC}, confirm t
 
 Next hit \emph{Start} to spin up the instance. When it is running click on \emph{Open} to start the Neo4j Browser. In this browser all Cypher queries can be executed directly on the database.
 
+\newpage
 \subsection{Creating a Project Node}
 In order to be able to request editing rights and actually use the app, it is necessary to manually create a project node in the Neo4j Browser that contains a property called \emph{isBeingEdited} set to \emph{false}:
 \lstset{language=Cypher}
@@ -1706,6 +1717,7 @@ This function does the actual searching. It uses the \emph{Fuse} library that us
 \subsection{Layout Algorithms}
 When the nodes get all properties necessary for the local usage in \emph{setNodes} they also walk through a couple of functions to assign their positions. First all collapsables get assigned a position and all nodes connected to them align themselves around them. Then nodes that have not been assigned a position get handled. Searching the one with most connections and treating it as the middle one, all connected ones will be allocated around it just like as if it were a collapsable. This continues until every node has a position assigned.
 
+\newpage
 \subsubsection{Collapsable Rule}
 All collapsables will be placed in a grid-like manner, creating a rectangle of collapsable nodes.
 
@@ -1785,12 +1797,13 @@ export const CollaspableRule = ( node, allCollapsables, client, limit, minDist =
 \end{lstlisting}
 This code does not include any comments or error handling to shorten it.
 
+\newpage
 \subsubsection{FlowerRule}
 Afterwards the nodes around the collapsables are placed. 
 
 If the parent has a level of \emph{0} it is a collapsable. The first position for a node is defined as the top-left (direction vector of \emph{(-1, -1)} from the parent). The delta angle between child nodes is calculated by dividing 360 by the number of children. Then it'll get the index of the current children in the list of childs the parent has and multiply the delta angle by this index. It then rotates the initial direction vector to get the one pointing at the position of the node. Multiplying it with the distance calculated in respect to the amount of other children leads to the position of the node.
 
-Should the parent be a node with a level other than 0 the new position depends on the parent's direction vector. All children can be placed within an angle of +-90 degrees in the direction of the parent's direction vector. The delta angle is again calculated by the total amount of child nodes. Calculating the new position works as with children of level 1. However as these nodes can have multiple parents the newly calculated position has to be added to the one the node might already have and get normalized afterwards.
+Should the parent be a node with a level other than 0 the new position depends on the parent's direction vector. All children can be placed within an angle of +-90 degrees in the direction of the parent's direction vector. The delta angle is again calculated by the total amount of child nodes. Calculating the new position works as with children of level 1. However as these nodes can have multiple parents the newly calculated position has to be added to the one the node might already have and get normalized afterwards. \\
 
 \begin{lstlisting}[caption={Allocating Nodes around Collapsables}]
 for ( let collapsable of collapsables ) {

@@ -3,29 +3,29 @@
 \contentsline {figure}{\numberline {1.1}{\ignorespaces The Application\relax }}{1}{figure.caption.2}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Virtual Machine vs. Docker\relax }}{21}{figure.caption.21}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Structure of AWS ECS\relax }}{22}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Virtual Machine vs. Docker\relax }}{22}{figure.caption.21}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Structure of AWS ECS\relax }}{24}{figure.caption.22}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces A small network of software components used for testing\relax }}{29}{figure.caption.23}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces The nodes in Neo4j Browser\relax }}{30}{figure.caption.24}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces After creating the first link-node\relax }}{32}{figure.caption.25}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Whole graph in the DB\relax }}{32}{figure.caption.26}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces A small network of software components used for testing\relax }}{32}{figure.caption.27}%
-\contentsline {figure}{\numberline {4.6}{\ignorespaces The Components in the UI\relax }}{38}{figure.caption.28}%
-\contentsline {figure}{\numberline {4.7}{\ignorespaces CPU Utilization in Percent of Service and Cluster\relax }}{41}{figure.caption.29}%
-\contentsline {figure}{\numberline {4.8}{\ignorespaces The Apollo Dev Tools can't connect\relax }}{42}{figure.caption.30}%
-\contentsline {figure}{\numberline {4.9}{\ignorespaces Layout created by the Tree Algorithm\relax }}{43}{figure.caption.31}%
-\contentsline {figure}{\numberline {4.10}{\ignorespaces Edge moving directly through Node\relax }}{44}{figure.caption.32}%
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Basic Idea of the Flower Layout\relax }}{44}{figure.caption.33}%
-\contentsline {figure}{\numberline {4.12}{\ignorespaces Node with more Children is further away\relax }}{45}{figure.caption.34}%
-\contentsline {figure}{\numberline {4.13}{\ignorespaces Intersections in the Flower Layout\relax }}{45}{figure.caption.35}%
-\contentsline {figure}{\numberline {4.14}{\ignorespaces Layout Created by Flower Algorithm\relax }}{46}{figure.caption.36}%
-\contentsline {figure}{\numberline {4.15}{\ignorespaces Two Collapsables Connected Through a Part-Of link. \emph {Container 1} is the child of \emph {Container 2}\relax }}{47}{figure.caption.37}%
-\contentsline {figure}{\numberline {4.16}{\ignorespaces The child nodes of \emph {Container 1} disappeared. \emph {Container 2} is still visible as it is defined as parent in the link connecting the two containers.\relax }}{48}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces A small network of software components used for testing\relax }}{31}{figure.caption.23}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces The nodes in Neo4j Browser\relax }}{32}{figure.caption.24}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces After creating the first link-node\relax }}{33}{figure.caption.25}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Whole graph in the DB\relax }}{34}{figure.caption.26}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces A small network of software components used for testing\relax }}{34}{figure.caption.27}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces The Components in the UI\relax }}{40}{figure.caption.29}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces CPU Utilization in Percent of Service and Cluster\relax }}{43}{figure.caption.30}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces The Apollo Dev Tools can't connect\relax }}{44}{figure.caption.31}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Layout created by the Tree Algorithm\relax }}{45}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Edge moving directly through Node\relax }}{46}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Basic Idea of the Flower Layout\relax }}{46}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Node with more Children is further away\relax }}{47}{figure.caption.35}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Intersections in the Flower Layout\relax }}{47}{figure.caption.36}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Layout Created by Flower Algorithm\relax }}{48}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Two Collapsables Connected Through a Part-Of link. \emph {Container 1} is the child of \emph {Container 2}\relax }}{49}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.16}{\ignorespaces The child nodes of \emph {Container 1} disappeared. \emph {Container 2} is still visible as it is defined as parent in the link connecting the two containers.\relax }}{50}{figure.caption.39}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Example Collapsable in Expanded State\relax }}{53}{figure.caption.39}%
-\contentsline {figure}{\numberline {6.2}{\ignorespaces Example Collapsable in Collapsed State\relax }}{53}{figure.caption.40}%
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Example Collapsable in Expanded State\relax }}{55}{figure.caption.40}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Example Collapsable in Collapsed State\relax }}{55}{figure.caption.40}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Neo4j Desktop after Creating the Database\relax }}{55}{figure.caption.41}%
-\contentsline {figure}{\numberline {7.2}{\ignorespaces Result Allocation of 13 Collapsables\relax }}{60}{figure.caption.48}%
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Neo4j Desktop after Creating the Database\relax }}{56}{figure.caption.41}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Result Allocation of 13 Collapsables\relax }}{62}{figure.caption.48}%
