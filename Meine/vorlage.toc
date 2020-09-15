@@ -32,7 +32,7 @@
 \contentsline {section}{\numberline {3.1}Docker}{20}{section.3.1}%
 \contentsline {section}{\numberline {3.2}AWS}{21}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}AWS-EC2}{21}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}AWS-ECS}{22}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.2}AWS-ECS}{21}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}AWS-Amplify}{23}{subsection.3.2.3}%
 \contentsline {chapter}{\numberline {4}Development}{24}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Why the GRANDstack}{24}{section.4.1}%
@@ -66,13 +66,13 @@
 \contentsline {section}{\numberline {7.2}Backend}{56}{section.7.2}%
 \contentsline {section}{\numberline {7.3}Frontend}{57}{section.7.3}%
 \contentsline {subsection}{\numberline {7.3.1}Local Resolvers}{58}{subsection.7.3.1}%
-\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{58}{section*.41}%
-\contentsline {subsubsection}{\nonumberline updateLink}{58}{section*.42}%
-\contentsline {subsubsection}{\nonumberline collapseNode}{58}{section*.43}%
-\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{59}{section*.44}%
-\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{59}{section*.45}%
+\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{58}{section*.42}%
+\contentsline {subsubsection}{\nonumberline updateLink}{58}{section*.43}%
+\contentsline {subsubsection}{\nonumberline collapseNode}{58}{section*.44}%
+\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{59}{section*.45}%
+\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{59}{section*.46}%
 \contentsline {subsection}{\numberline {7.3.2}Layout Algorithms}{59}{subsection.7.3.2}%
-\contentsline {subsubsection}{\nonumberline Collapsable Rule}{59}{section*.46}%
-\contentsline {subsubsection}{\nonumberline FlowerRule}{60}{section*.47}%
-\contentsline {subsubsection}{\nonumberline NonCollapsableRule}{62}{section*.48}%
-\contentsline {chapter}{\nonumberline List of Figures}{63}{chapter*.49}%
+\contentsline {subsubsection}{\nonumberline Collapsable Rule}{59}{section*.47}%
+\contentsline {subsubsection}{\nonumberline FlowerRule}{61}{section*.49}%
+\contentsline {subsubsection}{\nonumberline NonCollapsableRule}{63}{section*.50}%
+\contentsline {chapter}{\nonumberline List of Figures}{64}{chapter*.51}%

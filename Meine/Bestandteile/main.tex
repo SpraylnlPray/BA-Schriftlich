@@ -8,11 +8,11 @@ The idea for this project is to offer an online editor with CRUD-functionality f
 The purpose is to try out and test a combination of technologies. This software, or variations of it, might later be incorporated into a bigger project or adapted to fit another use case. The experiences and impressions during development can be of help when thinking about what technology stack to use, which is why a big part of this paper is dedicated to documenting this process.
 
 \section{The Endresult}
-To give the reader a better understanding of the context lets quickly look at the end result of this project.
+To give the reader a better understanding of the context lets quickly look at the application at the end of this project.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.35]{Bilder/AppOverview.png}
-\captionof{figure}{The Endresult}
+\captionof{figure}{The Application}
 \label{pic:AppOverview}
 \end{figure}
 
@@ -701,11 +701,7 @@ While it is similar to a virtual machine, there are certain differences between 
 \textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll run the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
 
 \section{AWS}
-AWS is a cloud platform from Amazon that offers over 175 different services in 24 different geographic regions around the world to allow for high availability all around the world. \cite{WhatIsAws}\\
-AWS was launched in 2002 only offering SOAP (a messaging protocol used in distributed systems to exchange information) and XML interfaces. \cite{HistoryAwsMedia} In 2003 the idea of a big system offering services and tools was born as the leadership realized that one of the company's strengths was building and running effective, reliable and scalable data centers. After developing a more precise idea of how this strengths could be used to fulfill a lot of companies' needs the first public launch was in 2006 with \emph{Simple Storage Service} (S3), the \emph{Elastic Compute Cloud} (EC2) and a \emph{Simple Queue Service} (SQS) following shortly after. \cite{HistoryAwsTech}
-
-Since then the services offered by AWS keep growing and other companies like Google, Microsoft or IBM started to compete in the business. In a 2019 research from Gartner AWS was found as one of the leading cloud Infrastructure as a Service providers world wide (IaaS) \cite{Gartner} 
-regarding \emph{Completeness of Vision} and \emph{Ability to execute}. 
+AWS is a cloud platform from Amazon that offers over many different services in various geographic regions around the world. This project made use of 3 of them to make the application publicly available. This section will give a short introduction and overview over each of them.
 
 \subsection{AWS-EC2}
 EC2 is a service that allows the creation of virtual machines with over 300 different variations of computational capacities like the number of CPUs, Memory, Storage and Network Performance. \cite{AwsEc2} 
@@ -731,12 +727,12 @@ A \textbf{Cluster} is a logical grouping of services. \\
 These components can be visually put together as shown in the figure below. \citep[with adaptions]{AwsEcs} 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=.45]{Bilder/EcsStructure.png}
+\includegraphics[scale=.6]{Bilder/EcsStructure.png}
 \captionof{figure}{Structure of AWS ECS}
 \label{ex311}
 \end{figure}
 
-A task is created from a task definition and placed in a service. It is possible to allow AWS to automatically manage all Docker and VM resources and then run the docker image directly. The dashed box is a cluster. This cluster contains 2 services, reach running 4 tasks. 
+A task is created from a task definition and placed in a service. It is possible to allow AWS to automatically manage all Docker and VM resources and then run the docker image directly. The dashed box is a cluster. This cluster contains 2 services, reach running 2 tasks running 2 containers. 
 
 The services of a cluster can be run in different \emph{Availability Zones} (AZ), meaning that they run on servers from AWS located in different parts of one geological region to improve response time.
 
@@ -1397,7 +1393,7 @@ While the tree logic was relatively easy to implement and created at least accep
 
 \begin{figure}[H] 
 \centering
-\includegraphics[scale=1]{Bilder/TreeBad.png}
+\includegraphics[scale=.4]{Bilder/TreeBad.png}
 \caption{Edge moving directly through Node}
 \label{ex:TreeBadEdge}
 \end{figure}
@@ -1437,7 +1433,15 @@ As \emph{test123} is a child of both \emph{node 2} and \emph{node 1} it takes in
 Now to the flaws of this approach: The node in the top center intersects with other, not related links. The reason for that is that as it is the only child element, it will simply extend its parents direction vector.
 In addition there are many more places where nodes or links could intersect. Also, if one or more nodes have a connection to another group of nodes, they might be placed very far from each other and their connections could intersect with many others.
 
-As this approach in many cases lead to more promising results than the tree layout algorithm it is the one currently in use. 
+As this approach in many cases lead to more promising results than the tree layout algorithm it is the one currently in use. This can be seen by directly comparing its result to the Tree Layout with the same data as in \autoref{ex:TreeGood}:
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{Bilder/FlowerCompTree.png}
+\captionof{figure}{Layout Created by Flower Algorithm}
+\label{ex:ComparisonTreeFlower}
+\end{figure}
+
 
 \section{Behavior Decisions}
 When implementing the user interface and the inner logic of the application there will often be the question \emph{How should the application behave if ...?}. Here are some that appeared in this project together with some ideas on what options were available:
@@ -1592,10 +1596,10 @@ Download Neo4j Desktop from the official Neo4j download page \cite{NeoDownload} 
 Create a new project by clicking \emph{New}. When clicking on \emph{Add Database} choose the option \emph{Create a Local Database}. Its important to write down the password as it is necessary to connect to the database. The version used while writing this is 4.1.0. Click on \emph{Create} and wait for the process to finish.
 Then under \emph{Plugins} click \emph{Add Plugin}, choose \emph{APOC}, confirm the installation for all graphs and close the window. The window should look similar to this:
 \begin{figure}[H]
-\label{ex:NeoDesktop}
 \centering
 \includegraphics[scale=.4]{Bilder/NeoDesktopInit.png}
 \captionof{figure}{Neo4j Desktop after Creating the Database}
+\label{ex:NeoDesktop}
 \end{figure}
 
 Next hit \emph{Start} to spin up the instance. When it is running click on \emph{Open} to start the Neo4j Browser. In this browser all Cypher queries can be executed directly on the database.
@@ -1715,15 +1719,17 @@ export const calculateCollapsableBoundaries = ( allCollapsables ) => {
 	}
 
 	let limit = 0;
-	for ( let i = 2; i < elementCountUsed / 2; i++ ) {
+	const elCountHalf = elementCountUsed / 2;
+	const elCountThird = elementCountUsed / 3;
+	for ( let i = 2; i < elCountHalf; i++ ) {
 		limit = Math.floor( elementCountUsed / i );
 		if ( isPrime( limit ) ) {
-			if ( limit < elementCountUsed / 2 ) {
+			if ( limit < elCountHalf ) {
 				return limit;
 			}
 		}
 		else {
-			if ( limit <= elementCountUsed / 3 ) {
+			if ( limit <= elCountThird ) {
 				return limit;
 			}
 		}
@@ -1735,6 +1741,26 @@ export const calculateCollapsableBoundaries = ( allCollapsables ) => {
 It walks from 2 to the number of elements divided by 2. Every time it checks if the element count divided by the current number is a prime number. In case it is a prime number it checks if it is smaller than half of the element count to make sure the lines don't get too long.
 
 Should the number not be a prime number it must be at least one third of the total number of collapsables. Should no number meet these conditions because the total number of nodes is too small the limit will be set to 3. These numbers were found heuristically.
+
+To make this clearer lets think about an example with \emph{10} collapsables:
+\begin{itemize}
+\item 10 is no prime number, so this is the number we're working with
+\item Divide 10 / 2, result being 5
+\item 5 is a prime number but it is obviously not smaller than 5
+\item Increase i
+\item Divide 10 / 3, result begin 3 due to using \emph{Math.floor()}
+\item 3 is a prime number and it is smaller than 5
+\item Return 3 as item limit per row
+\end{itemize}
+
+Despite the limit being 3 the final collapsables will be allocated like so:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{Bilder/AllocRes.png}
+\captionof{figure}{Result Allocation of 13 Collapsables}
+\end{figure}
+
+The reason is that the \emph{CollapsableRule} shown next goes from 0 to limit (resulting in 4 spots) to make sure there are enough spots for all collapsables.
 
 Afterwards the placement rule will use this limit to allocate the nodes in lines, starting at \emph{(0, 0)}.
 \begin{lstlisting}[caption={Placing all Collapsables}]
@@ -1780,8 +1806,8 @@ export const FlowerRule = ( next, client, distanceToOther = 350, minDist = 150 )
 				const initVec = { x: -1, y: -1 };
 				let normalized = normalizeVector( initVec );
 				let deltaAngle = 360 / parent.children.length;
-				if ( parent.children.length === 2 ) {
-					deltaAngle = deltaAngle * 2 / 3;
+				if ( parent.children.length % 2 === 0 ) {
+					deltaAngle = deltaAngle * 3 / 5;
 				}
 				const deltaRad = toRad( deltaAngle );
 				const index = parent.children.indexOf( nodeToCalculate );
