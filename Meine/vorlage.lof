@@ -3,8 +3,8 @@
 \contentsline {figure}{\numberline {1.1}{\ignorespaces The Application\relax }}{1}{figure.caption.2}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Virtual Machine vs. Docker\relax }}{22}{figure.caption.21}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Structure of AWS ECS\relax }}{24}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Virtual Machine vs. Docker \cite {GeekDocker}\relax }}{22}{figure.caption.21}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Structure of AWS ECS \citep [with adaptions]{AwsEcs}\relax }}{24}{figure.caption.22}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {4.1}{\ignorespaces A small network of software components used for testing\relax }}{31}{figure.caption.23}%
 \contentsline {figure}{\numberline {4.2}{\ignorespaces The nodes in Neo4j Browser\relax }}{32}{figure.caption.24}%
