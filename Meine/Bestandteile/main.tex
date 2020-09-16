@@ -1345,9 +1345,13 @@ Promise.all( nodePromises )
 In line 4 and 9 the node promises are pushed into the respective array. All of them are executed instantly. The \emph{then} branch of \emph{Promise.all()} in line 13 will only be reached if all of the promises in \emph{nodePromises} resolve. If that is the case, the mutations to create links can be run, which will also be saved in their array. Once those are resolved the next entity as mentioned above will be handled, etc.
 
 \subsection{AWS-Healthcheck}
-After deploying the backend to AWS ECS there was a problem that the server would often be down and couldn't be reached by the application. After looking at the event logs it turned out that the service would restart the task every 3 to 5 minutes due to failed \emph{Health Checks}. These ping a specified URL and compare the response to a pre-defined one. If the response should fail a certain amount of times to be equal to the one defined the service will restart the task as it assumes the task to be stopped, hung or broken in some other way. This lead to a really high CPU usage by the cluster and service and even worse, to the server not being reachable at any moment.
+After deploying the backend to AWS ECS there was a problem that the server would often be down and couldn't be reached by the application. After looking at the event logs it turned out that the service would restart the task every 3 to 5 minutes due to failed \emph{Health Checks}. 
 
-Despite adjusting the settings for the health checks various times to ping the correct route the check would still fail with an error code of \emph{404 Not Found}. In the end the only workaround without having to spend too much time on AWS was to set the code deemed as successful to 404. While this is definitely not a best practice solution it solved the problem in this case. The server ran perfectly and CPU usage by cluster and service dropped significantly:
+These ping a specified URL and compare the response code to a pre-defined one. If the response should fail a certain amount of times to equal the defined one the service will restart the task as it assumes the task to be stopped, hung or broken in some other way. This lead to a really high CPU usage by the cluster and service and even worse, to the server not being reachable at any moment.
+
+Despite setting the path for the health check to the one the frontend connects to it would still fail with an error code of \emph{404 Not Found}. Later on it came clear that in order to talk to the server the application uses a POST request. This detail was hidden because Apollo takes care of dispatching the calls.
+
+Then the solution was quickly found: The server now has a GET listener on the path \emph{/healthcheck}. This handler will internally try to fetch nodes from the \emph{/graphql} endpoint the application uses and return the status code of this operation. As the healthchecks now didn't return an error code the task didn't get restarted every 5 minutes and the CPU usage by cluster and service dropped significantly:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.6]{Bilder/AwsCpuReduction.png}

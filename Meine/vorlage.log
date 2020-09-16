@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  15 SEP 2020 15:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  16 SEP 2020 13:46
 entering extended mode
 **./vorlage.tex
 (vorlage.tex
@@ -988,15 +988,15 @@ Overfull \hbox (3.22617pt too wide) in paragraph at lines 1269--1270
 <Bilder/AwsCpuReduction.png, id=1123, 529.98pt x 374.14781pt>
 File: Bilder/AwsCpuReduction.png Graphic file (type png)
 <use Bilder/AwsCpuReduction.png>
-Package pdftex.def Info: Bilder/AwsCpuReduction.png  used on input line 1353.
+Package pdftex.def Info: Bilder/AwsCpuReduction.png  used on input line 1357.
 (pdftex.def)             Requested size: 317.99043pt x 224.4904pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1358--1359
+Underfull \hbox (badness 10000) in paragraph at lines 1362--1363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1364--1365
+Underfull \hbox (badness 10000) in paragraph at lines 1368--1369
 
  []
 
@@ -1004,20 +1004,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 1364--1365
 <Bilder/ScreenOfDeath.png, id=1130, 734.745pt x 118.19156pt>
 File: Bilder/ScreenOfDeath.png Graphic file (type png)
 <use Bilder/ScreenOfDeath.png>
-Package pdftex.def Info: Bilder/ScreenOfDeath.png  used on input line 1372.
+Package pdftex.def Info: Bilder/ScreenOfDeath.png  used on input line 1376.
 (pdftex.def)             Requested size: 477.57858pt x 76.8236pt.
 
-Overfull \hbox (8.10803pt too wide) in paragraph at lines 1372--1373
+Overfull \hbox (8.10803pt too wide) in paragraph at lines 1376--1377
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1380--1381
+Underfull \hbox (badness 10000) in paragraph at lines 1384--1385
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1382--1383
+Underfull \hbox (badness 10000) in paragraph at lines 1386--1387
 
  []
 
@@ -1025,46 +1025,46 @@ Underfull \hbox (badness 10000) in paragraph at lines 1382--1383
 <Bilder/TreeGood.png, id=1139, 490.83376pt x 437.38406pt>
 File: Bilder/TreeGood.png Graphic file (type png)
 <use Bilder/TreeGood.png>
-Package pdftex.def Info: Bilder/TreeGood.png  used on input line 1403.
+Package pdftex.def Info: Bilder/TreeGood.png  used on input line 1407.
 (pdftex.def)             Requested size: 343.58128pt x 306.16675pt.
 <Bilder/TreeBad.png, id=1140, 558.58687pt x 371.13657pt>
 File: Bilder/TreeBad.png Graphic file (type png)
 <use Bilder/TreeBad.png>
-Package pdftex.def Info: Bilder/TreeBad.png  used on input line 1410.
+Package pdftex.def Info: Bilder/TreeBad.png  used on input line 1414.
 (pdftex.def)             Requested size: 223.43079pt x 148.45198pt.
  [45 <./Bilder/TreeGood.png>]
 <Bilder/FlowerEx.png, id=1149, 493.0922pt x 488.57532pt>
 File: Bilder/FlowerEx.png Graphic file (type png)
 <use Bilder/FlowerEx.png>
-Package pdftex.def Info: Bilder/FlowerEx.png  used on input line 1422.
+Package pdftex.def Info: Bilder/FlowerEx.png  used on input line 1426.
 (pdftex.def)             Requested size: 271.20154pt x 268.71725pt.
 <Bilder/FlowerDistEx.png, id=1150, 491.58656pt x 563.10374pt>
 File: Bilder/FlowerDistEx.png Graphic file (type png)
 <use Bilder/FlowerDistEx.png>
-Package pdftex.def Info: Bilder/FlowerDistEx.png  used on input line 1430.
+Package pdftex.def Info: Bilder/FlowerDistEx.png  used on input line 1434.
 (pdftex.def)             Requested size: 196.63113pt x 225.2375pt.
  [46 <./Bilder/TreeBad.png> <./Bilder/FlowerEx.png>]
 <Bilder/FlowerExBad.png, id=1158, 607.51968pt x 591.71063pt>
 File: Bilder/FlowerExBad.png Graphic file (type png)
 <use Bilder/FlowerExBad.png>
-Package pdftex.def Info: Bilder/FlowerExBad.png  used on input line 1439.
+Package pdftex.def Info: Bilder/FlowerExBad.png  used on input line 1443.
 (pdftex.def)             Requested size: 334.13686pt x 325.44185pt.
  [47 <./Bilder/FlowerDistEx.png> <./Bilder/FlowerExBad.png>]
 <Bilder/FlowerCompTree.png, id=1168, 1138.2525pt x 617.30624pt>
 File: Bilder/FlowerCompTree.png Graphic file (type png)
 <use Bilder/FlowerCompTree.png>
-Package pdftex.def Info: Bilder/FlowerCompTree.png  used on input line 1454.
+Package pdftex.def Info: Bilder/FlowerCompTree.png  used on input line 1458.
 (pdftex.def)             Requested size: 455.29294pt x 246.91812pt.
  [48 <./Bilder/FlowerCompTree.png>]
 <Bilder/CollapseExBefore.png, id=1175, 462.97969pt x 515.67656pt>
 File: Bilder/CollapseExBefore.png Graphic file (type png)
 <use Bilder/CollapseExBefore.png>
-Package pdftex.def Info: Bilder/CollapseExBefore.png  used on input line 1482.
+Package pdftex.def Info: Bilder/CollapseExBefore.png  used on input line 1486.
 (pdftex.def)             Requested size: 254.6396pt x 283.62297pt.
 <Bilder/CollapseExAfter.png, id=1176, 457.71pt x 511.9125pt>
 File: Bilder/CollapseExAfter.png Graphic file (type png)
 <use Bilder/CollapseExAfter.png>
-Package pdftex.def Info: Bilder/CollapseExAfter.png  used on input line 1489.
+Package pdftex.def Info: Bilder/CollapseExAfter.png  used on input line 1493.
 (pdftex.def)             Requested size: 251.74129pt x 281.55275pt.
  [49 <./Bilder/CollapseExBefore.png>] [50 <./Bilder/CollapseExAfter.png>] [51]
 chapter 5.
@@ -1080,17 +1080,17 @@ chapter 6.
 <Bilder/CollapsableEx.png, id=1209, 1347.53438pt x 822.82407pt>
 File: Bilder/CollapsableEx.png Graphic file (type png)
 <use Bilder/CollapsableEx.png>
-Package pdftex.def Info: Bilder/CollapsableEx.png  used on input line 1589.
+Package pdftex.def Info: Bilder/CollapsableEx.png  used on input line 1593.
 (pdftex.def)             Requested size: 471.6441pt x 287.99274pt.
 
-Overfull \hbox (2.17355pt too wide) in paragraph at lines 1589--1590
+Overfull \hbox (2.17355pt too wide) in paragraph at lines 1593--1594
  [][] 
  []
 
 <Bilder/CollapsableCol.png, id=1210, 982.42032pt x 306.39468pt>
 File: Bilder/CollapsableCol.png Graphic file (type png)
 <use Bilder/CollapsableCol.png>
-Package pdftex.def Info: Bilder/CollapsableCol.png  used on input line 1593.
+Package pdftex.def Info: Bilder/CollapsableCol.png  used on input line 1597.
 (pdftex.def)             Requested size: 392.96117pt x 122.5557pt.
 [55 <./Bilder/CollapsableEx.png (PNG copy)> <./Bilder/CollapsableCol.png (PNG c
 opy)>]
@@ -1098,7 +1098,7 @@ chapter 7.
 <Bilder/NeoDesktopInit.png, id=1216, 1029.8475pt x 656.4525pt>
 File: Bilder/NeoDesktopInit.png Graphic file (type png)
 <use Bilder/NeoDesktopInit.png>
-Package pdftex.def Info: Bilder/NeoDesktopInit.png  used on input line 1610.
+Package pdftex.def Info: Bilder/NeoDesktopInit.png  used on input line 1614.
 (pdftex.def)             Requested size: 411.9317pt x 262.57634pt.
 [56
 
@@ -1107,10 +1107,10 @@ Package pdftex.def Info: Bilder/NeoDesktopInit.png  used on input line 1610.
 <Bilder/AllocRes.png, id=1269, 287.57437pt x 278.54062pt>
 File: Bilder/AllocRes.png Graphic file (type png)
 <use Bilder/AllocRes.png>
-Package pdftex.def Info: Bilder/AllocRes.png  used on input line 1771.
+Package pdftex.def Info: Bilder/AllocRes.png  used on input line 1775.
 (pdftex.def)             Requested size: 115.02771pt x 111.41426pt.
  [61] [62 <./Bilder/AllocRes.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1806--1807
+Underfull \hbox (badness 10000) in paragraph at lines 1810--1811
 
  []
 
@@ -1341,7 +1341,7 @@ grams/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Daniel/AppData/Loca
 l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/Users/Daniel/AppData
 /Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Users/Daniel/Ap
 pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt12.pfb>
-Output written on vorlage.pdf (73 pages, 1671258 bytes).
+Output written on vorlage.pdf (73 pages, 1671480 bytes).
 PDF statistics:
  1934 PDF objects out of 2073 (max. 8388607)
  1009 named destinations out of 1200 (max. 500000)
