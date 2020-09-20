@@ -20,29 +20,29 @@ The top bar contains buttons that communicate with the server. Initially it is n
 
 Should he make local changes the two buttons on the top right become clickable and allow to permanently save changes to the database or discard all changes and reset the local set to the one in the database.
 
-The left pane contains buttons for the user to interact with the application. Clicking the buttons to create nodes and links will display the respective form.
+The left pane contains buttons for the user to interact with the application. Clicking the buttons to create nodes or links will display the respective form.
 Furthermore there are fields to search nodes and filter the links that are displayed in the canvas on the right and a button that will re-calculate the layout of the graph when the data has changed.
 
-When selecting a node or link the pane on the left will show a form containing all saved data. Should the user have editing rights he can also make changes and save them. There are different node and link types, where each can but must not have a different syntactical meaning.
+When selecting a node or link the pane on the left will show a form containing all the properties of the selected object. Should the user have editing rights he can also make changes and save them. There are different node and link types, where each can have a different syntactical meaning.
 
 \section{Definitions}
-The word \emph{graph} refers to a network of nodes that are connected through links. Nodes must not be connected to links, but each link must be connected to a node (it can be the same one twice) on each end. This means that there can be various not connected networks of nodes and links in one graph.
+The word \emph{graph} refers to a network of nodes that are connected through links. Each link must be connected to a node (it can be the same one twice) on each end. This means that there can be one or more not connected networks of nodes and links in one graph.
 
-A \emph{collapsable} is a node that can hide (collapse) its children and show (expand) them if they should have a \emph{Part-Of} link to such node. In this nodes of two types have this functionality: Containers and Domains. The button to do so appears in the form on the left if the user selects a collapsable node.
+A \emph{collapsable} is a node that can hide (collapse) its children and show (expand) them. A Parent-Child-relationship is established by creating a \emph{Part-Of} link between two nodes, where the collapsable is the parent. There are two types of nodes which have this functionality: Containers and Domains. The button offering this appears in the form on the left when the user selects a collapsable node.
 
 \chapter{Backend to Frontend}
 
 This chapter will introduce the individual components, tools and frameworks this application is built with. For some of them it will give some more insights on how they work internally, others are so big that a detailed description would go beyond the scope of this paper. The order will be the same as they appeared in the development process.
 
 \section{The GRAND-stack}
-GRAND stands in this case for \textbf{G}raphQL, \textbf{R}eact, \textbf{A}pollo and \textbf{N}eo4j \textbf{D}atabase. \cite{GrandStackGettingStarted} React is a frontend framework, Apollo is used for statemanagement on the client side and communicating to the database on the server side. GraphQL will be used for the communication between them. Neo4j is a graph database and the server will communicate with it through a JavaScript driver provided by the Neo4j community.
+GRAND stands in this case for \textbf{G}raphQL, \textbf{R}eact, \textbf{A}pollo and \textbf{N}eo4j \textbf{D}atabase. \cite{GrandStackGettingStarted} React is a frontend framework, Apollo is used for state management on the client side and communicating to the database on the server side. GraphQL will be used for the communication between them. Neo4j is a graph database and the server will communicate with it through a JavaScript driver provided by the Neo4j community.
 
 \section{Query Language - GraphQL}
 GraphQL is a data query language as well as specification. Its development was started by Facebook in 2012 and it was open sourced in 2015. \cite{GraphQLFoundation}
 
-After their application suffered from poor performance on mobile devices, they took a new implementation using natively implemented models and views. This required a new API for their news feed as it was previously delivered as pure HTML. \cite{EngineeringFB}
+After the Facebook application suffered from poor performance on mobile devices, they took a new implementation using natively implemented models and views. This required a new API for their news feed as it was previously delivered as pure HTML. \cite{EngineeringFB}
 
-After evaluating different common options like RESTful-APIs and Facebook Query Language (FQL) they often saw the same problems:  The ratio of data actually used compared to the one fetched was very small, the number of requests \cite{GraphQLIntro} and the amount of code on both server and client side to prepare the data was big. \cite{EngineeringFB}
+After evaluating different common options like RESTful-APIs and Facebook Query Language (FQL) they often saw the same problems:  The ratio of data actually used compared to the data fetched was very small, the number of requests \cite{GraphQLIntro} and the amount of code on both server and client side to prepare the data was big. \cite{EngineeringFB}
 
 For example, for loading the start page of a single user, there would have been a lot of different requests necessary:
 \begin{itemize}
@@ -164,14 +164,16 @@ which might look a bit cleaner. It is also possible to return only specific valu
 The following information about Neo4j internals is all from \cite{NeoInternals} and \cite{Neo4jInternalsPP}. Sadly, these sources are all old and probably outdated, yet there does not seem to be more updated information available.
 
 \subsubsection{The Graph on Disk}
+This section describes internal aspects from Neo4j.
+
 Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. \citep[minute 08]{NeoInternals}
 
-Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node.
+Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node.\cite{NeoInternals}
 
-In addition to the first property, each node knows about its first relationship. If it is the \emph{first} one, it is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four more to other relationships, which are best explained in an example traversal in pseudo code:
+In addition to the first property, each node knows about its first relationship. If it is the \emph{first} one, it is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four more to other relationship.\cite{NeoInternals} These are best explained in pseudo code that walks through all relationships a node has:
 \newpage
 \lstset{language=JavaScript}
-\begin{lstlisting}[caption={Algorithm to Save Read the Graph from Disk}]
+\begin{lstlisting}[caption={Algorithm to Demonstrate Next Pointers},label={ex:NeoPointers}]
 if node n has relationship pointer r: 
 	if n is start node of r: 
 		if r has StartNext pointer sn: 
@@ -179,7 +181,7 @@ if node n has relationship pointer r:
 			repeat from line 2 
 		endif 
 		else  
-			visited all relationships $ \rightarrow $ terminate
+			visited all relationships -> terminate
 		endelse 
 	endif 
 	else 
@@ -188,19 +190,27 @@ if node n has relationship pointer r:
 			repeat from line 2 
 		endif 
 		else
-			visited all relationships $ \rightarrow $ terminate
+			visited all relationships -> terminate
 		endelse 
 	endelse 
 endif
 \end{lstlisting}
 
-This shows that every relationship has two next pointers. Which one will be used for further traversal, depends on if the source node is start- or end-node in the current relationship.
+Which can be visualized in a flowchar like the following:
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.6]{Bilder/NeoAlgoExplanation.png}
+\captionof{figure}{Flowchart of \autoref{ex:NeoPointers}}
+\label{pic:NeoAlgoExplanation}
+\end{figure}
 
-In addition to this, the same pointers exist into the other direction, meaning that there are also two pointers called StartPrevious and EndPrevious. The question for selecting which one will be chosen for further iteration stays the same.
+This shows that every relationship has two next pointers. Which one will be used for further traversal, depends on if the source node is start- or end-node in the current relationship. \cite{NeoInternals}
+
+In addition to this, the same pointers exist into the other direction, meaning that there are also two pointers called StartPrevious and EndPrevious. The question for selecting which one will be chosen for further iteration stays the same. \cite{NeoInternals}
 
 \subsubsection{The Graph in Memory}
-Upon start up these records are being loaded into the "FS Cache" (File System Cache). Neo4j will then partition these into equally sized regions and create a hit counter for each of them, to encounter high traffic regions that will be loaded into the "Node/Relationship Object Cache" which is more similar to an actual graph. \\
-Here each node holds a list of relationships that are grouped by the relationship type to allow for quick traversals, and relationships only hold their properties as well as start- and end-node and their type. Any references to other records are being done by its ID. 
+Upon start up these records are being loaded into the "FS Cache" (File System Cache). Neo4j will then partition these into equally sized regions and create a hit counter for each of them, to encounter high traffic regions that will be loaded into the "Node/Relationship Object Cache" which is more similar to an actual graph. \cite{NeoInternals}\\
+Here each node holds a list of relationships that are grouped by the relationship type to allow for quick traversals, and relationships only hold their properties as well as start- and end-node and their type. Any references to other records are being done by its ID. \cite{NeoInternals}
 
 \subsubsection{Traversing}
 For finding a node to start traversing the graph, Neo4j uses traditional indexing. \citep[minute 32]{NeoInternals} Once the start node is found, 2 concepts take over:
@@ -209,12 +219,12 @@ For finding a node to start traversing the graph, Neo4j uses traditional indexin
 \item \textbf{Evaluators} which return if traversing should continue on this branch ($ \rightarrow $ expand) or not and if this node should be included in the result set or not.
 \end{enumerate}
 When accessing a node the first thing the system will try to do is fetch it from the cache. If it isn't be there, the next place that will be checked is the FS Cache. Should the region that contains the node be available there, the access is quick but blocking, meaning that the entire region is getting locked. In the case that the region is out of the FS cache the operation is blocking and slower. \\
-The locking is necessary to make sure that no other transaction will evict that area from the memory while the current one reads from it.
+The locking is necessary to make sure that no other transaction will evict that area from the memory while the current one reads from it. \cite{NeoInternals}
 
 \subsubsection{Adding Cypher}
-As Cypher describes the shape of the searched data, a searched query will be converted into a representative pattern graph. This is an internal representation of a valid result set that matches the searched structure. Found patterns will be compared to it to decide whether they should be included in the result set or not.
+As Cypher describes the shape of the searched data, a searched query will be converted into a representative pattern graph. This is an internal representation of a valid result set that matches the searched structure. Found patterns will be compared to it to decide whether they should be included in the result set or not. \cite{NeoInternals}
 
-When a query is run, the first thing that happens is that matching start-nodes are searched in the database (through indexing). When a node is found, traversing the database starts as described above. For Expanders and Evaluators to know what to return, they simply compare the pattern graph described through Cypher with the graph that was found so far and see if there is more data that matches. 
+When a query is run, the first thing that happens is that matching start-nodes are searched in the database (through indexing). When a node is found, traversing the database starts as described above. For Expanders and Evaluators to know what to return, they simply compare the pattern graph described through Cypher with the graph that was found so far and see if there is more data that matches. \cite{NeoInternals}
 
 \section{Server - ApolloServer}
 %maybe some general information about Apollo?
@@ -265,7 +275,6 @@ query GetBooksByLibrary {
 }
 \end{lstlisting}
 
-\newpage
 which will be executed on this schema \citep[with adaptions]{ApolloResChain}
 \begin{lstlisting}[caption={Schema Definition},label={ex243}]
 # A library has a branch and books 
@@ -301,7 +310,7 @@ To resolve the query there are 4 resolvers necessary:
 \noindent
 Assuming that there are static arrays called "libraries", "books" and "authors" available that are filled with data, the resolvers might look like the following: 
 \citep[with adaptions]{ApolloResChain}
-\newpage
+
 \lstset{language=JavaScript}
 \begin{lstlisting}[caption={Resolver Definition},label={ex244}]
 const resolvers = { 
@@ -341,7 +350,7 @@ Knowing this, the server will now go through each object of this array and look 
 For each library the server has to get the branch and an array of books. As branch is a primitive type it does not need to be further resolved. Books however, returns an array of non-primitive types. To find out which books need to be returned it is enough to use the value of \emph{parent.branch} and compare it to the branch of each book in the books array and return those who match.
 
 Books is again an array of a non primitive type and has to be further resolved by iterating through the array and accessing the requested values title and author. Title is just a string, whereas author will get resolved further, etc.
-\newpage
+
 \subsubsection{Cypher in GraphQL}
 Using GraphQL directives it is possible to "annotate" our schema and specify precisely certain actions or checks the server should perform when accessing a field. \\
 The following schema shows the definition and usage of a directive: \cite{GraphQlDir}
@@ -377,7 +386,6 @@ The node that is currently being iterated over in the resolver chain is passed a
 
 Please note that this feature of using the cypher queries in the schema is only available when \emph{APOC} is installed on this Neo4j instance.
 
-\newpage
 \section{Frontend - React}
 React is a JavaScript-Framework to create component-based user interfaces. Each component has to define a \emph{render} method which describes what appears on the screen. In this method the programmer writes basic HTML or can embed other react components. \\
 The standard \emph{index.html} is pretty short when using react. The only code a programmer writes there is normally in the header area to include CDNs or other resources. The body contains only one element: \\
@@ -541,6 +549,7 @@ On the initial render React will create a component tree from which it'll then b
 
 When clicking the increase or decrease button in the previous example the components state gets updated which will automatically trigger a re-render. In such a small component it wouldn't really matter if React simply rendered the whole component. In a component containing hundreds of lines and probably many other sub-components the decision to render all of it just because would take a long time and be fatal for performance. Especially if really all it'd have to do is re-render line 45.
 
+\newpage
 \subsubsection{Finding The Differences}
 To know what exactly to update, React performs something called \emph{Reconciliation}. This process is very complicated, so this explanation leaves out the details and explain it in a few steps: 
 \begin{itemize}
@@ -677,14 +686,14 @@ Of course in some cases it might be necessary to always have the newest data fro
 
 \chapter{Deployment}
 
-While developing in a local environment it is also important to test the application in a production environment as early as possible. Many frameworks make optimizations to improve performance. This might lead to errors that can't be seen in a local setup. Often they also change error behavior. While during development an error might only lead to a warning message, in production the same error might cause the application to crash.
+While developing in a local environment it is also important to test the application in a production environment as early as possible. Many frameworks make optimizations to improve performance, latencies are bigger, paths are different etc.. This might lead to errors that can't be seen in a local setup. Often they also change error behavior. While during development an error might only lead to a warning message, in production the same error might cause the application to crash.
 
 Another reason to go for early deployment is to allow other people to see, use and test the application. Someone who sees the app for the first time or at least doesn't know how things were thought to work will make completely different use of it than a programmer. New issues with the workflow can be discovered and problems that a developer would never have thought of may be discovered. Further the layout will be tested on different screens, browsers and devices, unveiling unknown layout troubles. Issues discovered early are much easier to fix than those who are integrated deeply into the codebase. \\
 
 This chapter will introduce the tools that were used to deploy the application to a publicly available cloud platform that allows it to be used and tested by anyone, anywhere.
 
 \section{Docker}
-Docker is a platform that provides the ability to a developer to create any environment in which he wants to execute code in.
+Docker is a platform that enables a developer to describe and package the environment in which he wants to execute code.
 Before comparing it to a virtual machine lets take a look at the basic terminology:
 
 A \emph{Docker File} is a text file containing instructions that tell the Docker Engine how to build a \emph{Docker Image}. \cite{NickDocker}
@@ -693,7 +702,6 @@ This \emph{Docker Image} is a file containing necessary data to execute a given 
 
 Running the image will start a \emph{Docker Container}. It will execute specified commands and by that for example download node modules. This container is an instance executed by the \emph{Docker Engine} which runs on top of the Host OS of an actual machine.
 
-\newpage
 While it is similar to a virtual machine, there are certain differences between them: \\
 \textbf{Operating System} Every VM comes with its own operating system, making it heavy in terms of memory and processing power they require. Docker containers in turn all share the hosts operating system and only require the docker engine to be installed on the machine: 
 \begin{figure}[H]
@@ -704,10 +712,10 @@ While it is similar to a virtual machine, there are certain differences between 
 \end{figure}
 \noindent
 \textbf{Security} Following the previous point, every VM has its own operating system and is strongly isolated in the host kernel. Docker containers all run on a single kernel. Furthermore docker resources are shared. If an attacker gets access to one container he'll be able to exploit  all containers in a cluster. \cite{GeekDocker}) \\
-\textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll run the same on any machine. VMs are more difficult to port just due to their sheer size. In addition, the process of setting up a virtual machine differs from operating system to operating system. 
+\textbf{Portability} Containers can easily be ported to any machine that has the docker engine installed. There is no further configuration necessary, they'll run the same on any machine. VMs are more difficult to port because the process of setting up a virtual machine differs from operating system to operating system. 
 
 \section{AWS}
-AWS is a cloud platform from Amazon that offers over many different services in various geographic regions around the world. This project made use of 3 of them to make the application publicly available. This section will give a short introduction and overview over each of them.
+AWS is a cloud platform from Amazon that offers many different services in various geographic regions around the world. This project made use of 3 of them to make the application publicly available. This section will give a short introduction and overview over each of them.
 
 \subsection{AWS-EC2}
 EC2 is a service that allows the creation of virtual machines with over 300 different variations of computational capacities like the number of CPUs, Memory, Storage and Network Performance. \cite{AwsEc2} 
@@ -717,7 +725,7 @@ Basically, an EC2 instance is a virtual machine that runs on an Amazon server. \
 %In this app we will make use of EC2 to run a Neo4j instance. To make configuration easier, the Neo4j community provides images that can be started directly with only a few clicks from the AWS EC2 management console. By selecting AMIs and searching for "neo4j-community" in public images we can see all the available images with different versions of Neo4j. We will select one of the images that contains \emph{apoc} in their name to be able to use Cypher in our GraphQL schema. After clicking Launch we can select an instance https://neo4j.com/developer/neo4j-cloud-aws-ec2-ami/
 \newpage
 \subsection{AWS-ECS}
-ECS is a service to run automatically managed docker containers on AWS servers. Many big companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
+ECS is a service to run automatically managed docker containers on AWS servers. Many companies make use of this service because of its scalability, reliability and security. \cite{AwsEc2}
 These are the most important terms when talking about AWS ECS: \\
 
 A \textbf{Task Definition} is the blueprint of a task, specifying which Docker image(s) to use, ports to expose, can set environment variables and memory needed etc. \cite{CodeCampEcs}
@@ -730,7 +738,7 @@ A \textbf{Service} is an instance that is created following the specifications i
 
 A \textbf{Cluster} is a logical grouping of services. \\
 
-These components can be visually put together as shown in \autoref{ex311}. \\
+These components can be visually put together as shown in \autoref{ex311}.
 
 \begin{figure}[h]
 \centering
@@ -746,7 +754,21 @@ The services of a cluster can be run in different \emph{Availability Zones} (AZ)
 \subsection{AWS-Amplify}
 Amplify is a service that aims to make the development as well as the deployment of applications as easy as possible. It comes with many advanced features that help setting up an app quickly. Some examples are: Authentication, API creation, Analytics, Push Notifications and many more \cite{AwsAmplify}. It creates a certificate for any deployed application, allowing for HTTPS connections. Further it is able to scan a connected GitHub repository and provide a template configuration based on the framework used.
 
-Another really nice feature is the easy deployment flow: For each application it is possible to connect various branches. Each branch will have its unique URL and once a developer pushes to a connected branch, Amplify will build the newest status of the application. This is a great feature for testing new features in a production environment without having to deploy to a master environment directly.
+Another really nice feature is the easy deployment flow: For each application it is possible to connect various branches. Each branch will have its unique URL and once a developer pushes to a connected branch, Amplify will build a new version of the application. This is a great feature for testing new features in a production environment without having to deploy to a master environment directly.
+
+\section{AWS in this App}
+\autoref{ex:AwsMyApp} shows how this application uses the previously introduced services from AWS.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.8]{Bilder/AwsMyApp.png}
+\captionof{figure}{AWS usage of this application}
+\label{ex:AwsMyApp}
+\end{figure}
+
+As the app is small ECS consists of only one service with one task running one container.
+
+The UI hosted through Amplify dispatches queries to the GraphQL server thats being run in a service in ECS. The service will forward the call to the container, which resolves it and runs Cypher queries on the neo4j instance hosted in EC2.
 
 \chapter{Development}
 This discussion is not a "how to" guide because in the course of this work some mistakes were made. This section describes key architectural decisions and reports equally on those which turned out well and those which turned out badly.
@@ -972,6 +994,7 @@ schema {
 The end of the schema contains the definition for the query type and the root schema.
 
 \section{Getting started with Neo4j}
+\label{chap:StartNeo}
 To get started with Neo4j its a good idea to first create a small basic data set that shouldn't be too complicated to be able to easily experiment with it. So lets try to create a representation of the following graph in the database:
 
 \begin{figure}[H]
@@ -981,9 +1004,11 @@ To get started with Neo4j its a good idea to first create a small basic data set
 \label{ex421}
 \end{figure}
 
-The goal is to display this graph in the application. It is really helpful to first draw it on paper and then think of the individual components needed. As there will be one graph in the database and one in the application it is important to carefully separate them when talking about a node: While a node in the app is always a node in the database, this is not necessarily the case the other way around as a node in the database could also represent data about a connection in the application.
+The goal is to display this graph in the application. It is really helpful to first draw it on paper and then think of the individual components needed. In the application \emph{DB, Backend and Frontend} will be referred to as \emph{nodes}, and \emph{Mutates, Reads, Serves and Invokes} will be referred to as \emph{links}.
 
-This code will create the three nodes for DB, Backend and Frontend:
+Both, \emph{nodes} and \emph{links} in the application, will however be nodes with properties on them in Neo4j.
+
+This code will create the three nodes for DB, Backend and Frontend in Neo4j:
 \lstset{language=Cypher}
 \begin{lstlisting}[caption={Cypher Statements to Create the Nodes}]
 CREATE (:Node:AbstractUserInterface {id: randomUUID(), label: "Frontend", story: "Interaction point for the user", nodeType: "AbstractUserInterface"})
@@ -1302,7 +1327,7 @@ Deleting such a node will also automatically lead to the deletion of the link. W
 
 \item[3] The user deletes a link that has a sequence and link-end property.
 
-As discussed previously, these two exist as their own nodes in Neo4j. Simply deleting the link won't work as it has connected relationships. Using \emph{DETACH DELETE} to delete the node will at least not throw an error, but leave the sequence- and link-end-node fly around in the database with no references. They will not be deleted unless the database is inspected and garbage collected using other tools.
+As discussed in \autoref{chap:StartNeo}, these two exist as their own nodes in Neo4j. Simply deleting the link won't work as it has connected relationships. Using \emph{DETACH DELETE} to delete the node will at least not throw an error, but leave the sequence- and link-end-node fly around in the database with no references. They will not be deleted unless the database is inspected and garbage collected using other tools.
 \end{itemize}
 
 There are many more cases where the execution order of queries is critical for keeping the database clean and there might be multiple ways of doing so. At the moment the application makes use of the ES6 function \emph{Promise.all()}. There is an array for each type of operation (creating node, creating link, deleting node, etc.). When the application finds an entity that needs to be sent to the server it will push the return value from the Apollo mutation hook into the respective array. Using \emph{Promise.all( iterable )} it waits for all promises of that type to resolve and only if that is the case it will continue the saving process.
@@ -1347,11 +1372,8 @@ In line 4 and 9 the node promises are pushed into the respective array. All of t
 \subsection{AWS-Healthcheck}
 After deploying the backend to AWS ECS there was a problem that the server would often be down and couldn't be reached by the application. After looking at the event logs it turned out that the service would restart the task every 3 to 5 minutes due to failed \emph{Health Checks}. 
 
-These ping a specified URL and compare the response code to a pre-defined one. If the response should fail a certain amount of times to equal the defined one the service will restart the task as it assumes the task to be stopped, hung or broken in some other way. This lead to a really high CPU usage by the cluster and service and even worse, to the server not being reachable at any moment.
-
-Despite setting the path for the health check to the one the frontend connects to it would still fail with an error code of \emph{404 Not Found}. Later on it came clear that in order to talk to the server the application uses a POST request. This detail was hidden because Apollo takes care of dispatching the calls.
-
-Then the solution was quickly found: The server now has a GET listener on the path \emph{/healthcheck}. This handler will internally try to fetch nodes from the \emph{/graphql} endpoint the application uses and return the status code of this operation. As the healthchecks now didn't return an error code the task didn't get restarted every 5 minutes and the CPU usage by cluster and service dropped significantly:
+These ping a specified URL and compare the response code to a pre-defined one. If the response should fail a certain amount of times to equal the defined one the service will restart the task as it assumes the task to be stopped, hung or broken in some other way. This lead to a really high CPU usage by the cluster and service and even worse, to the server not being reachable for long periods of time.
+The solution was to implement a GET listener on the path \emph{/healthcheck}. This handler will internally try to fetch nodes from the \emph{/graphql} endpoint the application uses and return the status code of this operation. As the healthchecks now didn't return an error code the task didn't get restarted every 5 minutes and the CPU usage by cluster and service dropped significantly:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.6]{Bilder/AwsCpuReduction.png}
@@ -1359,13 +1381,21 @@ Then the solution was quickly found: The server now has a GET listener on the pa
 \end{figure}
 
 \subsection{Apollo Error-Codes}
-When writing the code to curve multiple links between two nodes a first version used the node data from the local cache to iterate through them and find connected links in the links array. While it worked perfectly on the local setup and \emph{most} of the time in the deployed versions, sometimes there appeared an error message: \\
+When writing the code to curve multiple links between two nodes like shown in \autoref{ex:CurvedLinks} a first version used the node data from the local cache to iterate through them and find connected links in the links array. While it worked perfectly on the local setup and \emph{most} of the time in the deployed versions, sometimes there appeared an error message:
 
 \centerline{Error in setLinks: Invariant Violation: 50 (see https://...)} 
 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{Bilder/CurvedLinks.png}
+\captionof{figure}{Curved Links}
+\label{ex:CurvedLinks}
+\end{figure}
+
 While this message contains something that is similar to an error code, it turned out that these change with every new update to the ApolloClient. This makes it hard to find help online as people who might have had the similar error code probably got it for a different reason. At some point the error also appeared on the local setup and there the ApolloClient serves an error message with a lot more information. 
 
-As it turned out, the source of the problem was that in the code to calculate the custom curvature reading the nodes from the cache would sometimes end in an error if the query for nodes hasn't returned data yet. However instead of returning undefined - which would have led to a typical JavaScript error that is easy to track down - Apollo throws an error itself. The reason for a different message between production and development environments is that in production environments Apollo strips these error messages to a minimum to reduce the bundle size. \\
+As it turned out, the source of the problem was that in the code to calculate the custom curvature reading the nodes from the cache would sometimes end in an error if the query for nodes hasn't returned data yet. However instead of returning undefined - which would have led to a typical JavaScript error that is easy to track down - Apollo throws an error itself. The reason for a different message between production and development environments is that in production environments Apollo strips these error messages to a minimum to reduce the bundle size.
 
 The solution to getting error messages with more information even in a production environment was to write a few wrapper methods that take a GraphQL query, the data to write into the cache and an error string that gets printed in case something goes wrong.
 
@@ -1381,9 +1411,9 @@ This became especially annoying when wanting to check the local state after comp
 \subsection{CORS-problems}
 Something very useful when using AWS Amplify is that when creating a web app with it, marking the URL in the address bar as secure which makes the application appear more serious.
 
-But it comes with one problem. Amplify configures its applications in a way that it only accepts data from other resources marked as secure. As the backend did not have a certificate at that point any communication would be blocked by Amplify resulting in a CORS-error. \\
+But it comes with one problem. Amplify configures its applications in a way that it only accepts data from other resources marked as secure. As the backend did not have a certificate at that point any communication would be blocked by Amplify resulting in a CORS-error.
 
-So what exactly is CORS? It stands from \emph{Cross-origin resource sharing} and is a way to configure websites to accept data requested from another domain than their own. \\
+So what exactly is CORS? It stands from \emph{Cross-origin resource sharing} and is a way to configure websites to accept data requested from another domain than their own.
 
 Even after spending a lot of time searching for a setting to disable this behavior from Amplify and configuring the ApolloClient according to the docs to allow CORS to make sure its not a configuration problem from the application, the results stayed the same.
 
@@ -1393,9 +1423,9 @@ The only remedy to this issue was to get a certificate for the backend and by th
 \section{Graph-Layout}
 As mentioned in the introduction, the ability to create a graph on its own is a central aspect of the application. This part offers a lot of room for improvement as graph layout is its own field of research and the algorithms can become incredibly complex. Here are two approaches described together with their flaws and benefits.
 
-One main problem both tries face is that in order to allocate them, a start-node must be found that the others can use to orientate themselves on. But which node should be chosen to start? The one with the most connections? Where should nodes that are not children of the start-node be placed? 
+One main problem both algorithms face is that in order to allocate them, a start-node must be found that the other nodes can use to orientate themselves on. But which node should be chosen to start? The one with the most connections? Where should nodes that are not children of the start-node be placed? 
 
-Nodes that can be collapsed (hide their direct descendant children) are placed in a grid-like manner. Then their children are placed relatively to them. After handling all child-nodes, the ones that were not part of a collapsable were handled. For those the ones with the most connections would be chosen as start-node.
+For now both algorithms place nodes that can be collapsed in a grid-like manner. Then their children are recursively placed relative to them. After handling all child-nodes, those nodes that were not connected to a collapsable in any way are handled. For those the ones with the most connections would be chosen as start-node.
 
 \subsection{Tree-Layout}
 In this approach each node would distribute its child nodes below it. Depending on the amount of children they'd be split into different layers of nodes.
