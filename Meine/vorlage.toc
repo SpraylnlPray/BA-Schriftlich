@@ -17,9 +17,9 @@
 \contentsline {subsubsection}{\nonumberline Example Resolver}{9}{section*.10}%
 \contentsline {subsubsection}{\nonumberline Resolver Chain}{10}{section*.11}%
 \contentsline {subsubsection}{\nonumberline Cypher in GraphQL}{12}{section*.12}%
-\contentsline {section}{\numberline {2.5}Frontend - React}{13}{section.2.5}%
+\contentsline {section}{\numberline {2.5}Frontend - React}{12}{section.2.5}%
 \contentsline {subsubsection}{\nonumberline Components}{13}{section*.13}%
-\contentsline {subsubsection}{\nonumberline State}{15}{section*.14}%
+\contentsline {subsubsection}{\nonumberline State}{14}{section*.14}%
 \contentsline {subsubsection}{\nonumberline Updating Components}{16}{section*.15}%
 \contentsline {subsubsection}{\nonumberline Finding The Differences}{17}{section*.16}%
 \contentsline {subsubsection}{\nonumberline Stateless Functional Components}{17}{section*.17}%
