@@ -17,9 +17,9 @@
 \contentsline {subsubsection}{\nonumberline Example Resolver}{9}{section*.10}%
 \contentsline {subsubsection}{\nonumberline Resolver Chain}{10}{section*.11}%
 \contentsline {subsubsection}{\nonumberline Cypher in GraphQL}{12}{section*.12}%
-\contentsline {section}{\numberline {2.5}Frontend - React}{12}{section.2.5}%
+\contentsline {section}{\numberline {2.5}Frontend - React}{13}{section.2.5}%
 \contentsline {subsubsection}{\nonumberline Components}{13}{section*.13}%
-\contentsline {subsubsection}{\nonumberline State}{14}{section*.14}%
+\contentsline {subsubsection}{\nonumberline State}{15}{section*.14}%
 \contentsline {subsubsection}{\nonumberline Updating Components}{16}{section*.15}%
 \contentsline {subsubsection}{\nonumberline Finding The Differences}{17}{section*.16}%
 \contentsline {subsubsection}{\nonumberline Stateless Functional Components}{17}{section*.17}%
@@ -41,10 +41,10 @@
 \contentsline {section}{\numberline {4.3}Getting started with Neo4j}{32}{section.4.3}%
 \contentsline {section}{\numberline {4.4}Communicating with the DB through ApolloServer and GraphQL-Playground}{35}{section.4.4}%
 \contentsline {section}{\numberline {4.5}Making ApolloServer and ApolloClient communicate}{39}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Building the UI}{39}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Components}{39}{subsection.4.6.1}%
-\contentsline {section}{\numberline {4.7}Problems}{42}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Keeping the data consistent when saving changes}{42}{subsection.4.7.1}%
+\contentsline {section}{\numberline {4.6}Building the UI}{40}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Components}{40}{subsection.4.6.1}%
+\contentsline {section}{\numberline {4.7}Problems}{41}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Keeping the data consistent when saving changes}{41}{subsection.4.7.1}%
 \contentsline {subsection}{\numberline {4.7.2}AWS-Healthcheck}{43}{subsection.4.7.2}%
 \contentsline {subsection}{\numberline {4.7.3}Apollo Error-Codes}{44}{subsection.4.7.3}%
 \contentsline {subsection}{\numberline {4.7.4}Apollo Chrome Dev-Tools}{45}{subsection.4.7.4}%
@@ -67,13 +67,13 @@
 \contentsline {section}{\numberline {7.2}Backend}{59}{section.7.2}%
 \contentsline {section}{\numberline {7.3}Frontend}{59}{section.7.3}%
 \contentsline {subsection}{\numberline {7.3.1}Local Resolvers}{60}{subsection.7.3.1}%
-\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{60}{section*.45}%
-\contentsline {subsubsection}{\nonumberline updateLink}{60}{section*.46}%
-\contentsline {subsubsection}{\nonumberline collapseNode}{61}{section*.47}%
-\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{61}{section*.48}%
-\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{61}{section*.49}%
+\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{60}{section*.44}%
+\contentsline {subsubsection}{\nonumberline updateLink}{60}{section*.45}%
+\contentsline {subsubsection}{\nonumberline collapseNode}{61}{section*.46}%
+\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{61}{section*.47}%
+\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{61}{section*.48}%
 \contentsline {subsection}{\numberline {7.3.2}Layout Algorithms}{61}{subsection.7.3.2}%
-\contentsline {subsubsection}{\nonumberline Collapsable Rule}{62}{section*.50}%
-\contentsline {subsubsection}{\nonumberline FlowerRule}{64}{section*.52}%
-\contentsline {subsubsection}{\nonumberline NonCollapsableRule}{65}{section*.53}%
-\contentsline {chapter}{\nonumberline List of Figures}{66}{chapter*.54}%
+\contentsline {subsubsection}{\nonumberline Collapsable Rule}{62}{section*.49}%
+\contentsline {subsubsection}{\nonumberline FlowerRule}{64}{section*.51}%
+\contentsline {subsubsection}{\nonumberline NonCollapsableRule}{65}{section*.52}%
+\contentsline {chapter}{\nonumberline List of Figures}{66}{chapter*.53}%

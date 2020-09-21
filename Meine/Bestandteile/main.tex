@@ -388,6 +388,7 @@ The node that is currently being iterated over in the resolver chain is passed a
 
 Please note that this feature of using the cypher queries in the schema is only available when \emph{APOC} is installed on this Neo4j instance.
 
+\newpage
 \section{Frontend - React}
 React is a JavaScript-Framework to create component-based user interfaces. Each component has to define a \emph{render} method, which describes what appears on the screen. In this method the programmer writes basic HTML or can embed other react components. \\
 The standard \emph{index.html} is pretty short when using react. The only code a programmer writes there is normally in the header area to include CDNs or other resources. The body contains only one element: \\
@@ -1118,7 +1119,7 @@ async SeedDB( _, __, ctx ) {
 },
 \end{lstlisting}
 
-The \emph{seedQuery} is a long cypher query defined in an external file. After deleting all nodes and connections in the database using the \emph{deleteQuery} it gets executed to create new data to use.
+The \emph{seedQuery} is a long cypher query defined in an external file. After deleting all nodes and connections in the database using the \emph{deleteQuery} it gets executed to a structure similar to the one shown in \autoref{ex:GraphSideBySide}.
 
 To run this resolver and seed the database the following GraphQL query can be used in the GraphQL Playground:
 \lstset{language=GraphQL}
@@ -1129,7 +1130,7 @@ mutation seedDB {
   }
 }
 \end{lstlisting}
-The name in line 1 is completely optional. What matters is line 2 as this string will be used to identify the correct resolver. Tthe curly braces are used to define a result set. After hitting the play button the expected result gets returned:
+The name in line 1 is completely optional. What matters is line 2 as this string will be used to identify the correct resolver. The curly braces are used to define a result set. After hitting the play button the expected result gets returned:
 \begin{lstlisting}[caption={Seeding Result}, label={exResSeed}]
 {
   "data": {
@@ -1140,6 +1141,7 @@ The name in line 1 is completely optional. What matters is line 2 as this string
 }
 \end{lstlisting}
 
+\newpage
 The next step is retrieving data. As mentioned previously, to save some time when writing queries, one can use the neo4j-graphql-js npm package which combines resolvers and a GraphQL schema to an executable schema. This package can generate many queries and mutations based on the schema provided but still allows the usage of custom resolvers.
 By doing so, nodes can be fetched without any further coding:
 
@@ -1250,9 +1252,9 @@ export const CREATE_NODE = gql`
 `;
 \end{lstlisting}
 \noindent
-The small functional component shown in \autoref{ex:useQueryFuncComp} demonstrates how to pass the query to the hook and use it:
+The small functional component shown in \autoref{ex:useQueryFuncComp} demonstrates how to pass the query to the hook and use it.
 \lstset{language=JavaScript}
-\begin{lstlisting}[caption={Using the Query in a Component (no actual application code)},label={ex:useQueryFuncComp},float=h]
+\begin{lstlisting}[caption={Using the Query in a Component (no actual application code)},label={ex:useQueryFuncComp}]
 import { CREATE_NODE } from './queries';
 import { useState } from 'react';
 
@@ -1294,7 +1296,7 @@ What must appear on the screen so the application can be used?
 
 The application should have a big canvas to display the graph and allow interaction with it. There needs to be space to show information about a selected link or node, as well as options to search/filter the view. A button to save data to the database and also to discard local changes should be apparent. So lets have a look at the app and at the components it consists of:
 \begin{figure}[H]
-\includegraphics[scale=.46]{Bilder/Layout.png}
+\includegraphics[scale=.425]{Bilder/Layout.png}
 \captionof{figure}{The Components in the UI}
 \end{figure}
 The top level components in red are:
@@ -1309,7 +1311,7 @@ Their child components in green:
 \item[1] \textbf{OptionBar} It contains the buttons to create a node or a link, together with a button that will hide the entire \emph{InteractionPane} to give the \emph{EditorPane} the full window width.
 \item[2] \textbf{InputPane} All components that require input from the user are child components of this one. This could be called a container component as it doesn't display anything on its own.
 \item[3] \textbf{ProjectStatus} Shows information about the ability of the user to make changes to the data and allows the request of editing rights to do so.
-\item[4] \textbf{SavePane} Will send changed entities to the server and inform the user about the progress or discard local changes.
+\item[4] \textbf{SavePane} Will send changed entities to the server and inform the user about the progress, or discard local changes.
 \end{itemize}
 
 The child component of the \emph{InputPane} in cyan is called \textbf{GraphSettingsPane}. In the future there will be more options on manipulating data shown in the graph, like filtering for certain types, special layout algorithms etc. What component is displayed here varies depending on what the user last clicked. There are 2 more forms for creating and editing a node or a link.
@@ -1330,23 +1332,24 @@ Deleting such a node will also automatically lead to the deletion of the link. W
 
 \item[3] The user deletes a link that has a sequence and link-end property.
 
-As discussed in \autoref{chap:StartNeo}, these two exist as their own nodes in Neo4j. Simply deleting the link won't work as it has connected relationships. Using \emph{DETACH DELETE} to delete the node will at least not throw an error, but leave the sequence- and link-end-node fly around in the database with no references. They will not be deleted, unless the database is inspected and garbage collected using other tools.
+As discussed in \autoref{chap:StartNeo}, these two exist as their own nodes in Neo4j. Simply deleting the link won't work, as it has connected relationships. Using \emph{DETACH DELETE} to delete the node will at least not throw an error, but leave the sequence- and link-end-node fly around in the database with no references. They will not be deleted, unless the database is inspected and garbage collected using other tools.
 \end{itemize}
 
-There are many more cases, where the execution order of queries is critical for keeping the database clean and there might be multiple ways of doing so. At the moment the application makes use of the ES6 function \emph{Promise.all()}. There is an array for each type of operation (creating node, creating link, deleting node, etc.). When the application finds an entity that needs to be sent to the server, it will push the return value from the Apollo mutation hook into the respective array. Using \emph{Promise.all( iterable )} it waits for all promises of that type to resolve and only if that is the case, it will continue the saving process.
+There are many more cases, where the execution order of queries is critical for keeping the database clean and there might be multiple ways of doing so. At the moment, the application makes use of the ES6 function \emph{Promise.all()}. There is an array for each type of operation (creating node, creating link, deleting node, etc.). When the application finds an entity that needs to be sent to the server, it will push the return value from the Apollo mutation hook into the respective array. Using \emph{Promise.all( iterable )} it waits for all promises of that type to resolve and only if that is the case, it will continue the saving process.
 
 The order used at the moment is the following:
 \begin{itemize}
-\item[1.] \textbf{Creating and updating nodes} First, make sure that all nodes that might be needed later are created. In addition to that, any updates made to other nodes can be done simultaneously, as they won't affect other entities.
-\item[2.] \textbf{Create Links} Add any new links to the database, as they might be referenced in sequence- and link-end-creations in the next step.
+\item[1.] \textbf{Creating and updating nodes} First, make sure that all nodes that might be needed later are created. In addition to that, any updates made to other nodes can be done simultaneously as they won't affect other entities.
+\item[2.] \textbf{Create Links} Add any new links to the database as they might be referenced in sequence- and link-end-creations in the next step.
 \item[3.] \textbf{Sequences and Link-Ends} must be created on newly created links
-\item[4.] \textbf{Update Links} Changes to Links can now be commited safely to the database as any new node they might connect to is guaranteed to exist and internal updates won't affect other entities. In the same step, their link-end- and sequence-properties can be updated.
+\item[4.] \textbf{Update Links} Changes to Links can now be committed safely to the database as any new node they might connect to is guaranteed to exist and internal updates won't affect other entities. In the same step, their link-end- and sequence-properties can be updated.
 %CHECK IF THIS IS TRUE
-\item[5.] \textbf{Delete Links} Remove deleted links from the database. This must be done before deleting nodes as otherwise deleting a node might not work if it has attached relationships.
-\item[6.] \textbf{Delete Nodes} Remove deleted nodes from the database. Its important to do this using \emph{DELETE} and not \emph{DETACH DELETE} to make sure there won't be any links without node on one end.
+\item[5.] \textbf{Delete Links} Remove deleted links from the database. This must be done before deleting nodes, as otherwise deleting a node might not work if it has attached relationships.
+\item[6.] \textbf{Delete Nodes} Remove deleted nodes from the database. It is important to do this using \emph{DELETE} and not \emph{DETACH DELETE} to make sure there won't be any links without node on one end.
 \item[7.] \textbf{Reset Local Store} After that, mark all items in the local store as up do date.
 \end{itemize}
 
+\newpage
 This code demonstrates the usage of \emph{Promise.all()} to make it more understandable:
 \begin{lstlisting}[caption={Usage of Promise.all()}]
 for ( let node of createdNodes ) {
@@ -1569,6 +1572,7 @@ While Apollo is the first result when looking for \emph{How to create a GraphQL 
 This part contains a list of ideas about what could be added or modified in the project in possible further development together with some suggestions on how these could be approached.
 \begin{itemize}
 \item \textbf{UI/UX} improvements to make working with the application more comfortable.
+
 \begin{itemize}
 \item The \textbf{responsiveness} of the website. Maybe even re-creating the structure of the app using a mobile-first approach might be a good idea, otherwise adapting the css values would be the way to go.
 
@@ -1578,6 +1582,7 @@ This part contains a list of ideas about what could be added or modified in the 
 \end{itemize}
 
 \item A \textbf{Syntax Checker} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked. Rules to start with could be:
+
 \begin{itemize}
 \item Collapsables can only have \emph{Part-Of} links
 \item Loops between collapsables
