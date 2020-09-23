@@ -11,7 +11,7 @@ The purpose is to try out and test a combination of technologies. This software,
 To give the reader a better understanding of the context lets have a quick look at the application at the end of this project.
 \begin{figure}[H]
 \centering
-\includegraphics[scale=.35]{Bilder/AppOverview.png}
+\includegraphics[width=\textwidth, height=250px]{Bilder/AppOverview.png}
 \captionof{figure}{The Application}
 \label{pic:AppOverview}
 \end{figure}
@@ -28,7 +28,7 @@ When selecting a node or link the pane on the left will show a form containing a
 \section{Definitions}
 The word \emph{graph} refers to a network of nodes that are connected through links. Each link must be connected to a node (it can be the same one twice) on each end. This means that there can be one or more not connected networks of nodes and links in one graph.
 
-A \emph{collapsable} is a node that can hide (collapse) its children and show (expand) them. A Parent-Child-relationship is established by creating a link of the type \emph{Part-Of} between two nodes, where the collapsable is the parent. There are two types of nodes which have this functionality: Containers and Domains. The button offering this appears in the form on the left when the user selects a collapsable node.
+A \emph{collapsible} is a node that can hide (collapse) its children and show (expand) them. A Parent-Child-relationship is established by creating a link of the type \emph{Part-Of} between two nodes, where the collapsible is the parent. There are two types of nodes which have this functionality: Containers and Domains. The button offering this appears in the form on the left when the user selects a collapsible node.
 
 \chapter{Backend to Frontend}
 
@@ -48,7 +48,7 @@ For example, for loading the start page of a single user, there would have been 
 \begin{itemize}
 \item \emph{https://facebook.com/user/id} - Get all user specific data
 \item \emph{https://facebook.com/user/id/events} - Get all possibly relevant events
-\item \emph{https://facebook.com/user/id/friends-suggestions} - Get all friend suggestions
+\item \emph{https://facebook.com/user/id/friend-suggestions} - Get all friend suggestions
 \item ...
 \end{itemize} \cite{GraphQLIntro}
 
@@ -57,14 +57,14 @@ GraphQL aims to resolve all these issues: Reduce the amount of unnecessary data 
 It allows developers to get a lot of different data from a single endpoint. Instead of having to send requests to the above shown 3+ endpoints, when using GraphQL all requests would go to \emph{graph.facebook.com} with a query similar to: \\
 \newpage
 \lstset{language=GraphQL}
-\begin{lstlisting}[caption={A GraphQL Query to Fetch User Data},label={ex211}]
+\begin{lstlisting}[caption={A GraphQL Query to Fetch User Data \citep[with adaptions]{GraphQLIntro}},label={ex211}]
 query {
 	user(id: 1) {
 		name
 		events {
 			count
 		}
-		friends_suggestions {
+		friend_suggestions {
 			name
 			mutual_friends {
 				count
@@ -73,9 +73,9 @@ query {
 	}
 }
 \end{lstlisting}
-\citep[with adaptions]{GraphQLIntro}	
+	
 Where the answer would be a JSON-string:
-\begin{lstlisting}[caption={Example Response Data},label={ex212}]
+\begin{lstlisting}[caption={Example Response Data \citep[with adaptions]{GraphQLIntro}},label={ex212}]
 { 
 	"data": {
 		"user": {
@@ -83,7 +83,7 @@ Where the answer would be a JSON-string:
 			"events": {
 				"count": 4
 			},
-			"friends_suggestions": {
+			"friend_suggestions": {
 				"name": "Seth Juarez",
 				"mutual_friends": {
 					"count": 18 
@@ -93,7 +93,6 @@ Where the answer would be a JSON-string:
 	}
 }
 \end{lstlisting}
-\citep[with adaptions]{GraphQLIntro}	
 
 The query can be as extensive as the developer needs it, it will return only the data requested and the answer string can be directly accessed like a JSON-object. Thereby GraphQL fulfills all its design goals.
 \\ \\
@@ -163,52 +162,61 @@ MATCH (n:Node)-[:Neighbor]-(n2:Node) WHERE n.label = "A" RETURN n, n2
 which might look a bit cleaner. It is also possible to return only specific values of n and n2 and give them names by stating
 \emph{ ...RETURN n.label AS Label1, n2.label AS Label2 }
 
-The following information about Neo4j internals is all from \cite{NeoInternals} and \cite{Neo4jInternalsPP}. Sadly, these sources are all old and could be outdated, yet there does not seem to be more current information available.
+The following information about Neo4j internals is all from \cite{NeoInternals} and \cite{Neo4jInternalsPP}. Sadly, these sources are all old and might be outdated, yet there does not seem to be more current information available.
 
 \subsubsection{The Graph on Disk}
 This section describes internal aspects from Neo4j.
 
 Internally, there are 3 types of records saved on the disk: node-, relationship- and property-records. All of these have fixed sizes to allow for quicker allocation during the start up process. Every record has an "inUse" field, as well as a unique ID with which Neo4j is able to exactly locate a searched record on the disk. \citep[minute 08]{NeoInternals}
 
-Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty the algorithm knows that it has reached all properties of a node.\cite{NeoInternals}
+Properties on nodes are saved through a linked list like object. The exact implementation however does not alter the idea behind it. A property knows about its type and has a next pointer. Each node saves the pointer to its first property whose next pointer will lead to the next property etc.. Should a next pointer be empty an algorithm to get all properties knows that it has reached the end of the list.\cite{NeoInternals}
 
-In addition to the first property, each node knows about its first relationship. If it is the \emph{first} one, it is simply being determined by the order of creation. A relationship has pointers to its start- and end-node, to its type and four more to other relationship.\cite{NeoInternals} These are best explained in pseudo code that walks through all relationships a node has:
-\newpage
-\lstset{language=JavaScript}
-\begin{lstlisting}[caption={Algorithm to Demonstrate Next Pointers},label={ex:NeoPointers}]
-if node n has relationship pointer r: 
-	if n is start node of r: 
-		if r has StartNext pointer sn: 
-			set r = sn 
-			repeat from line 2 
-		endif 
-		else  
-			visited all relationships -> terminate
-		endelse 
-	endif 
-	else 
-		if r has EndNext pointer en: 
-			set r = en 
-			repeat from line 2 
-		endif 
-		else
-			visited all relationships -> terminate
-		endelse 
-	endelse 
-endif
-\end{lstlisting}
+In addition to its first property, each node references its first relationship. If it is the \emph{first} one, is simply being determined by the order of creation. A relationship knows its type and has various references \cite{NeoInternals}:
+\begin{itemize}
+\item One for the start node, one for the end node
+\item One for the next and one for the previous relationship in the relationship list from the start node (\textbf{S}tart\textbf{N}ext, \textbf{S}tart\textbf{P}revious)
+\item One for the next and one for the previous relationship in the relationship list from the end node (\textbf{E}nd\textbf{N}ext, \textbf{E}nd\textbf{P}revious)
+\end{itemize}
 
-Which can be visualized in a flowchar like the following:
-\begin{figure}[H]
+To understand all these references have a look at example data under \autoref{ex:NeoPointerExpBase} as it is visible to a user in the Neo4j Browser. Then look at \autoref{ex:NeoPointerExpExt} that shows the data with all the references that exist. 
+\begin{figure}[h]
 \centering
-\includegraphics[scale=.6]{Bilder/NeoAlgoExplanation.png}
-\captionof{figure}{Flowchart of \autoref{ex:NeoPointers}}
-\label{pic:NeoAlgoExplanation}
+\includegraphics[scale=.5]{Bilder/NeoPointerExpBase.png}
+\captionof{figure}{Person Nodes connected through \emph{Knows} Relationships \citep[Slide 4, with adaptions]{Neo4jInternalsPP}}
+\label{ex:NeoPointerExpBase}
 \end{figure}
 
-This shows that every relationship has two next pointers, StartNext and EndNext. Which one will be used for further traversal, depends on if the source node is start- or end-node in the current relationship. \cite{NeoInternals}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{Bilder/NeoPointerExpExt.png}
+\captionof{figure}{References in Neo4j \citep[Slide 9, with adaptions]{Neo4jInternalsPP}. Green Arrows mark the Reference to the First Relationship of a Node. Orange Arrows mark References to Neighbours in the Relationship list. Blue Arrows mark the Reference to the Start and End Node of a Relationship. Cyan Arrows mark the Reference to the First and Next Property of a Node.}
+\label{ex:NeoPointerExpExt}
+\end{figure}
 
-In addition to this, the same pointers exist into the other direction, meaning that there are also two pointers called StartPrevious and EndPrevious. The question for selecting which one will be chosen for further iteration stays the same. \cite{NeoInternals}
+%\newpage
+%\lstset{language=JavaScript}
+%\begin{lstlisting}[caption={Algorithm to Demonstrate Next Pointers},label={ex:NeoPointers}]
+%if node n has relationship pointer r: 
+%	if n is start node of r: 
+%		if r has StartNext pointer sn: 
+%			set r = sn 
+%			repeat from line 2 
+%		endif 
+%		else  
+%			visited all relationships -> terminate
+%		endelse 
+%	endif 
+%	else 
+%		if r has EndNext pointer en: 
+%			set r = en 
+%			repeat from line 2 
+%		endif 
+%		else
+%			visited all relationships -> terminate
+%		endelse 
+%	endelse 
+%endif
+%\end{lstlisting}
 
 \subsubsection{The Graph in Memory}
 Upon start up, these records are being loaded into the "FS Cache" (File System Cache). Neo4j will then partition these into equally sized regions and create a hit counter for each of them, to encounter high traffic regions that will be loaded into the "Node/Relationship Object Cache" which is more similar to an actual graph. \cite{NeoInternals}\\
@@ -217,7 +225,7 @@ Here each node holds a list of relationships that are grouped by the relationshi
 \subsubsection{Traversing}
 For finding a node to start traversing the graph, Neo4j uses traditional indexing. \citep[minute 32]{NeoInternals} Once the start node is found, two concepts take over:
 \begin{enumerate}
-\item \textbf{RelationshipExpanders} which will return all relevant relationships for a node to continue traversing from that node.
+\item \textbf{RelationshipExpanders} which will return all relevant relationships for a node to continue traversing from that node. To do so, it makes use of the Next and Previous pointers previously explained.
 \item \textbf{Evaluators} which return if traversing should continue on this branch ($ \rightarrow $ expand) or not and if this node should be included in the result set or not.
 \end{enumerate}
 When accessing a node the first thing the system will try to do is fetch it from the cache. If it isn't there, the next place that will be checked is the FS Cache. Should the region that contains the node be available there, the access is quick but blocking, meaning that the entire region is getting locked. In the case that the region is out of the FS cache the operation is blocking and slower. \\
@@ -255,7 +263,7 @@ The following describes each step:
 \item Line 2 acquires a session to communicate with the database. \cite{Neo4jDriver} This object allows sending Cypher queries to the database that get executed right away.
 \item Lines 3 to 6 define a Cypher query which is similar to the ones shown in \autoref{ex231} and \autoref{ex232}. 
 \item Line 4 makes use of the args object and embeds the nodeType directly into the query string by using template strings. This is necessary as it is not possible to make use of query variables at this point of a cypher query. This line also shows that by using \$<variableName> query variables that were passed along can be accessed.
-\item Line 5 demonstrates the usage of an object that can be passed as query variable. This object can't only contain simple datatypes, but it is really useful to set various values at once.
+\item Line 5 demonstrates the usage of an object that can be passed as query variable. This object can't only contain simple data types, but it is really useful to set various values at once.
 \item Finally, line 7 sends the specified query string together with the args object (that must contain all referenced variables) to the database. Using the ES6 await keyword makes sure that code execution doesn't continue until the results are returned.
 \item The last line iterates over the record set and retrieves any properties by the name specified in the query. Using only the first element of the array is specific to this case, as CreateNode is defined to return a single node, not an array of such.
 \end{itemize}
@@ -765,13 +773,13 @@ Another feature is the easy deployment flow: For each application it is possible
 \begin{figure}[h]
 \centering
 \includegraphics[scale=.8]{Bilder/AwsMyApp.png}
-\captionof{figure}{AWS usage of this application}
+\captionof{figure}{AWS usage of this Application. The UI runs in Amplify and dispatches queries to the Service running in ECS. The Service forwards the query to the Container which resolves it and runs Cypher queries on the Neo4j instance hosted in EC2.}
 \label{ex:AwsMyApp}
 \end{figure}
 
 As the app is small ECS consists of only one service with one task running one container.
 
-The UI hosted through Amplify dispatches queries to the GraphQL server thats being run in a service in ECS. The service will forward the call to the container, which resolves it and runs Cypher queries on the neo4j instance hosted in EC2.
+The UI hosted through Amplify dispatches queries to the GraphQL server that's being run in a service in ECS. The service will forward the call to the container, which resolves it and runs Cypher queries on the Neo4j instance hosted in EC2.
 
 \chapter{Development}
 This discussion is not a "how to" guide as in the course of this work some mistakes were made. This section describes key architectural decisions and reports equally on those which turned out well and those which turned out badly.
@@ -846,6 +854,7 @@ enum ArrowType{
   InvTriangle
 }
 \end{lstlisting}
+\newpage
 Any node will have a type from the \emph{NodeType} enum above. The type decides, how the node will be displayed in the application. What values are part of this enum depends on what the app should display. The same applies to links and the \emph{LinkType} enum. Furthermore every link can have arrows of different shape on each end. As this app uses a canvas library to take care of the drawings on the screen the values that are part of this enum depend on what the library offers.
 
 \begin{lstlisting}[caption={Usage of Interfaces in GraphQL}]
@@ -882,6 +891,7 @@ type Link implements ILink & IDisplayable{
 \end{lstlisting}
 Coming from an Object Oriented background, using interfaces seemed intuitive. Having an ID, label and story object to be apparent on all entities that can be shown on screen makes sense as this is the least a user might want to see. What was not known when creating the schema is that visjs requires each link to be connected to an x and y node, in other words: a link can't "float". This means that there are two more required fields in the ILink interface, making the IDisplayable interface conflict with its purpose of defining properties that are required to be displayed.
 
+\newpage
 The \emph{@cypher} directive shown earlier can be used to easily retrieve the links attached to the node. This is an array which can be empty as nodes do not necessarily need be connected in any way. The same idea holds for the array of connected nodes. The two booleans \emph{synchronous} and \emph{unreliable} were subject to a lot of discussion as they could also be placed on links rather than nodes to annotate them.
 
 \emph{optional} on link is a value that would have been used for template functionality that is not implemented yet in the application.
@@ -913,7 +923,7 @@ type LinkEnd{
 \end{lstlisting}
 If more than one link connects the same pair of nodes a sequence property can be used to assign a group id to each link and an order within that group. Because of that each sequence on a link contains a string identifying the sequence group it belongs to as well as a sequence number to display the order in which steps will be executed. Each link end can contain a note about how the component on the respective end perceives the incoming connection.
 
-The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive datatypes. This idea sounds promising as one can just pass all input objects from a form to the query. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types which is why the usage of these input types was not worth the effort. In this case it would've been better to put all input values directly into a \emph{variables} object that gets sent to the server.
+The input types are used to be able to pass an object into GraphQL queries or mutations instead of just primitive data types. This idea sounds promising as one can just pass all input objects from a form to the query. In the end it turned out that this led to a lot of object modifying just to get the right structure from the input types which is why the usage of these input types was not worth the effort. In this case it would've been better to put all input values directly into a \emph{variables} object that gets sent to the server.
 
 \newpage
 \begin{lstlisting}[caption={Mutation Type Definition},label={mutations}]
@@ -997,7 +1007,7 @@ The end of the schema contains the definition for the query type and the root sc
 
 \section{Getting started with Neo4j}
 \label{chap:StartNeo}
-To get started with Neo4j it is a good idea to first create a small basic data set that shouldn't be too complicated to be able to easily experiment with it. So the goal for now is to try to create a representation of the following graph in the database:
+To get started with Neo4j it is a good idea to first create a small basic dataset that shouldn't be too complicated to be able to easily experiment with it. So the goal for now is to try to create a representation of the following graph in the database:
 
 \begin{figure}[H]
 \centering
@@ -1089,12 +1099,12 @@ To make this more clear here is a comparison to the graph to be displayed in the
 
 The yellow, pink and blue circles represent the nodes that are also shown as nodes on the frontend. The connections and all data they contain have turned into the green circles. This shows very well that both, nodes and links from the graph in the application, turn into nodes in the database, as shown in the beginning of \autoref{chap:StartNeo}.
 
-It is important to note that the directions of the arrows in \autoref{ex424} do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform all relationships were made to be outgoing from the link nodes.
+It is important to note, that the directions of the arrows in \autoref{ex424} do not represent the direction of the link in the image. They are only necessary because Neo4j doesn't allow for undirected links in create statements. To make it uniform all relationships were made to be outgoing from the link nodes.
 
 To shorten the example, the information about the arrows in \autoref{ex:GraphSideBySide} does not exist in \autoref{ex424}. 
 
 \section{Communicating with the DB through ApolloServer and GraphQL-Playground}
-The next step is to communicate with the database through the server. After setting up ApolloServer (more on setup in \autoref{chap:Doc}) a first step would be to create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning making mistakes which can leave the dataset in a bad shape is common and fixing it manually would take a lot of time. Line 2 in \autoref{mutations} contains the GraphQL definition. 
+The next step is to communicate with the database through the server. After setting up ApolloServer (more on setup in \autoref{chap:Doc}) a first step would be to create a resolver to seed the database with some default data similar to the one shown previously in \autoref{ex423}. This was really helpful as especially in the beginning making mistakes which can leave the data set in a bad shape is common and fixing it manually would take a lot of time. Line 2 in \autoref{mutations} contains the GraphQL definition. 
 \newpage
 The resolver looks like the following:
 \lstset{language=JavaScript}
@@ -1289,7 +1299,7 @@ Line 12 contains the creation of the variables object, passed to the mutation in
 Line 18 contains the JSX definition of the form. It gets embedded in line 22 by using curly braces.
 
 \section{Building the UI}
-When building a React application it is useful to think about the structure to get an idea of what components will be necessary. Furthermore if the application should be usable on mobile devices it might be a good idea to first create the layout for those. Moving then to a layout that is suitable for a PC screen is a lot easier than the other way around.
+When building a React application it is useful to think about the structure of the UI to get an idea of what components will be necessary. Furthermore if the application should be usable on mobile devices it might be a good idea to first create the layout for those. Moving then to a layout that is suitable for a PC screen is a lot easier than the other way around.
 
 \subsection{Components}
 What must appear on the screen so the application can be used?
@@ -1431,7 +1441,7 @@ As mentioned in the introduction, the ability to create a graph on its own is a 
 
 One main problem both algorithms face is that in order to allocate them, a start-node must be found that the other nodes can use to orientate themselves on. But which node should be chosen to start? The one with the most connections? Where should nodes that are not children of the start-node be placed? 
 
-For now both algorithms place nodes that can be collapsed in a grid-like manner. Then their children are recursively placed relative to them. After handling all child-nodes, those nodes that were not connected to a collapsable in any way are handled. For those the ones with the most connections would be chosen as start-node.
+For now both algorithms place nodes that can be collapsed in a grid-like manner. Then their children are recursively placed relative to them. After handling all child-nodes, those nodes that were not connected to a collapsible in any way are handled. For those the ones with the most connections would be chosen as start-node.
 
 \subsection{Tree-Layout}
 In this approach, each node would distribute its child nodes below it. Depending on the amount of children they'd be split into different layers of nodes.
@@ -1480,7 +1490,7 @@ While this approach sounds promising it of course has flaws as well. To demonstr
 \captionof{figure}{Intersections in the Flower Layout}
 \end{figure}
 
-The container on the bottom is selected as "Center" as it is a collapsable. Its child nodes are distributed around it by equally sized angles. Its also clearly visible that the nodes \emph{node 2} and \emph{methodical server} have a greater distance to their parent-node than the other three as they have zero or one child element.
+The container on the bottom is selected as "Center" as it is a collapsible. Its child nodes are distributed around it by equally sized angles. Its also clearly visible that the nodes \emph{node 2} and \emph{methodical server} have a greater distance to their parent-node than the other three as they have zero or one child element.
 
 As \emph{test123} is a child of both \emph{node 2} and \emph{node 1} it takes into account two direction vectors: One from \emph{Container 1} to \emph{node 1} and the one it gets assigned from \emph{node 2}. Every node will allocate its child nodes within an angle of +-90° to its own direction vector. These two vectors get divided in two and the result will lead to the position of \emph{test123}. The reason for \emph{Server} being so far away from \emph{AWS-Amplify} is because it has 3 child-nodes.
 
@@ -1492,7 +1502,7 @@ As this approach in many cases lead to more promising results than the tree layo
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.4]{Bilder/FlowerCompTree.png}
-\captionof{figure}{Layout Created by Flower Algorithm}
+\captionof{figure}{Layout Created by Flower Algorithm with the same Data as in \autoref{ex:TreeGood}}
 \label{ex:ComparisonTreeFlower}
 \end{figure}
 
@@ -1503,15 +1513,15 @@ When implementing the user interface and the inner logic of the application, the
 \item What should happen when a node that has links connected gets deleted? As visjs doesn't offer the option of simply leaving the link there, solutions similar to the following have to be considered:
 \begin{itemize}
 \item Deleting a node with connected links is not possible.
-\item The connected links snap to the node thats closest by.
+\item The connected links snap to the node that is closest by.
 \item Each link snaps to the other node it is connected to, creating a circle.
 \end{itemize}
 In the end number 3 got implemented as it is the most usable and predictable behavior for this use case.
 
-\item What should happen if a \emph{Part-Of} link connects two collapsables and the user clicks \emph{Collapse} on one of them?
+\item What should happen if a \emph{Part-Of} link connects two collapsibles and the user clicks \emph{Collapse} on one of them?
 \begin{itemize}
-\item Both collapsables should disappear together with their child-nodes.
-\item If the collapsable that issues the collapse call is the parent in the connection, the other one disappears. Otherwise both stay visible.
+\item Both collapsibles should disappear together with their child-nodes.
+\item If the collapsible that issues the collapse call is the parent in the connection, the other one disappears. Otherwise both stay visible.
 \item The creation of such connections should not be possible.
 \end{itemize}
 In this case the second option got implemented as number 1 would make the application not usable and the third one might limit the user in the use of the application.
@@ -1520,7 +1530,7 @@ To demonstrate this, have a take a look at this picture:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.55]{Bilder/CollapseExBefore.png}
-\captionof{figure}{Two Collapsables Connected Through a Part-Of link. \emph{Container 1} is the child of \emph{Container 2}}
+\captionof{figure}{Two Collapsibles Connected Through a Part-Of link. \emph{Container 1} is the child of \emph{Container 2}}
 \end{figure}
 
 If the user clicks \emph{Collapse} on \emph{Container 1} the image will change to the following:
@@ -1530,10 +1540,10 @@ If the user clicks \emph{Collapse} on \emph{Container 1} the image will change t
 \captionof{figure}{The child nodes of \emph{Container 1} disappeared. \emph{Container 2} is still visible as it is defined as parent in the link connecting the two containers.}
 \end{figure}
 
-\item How is a part-of relationship defined? In other words, which nodes should disappear if a collapsable gets collapsed?
+\item How is a part-of relationship defined? In other words, which nodes should disappear if a collapsible gets collapsed?
 \begin{itemize}
-\item All nodes that the flower layout identifies as children of a collapsable.
-\item Only nodes with a direct part-of link to the collapsable will disappear
+\item All nodes that the flower layout identifies as children of a collapsible.
+\item Only nodes with a direct part-of link to the collapsible will disappear
 \end{itemize}
 The second options was the one to go for, as in the first one it is almost impossible to algorithmically detect which node should be the last one to disappear if the user created connections between groups created by the flower layout algorithm. Nodes that are not part of the current group might disappear as well.
 \end{itemize}
@@ -1552,7 +1562,7 @@ This chapter will shortly list some things, that were positive in this project a
 
 \section{What was good}
 \begin{itemize}
-\item \textbf{It works!} Despite many problems especially with Apollo and the configuration during the deployment phase, the application works and runs stable on a publicly shared cloud platform without any known bugs in the functionality, which is a big success. Deploying as early as possible allowed others to use and test the system from an early stage on and provide valuable feedback during development.
+\item \textbf{It works!} Despite many problems especially with Apollo and the configuration during the deployment phase, the application works and runs stable on a publicly shared cloud platform without any known bugs in the functionality, which is a big success. Deploying as early as possible allowed others to use and test the system from an early stage and provide valuable feedback during development.
 
 \item \textbf{Interesting} Learning all of the technologies from scratch at the beginning of the project was of course a lot to take in. But with time came more understanding of every part and it was interesting to take a deep dive into this area of software development and get to explore profoundly all parts of it.
 \end{itemize}
@@ -1584,8 +1594,8 @@ This part contains a list of ideas about what could be added or modified in the 
 \item A \textbf{Syntax Checker} for connections between nodes. The app doesn't put any restrictions on the creation of links. This is on purpose as specific use cases might require combinations that can't be foreseen when creating the app. However displaying warnings for certain combinations can be of very high value and make the user aware of structures that he didn't mean to create. In general this should be done using web workers as checking all connections could take a lot of time, depending on number and complexity of the rules and the amount of connections in the diagram. At first only single links should be the focus, later on whole constructs could be checked. Rules to start with could be:
 
 \begin{itemize}
-\item Collapsables can only have \emph{Part-Of} links
-\item Loops between collapsables
+\item Collapsibles can only have \emph{Part-Of} links
+\item Loops between collapsibles
 \item Only \emph{Team} nodes can have \emph{Responsibility} links
 \end{itemize}
 
@@ -1593,6 +1603,7 @@ This part contains a list of ideas about what could be added or modified in the 
 
 \item Allow the user to define \textbf{Custom Types} of nodes and links. This and the previous point require implementing a way of uploading and saving these definitions in the application.
 
+\newpage
 \item \textbf{Improve Layout Algorithm} to create a better looking image. Two ideas are
 \begin{itemize}
 \item A \textbf{distance system} that when calculating the position for a node first checks if this new place is close to other already placed nodes. If it is closer than a certain number the algorithm will search for a new position. The minimum distance can vary depending on the type of the node.
@@ -1612,7 +1623,18 @@ This part contains a list of ideas about what could be added or modified in the 
 \item A lot of the state management logic can be shortened if a graph like datastructure would be built initially and saved in the cache instead of sticking to a list of nodes that have a list of IDs they are connected to.
 \end{itemize}
 
-\item \textbf{Improve Collapsables} to increase the value they have to make the graphs cleaner. \autoref{ex:CollExpanded} shows how collapsables could look at some point when being expanded while \autoref{ex:CollColapsed} demonstrated a collapsed one.
+\item \textbf{Improve Collapsibles} to increase the value they have to make the graphs cleaner. \autoref{ex:CollExpanded} shows how collapsibles could look at some point when being expanded while \autoref{ex:CollColapsed} demonstrated a collapsed one.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.35]{Bilder/CollapsableEx.png}
+\captionof{figure}{Example Collapsible in Expanded State}
+\label{ex:CollExpanded}
+
+\includegraphics[scale=.4]{Bilder/CollapsableCol.png}
+\captionof{figure}{Example Collapsible in Collapsed State}
+\label{ex:CollColapsed}
+\end{figure}
 
 Implementing this in visjs might not be the most enjoyable task as it does not natively offer functionality to draw a rectangle around a group of elements.
 
@@ -1621,21 +1643,10 @@ One way would be to get the position of all part-of elements, calculate the midd
 \item \textbf{Versioning} with Git to be able to version graphs to track changes or export them to create backups. This would require to define an algorithm that can convert graph data into for example JSON or XML files. These files could then be stored in GitHub. 
 
 \item \textbf{References} to other diagrams or items of the same diagram. 
-It often happens that structures appear various times in project architecture. This functionality would apply changes made to one of them to all copies of the other in the current diagram.
+It often happens that structures appear multiple times in project architecture. This functionality would apply changes made to one of them to all copies of the other in the current diagram.
 
 If a user has various diagrams, it'd be useful if he could create a node that links to other diagrams and by clicking on them they open up in a new tab of the screen. 
 \end{itemize}
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=.35]{Bilder/CollapsableEx.png}
-\captionof{figure}{Example Collapsable in Expanded State}
-\label{ex:CollExpanded}
-
-\includegraphics[scale=.4]{Bilder/CollapsableCol.png}
-\captionof{figure}{Example Collapsable in Collapsed State}
-\label{ex:CollColapsed}
-\end{figure}
 
 \chapter{Documentation}
 \label{chap:Doc}
@@ -1664,7 +1675,7 @@ In order to be able to request editing rights and actually use the app, it is ne
 CREATE (p:Project {isBeingEdited: false}) RETURN p
 \end{lstlisting}
 
-\subsection{Backend}
+\subsection{Backend Setup}
 Install Node.js, clone the server \cite{GitServer} code from GitHub. Open a console window, navigate into the folder containing the server code and execute \emph{npm install}. Inside the server folder, create a file called \emph{.env} with the following content:
 \lstset{language=Docker}
 \begin{lstlisting}[caption={Environment Variables for the Server}]
@@ -1681,7 +1692,7 @@ Now type \emph{npm run start-dev} into the console to spin up the local developm
 "Server vX.X started at ... listening on http://localhost:8080/graphql" \\
 Visiting this URL will open the GraphQL Playground that can be used to test the resolvers of the server for example as shown in \autoref{ex:RunCreateNode}.
 
-\subsection{Frontend}
+\subsection{Frontend Setup}
 Clone the client \cite{GitClient} code from GitHub, open a console window, navigate into the client folder and execute \emph{npm install}. In the same folder, create a \emph{.env} file with the following content:
 \begin{lstlisting}[caption={Environment Variables for the Frontend}]
 REACT_APP_ENV=dev
@@ -1730,7 +1741,7 @@ Below that it contains the definition of visjs events:
 \end{itemize}
 
 \subsection{Local Resolvers}
-This section will talk in a bit more detail about the more complicated resolvers in \emph{ApolloResolver}. Something very important that counts for all of them is that data read from the cache is immutable and trying to modify it will result in an error. Thats why in most resolver as soon as data was read from the cache the code will create a \emph{deepCopy} of it.
+This section will talk in a bit more detail about the more complicated resolvers in \emph{ApolloResolver}. Something very important that counts for all of them is that data read from the cache is immutable and trying to modify it will result in an error. That is why in most resolver as soon as data was read from the cache the code will create a \emph{deepCopy} of it.
 
 \subsubsection{setNodes, setLinks}
 When the nodes and links come from the database for example after the initial fetch or when syncing after requesting editing rights they are missing some data to be usable locally.
@@ -1757,17 +1768,17 @@ This function does the actual searching. It uses the \emph{Fuse} library that us
 
 
 \subsection{Layout Algorithms}
-When the nodes get all properties necessary for the local usage in \emph{setNodes} they also walk through a couple of functions to assign their positions. First all collapsables get assigned a position and all nodes connected to them align themselves around them. Then nodes that have not been assigned a position get handled. Searching the one with most connections and treating it as the middle one, all connected ones will be allocated around it just like as if it were a collapsable. This continues until every node has a position assigned.
+When the nodes get all properties necessary for the local usage in \emph{setNodes} they also walk through a couple of functions to assign their positions. First all collapsibles get assigned a position and all nodes connected to them align themselves around them. Then nodes that have not been assigned a position get handled. Searching the one with most connections and treating it as the middle one, all connected ones will be allocated around it just like as if it were a collapsible. This continues until every node has a position assigned.
 
 \newpage
-\subsubsection{Collapsable Rule}
-All collapsables will be placed in a grid-like manner, creating a rectangle of collapsable nodes.
+\subsubsection{Collapsible Rule}
+All collapsibles will be placed in a grid-like manner, creating a rectangle of collapsible nodes.
 
-To calculate the number of nodes per line the number of collapsables is used with the following algorithm:
+To calculate the number of nodes per line the number of collapsibles is used with the following algorithm:
 \lstset{language=JavaScript}
-\begin{lstlisting}[caption={Algorithm to determine the number of Collapsables per Row}]
-export const calculateCollapsableBoundaries = ( allCollapsables ) => {
-	let elementCountUsed = allCollapsables.length;
+\begin{lstlisting}[caption={Algorithm to determine the number of Collapsibles per Row}]
+export const calculateCollapsibleBoundaries = ( allCollapsibles ) => {
+	let elementCountUsed = allCollapsibles.length;
 	if ( isPrime( elementCountUsed ) ) {
 		elementCountUsed -= 1;
 	}
@@ -1794,9 +1805,9 @@ export const calculateCollapsableBoundaries = ( allCollapsables ) => {
 
 It walks from 2 to the number of elements divided by 2. Every time it checks if the element count divided by the current number is a prime number. In case it is a prime number, it checks if it is smaller than half of the element count, to make sure the lines don't get too long.
 
-Should the number not be a prime number, it must be at least one third of the total number of collapsables. Should no number meet these conditions because the total number of nodes is too small, the limit will be set to three. These numbers were found heuristically.
+Should the number not be a prime number, it must be at least one third of the total number of collapsibles. Should no number meet these conditions because the total number of nodes is too small, the limit will be set to three. These numbers were found heuristically.
 
-To make this clearer, imagine an example with \emph{10} collapsables:
+To make this clearer, imagine an example with \emph{10} collapsibles:
 \begin{itemize}
 \item 10 is no prime number, so this is the number we're working with
 \item Divide 10 / 2, result being 5
@@ -1807,21 +1818,21 @@ To make this clearer, imagine an example with \emph{10} collapsables:
 \item Return 3 as item limit per row
 \end{itemize}
 
-Despite the limit being three, the final collapsables will be allocated like so:
+Despite the limit being three, the final collapsibles will be allocated like so:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.4]{Bilder/AllocRes.png}
-\captionof{figure}{Result Allocation of 13 Collapsables}
+\captionof{figure}{Result Allocation of 13 Collapsibles}
 \end{figure}
 
-The reason is, that the \emph{CollapsableRule} shown next goes from 0 to limit (resulting in four spots) to make sure there are enough spots for all collapsables.
+The reason is, that the \emph{CollapsibleRule} shown next goes from 0 to limit (resulting in four spots) to make sure there are enough spots for all collapsibles.
 
 Afterwards, the placement rule will use this limit to allocate the nodes in lines, starting at \emph{(0, 0)}.
-\begin{lstlisting}[caption={Placing all Collapsables}]
-export const CollaspableRule = ( node, allCollapsables, client, limit, minDist = 1000 ) => {
-	if ( isCollapsable( node ) ) {
-		const otherCollapsables = allCollapsables.filter( aNode => aNode.id !== node.id && !aNode.deleted );
-		const existingCoords = getExistingCoordinatesFor( otherCollapsables );
+\begin{lstlisting}[caption={Placing all Collapsibles}]
+export const CollapsibleRule = ( node, allCollapsibles, client, limit, minDist = 1000 ) => {
+	if ( isCollapsible( node ) ) {
+		const otherCollapsibles = allCollapsibles.filter( aNode => aNode.id !== node.id && !aNode.deleted );
+		const existingCoords = getExistingCoordinatesFor( otherCollapsibles );
 		let newCoords = {};
 
 		loop1:
@@ -1841,15 +1852,15 @@ This code does not include any comments or error handling to shorten it.
 
 \newpage
 \subsubsection{FlowerRule}
-Afterwards, the nodes around the collapsables are placed. 
+Afterwards, the nodes around the collapsibles are placed. 
 
-If the parent has a level of \emph{0}, it is a collapsable. The first position for a node is defined as the top-left (direction vector of \emph{(-1, -1)} from the parent). The delta angle between child nodes is calculated by dividing 360 by the number of children. Then, it'll get the index of the current children in the list of childs the parent has and multiply the delta angle by this index. It then rotates the initial direction vector to get the one pointing at the position of the node. Multiplying it with the distance calculated in respect to the amount of other children leads to the position of the node.
+If the parent has a level of \emph{0}, it is a collapsible. The first position for a node is defined as the top-left (direction vector of \emph{(-1, -1)} from the parent). The delta angle between child nodes is calculated by dividing 360 by the number of children. Then, it'll get the index of the current children in the list of childs the parent has and multiply the delta angle by this index. It then rotates the initial direction vector to get the one pointing at the position of the node. Multiplying it with the distance calculated in respect to the amount of other children leads to the position of the node.
 
 Should the parent be a node with a level other than 0, the new position depends on the parent's direction vector. All children can be placed within an angle of +-90 degrees in the direction of the parent's direction vector. The delta angle is, again, calculated by the total amount of child nodes. Calculating the new position works as with children of level 1. However, as these nodes can have multiple parents, the newly calculated position has to be added to the one the node might already have and get normalized afterwards. \\
 
-\begin{lstlisting}[caption={Allocating Nodes around Collapsables}]
-for ( let collapsable of collapsables ) {
-	const next = [].concat( collapsable.children );
+\begin{lstlisting}[caption={Allocating Nodes around Collapsibles}]
+for ( let collapsible of collapsibles ) {
+	const next = [].concat( collapsible.children );
 	FlowerRule( next, client );
 }
 
@@ -1916,8 +1927,8 @@ export const FlowerRule = ( next, client, distanceToOther = 350, minDist = 150 )
 \end{lstlisting}
 This code does not include any comments or error handling to shorten it.
 
-\subsubsection{NonCollapsableRule}
-The last rule handles all nodes that are not connected to a collapsable in any way and thus have not received any coordinates yet. It works in a very similar manner.
+\subsubsection{NonCollapsibleRule}
+The last rule handles all nodes that are not connected to a collapsible in any way and thus have not received any coordinates yet. It works in a very similar manner.
 
-It'll find the node with most connections and place it on the top left of the collapsable at the origin. There is no specific reason for this position, it was simply defined like that. The next step is, to create the parent-child hierarchy for this network and then apply the flower rule to it.
+It'll find the node with most connections and place it on the top left of the collapsible at the origin. There is no specific reason for this position, it was simply defined like that. The next step is, to create the parent-child hierarchy for this network and then apply the flower rule to it.
 

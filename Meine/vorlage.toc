@@ -10,24 +10,24 @@
 \contentsline {subsubsection}{\nonumberline General}{5}{section*.3}%
 \contentsline {subsubsection}{\nonumberline Cypher}{6}{section*.4}%
 \contentsline {subsubsection}{\nonumberline The Graph on Disk}{6}{section*.5}%
-\contentsline {subsubsection}{\nonumberline The Graph in Memory}{8}{section*.7}%
-\contentsline {subsubsection}{\nonumberline Traversing}{8}{section*.8}%
-\contentsline {subsubsection}{\nonumberline Adding Cypher}{8}{section*.9}%
+\contentsline {subsubsection}{\nonumberline The Graph in Memory}{7}{section*.8}%
+\contentsline {subsubsection}{\nonumberline Traversing}{7}{section*.9}%
+\contentsline {subsubsection}{\nonumberline Adding Cypher}{8}{section*.10}%
 \contentsline {section}{\numberline {2.4}Server - ApolloServer}{9}{section.2.4}%
-\contentsline {subsubsection}{\nonumberline Example Resolver}{9}{section*.10}%
-\contentsline {subsubsection}{\nonumberline Resolver Chain}{10}{section*.11}%
-\contentsline {subsubsection}{\nonumberline Cypher in GraphQL}{12}{section*.12}%
+\contentsline {subsubsection}{\nonumberline Example Resolver}{9}{section*.11}%
+\contentsline {subsubsection}{\nonumberline Resolver Chain}{10}{section*.12}%
+\contentsline {subsubsection}{\nonumberline Cypher in GraphQL}{12}{section*.13}%
 \contentsline {section}{\numberline {2.5}Frontend - React}{13}{section.2.5}%
-\contentsline {subsubsection}{\nonumberline Components}{13}{section*.13}%
-\contentsline {subsubsection}{\nonumberline State}{15}{section*.14}%
-\contentsline {subsubsection}{\nonumberline Updating Components}{16}{section*.15}%
-\contentsline {subsubsection}{\nonumberline Finding The Differences}{17}{section*.16}%
-\contentsline {subsubsection}{\nonumberline Stateless Functional Components}{17}{section*.17}%
+\contentsline {subsubsection}{\nonumberline Components}{13}{section*.14}%
+\contentsline {subsubsection}{\nonumberline State}{15}{section*.15}%
+\contentsline {subsubsection}{\nonumberline Updating Components}{16}{section*.16}%
+\contentsline {subsubsection}{\nonumberline Finding The Differences}{17}{section*.17}%
+\contentsline {subsubsection}{\nonumberline Stateless Functional Components}{17}{section*.18}%
 \contentsline {section}{\numberline {2.6}Client - ApolloClient}{18}{section.2.6}%
-\contentsline {subsubsection}{\nonumberline Hooks}{18}{section*.18}%
-\contentsline {subsubsection}{\nonumberline Apollo Hooks}{18}{section*.19}%
-\contentsline {subsubsection}{\nonumberline Local Resolvers}{19}{section*.20}%
-\contentsline {subsubsection}{\nonumberline The Apollo Cache}{20}{section*.21}%
+\contentsline {subsubsection}{\nonumberline Hooks}{18}{section*.19}%
+\contentsline {subsubsection}{\nonumberline Apollo Hooks}{18}{section*.20}%
+\contentsline {subsubsection}{\nonumberline Local Resolvers}{19}{section*.21}%
+\contentsline {subsubsection}{\nonumberline The Apollo Cache}{20}{section*.22}%
 \contentsline {chapter}{\numberline {3}Deployment}{21}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Docker}{21}{section.3.1}%
 \contentsline {section}{\numberline {3.2}AWS}{22}{section.3.2}%
@@ -62,18 +62,18 @@
 \contentsline {section}{\numberline {7.1}Setting Up a Local Development Environment}{57}{section.7.1}%
 \contentsline {subsection}{\numberline {7.1.1}Neo4j Desktop}{57}{subsection.7.1.1}%
 \contentsline {subsection}{\numberline {7.1.2}Creating a Project Node}{58}{subsection.7.1.2}%
-\contentsline {subsection}{\numberline {7.1.3}Backend}{58}{subsection.7.1.3}%
-\contentsline {subsection}{\numberline {7.1.4}Frontend}{58}{subsection.7.1.4}%
+\contentsline {subsection}{\numberline {7.1.3}Backend Setup}{58}{subsection.7.1.3}%
+\contentsline {subsection}{\numberline {7.1.4}Frontend Setup}{58}{subsection.7.1.4}%
 \contentsline {section}{\numberline {7.2}Backend}{59}{section.7.2}%
 \contentsline {section}{\numberline {7.3}Frontend}{59}{section.7.3}%
 \contentsline {subsection}{\numberline {7.3.1}Local Resolvers}{60}{subsection.7.3.1}%
-\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{60}{section*.44}%
-\contentsline {subsubsection}{\nonumberline updateLink}{60}{section*.45}%
-\contentsline {subsubsection}{\nonumberline collapseNode}{61}{section*.46}%
-\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{61}{section*.47}%
-\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{61}{section*.48}%
+\contentsline {subsubsection}{\nonumberline setNodes, setLinks}{60}{section*.45}%
+\contentsline {subsubsection}{\nonumberline updateLink}{60}{section*.46}%
+\contentsline {subsubsection}{\nonumberline collapseNode}{61}{section*.47}%
+\contentsline {subsubsection}{\nonumberline setNodeLabelFilter}{61}{section*.48}%
+\contentsline {subsubsection}{\nonumberline searchNodeByLabel}{61}{section*.49}%
 \contentsline {subsection}{\numberline {7.3.2}Layout Algorithms}{61}{subsection.7.3.2}%
-\contentsline {subsubsection}{\nonumberline Collapsable Rule}{62}{section*.49}%
-\contentsline {subsubsection}{\nonumberline FlowerRule}{64}{section*.51}%
-\contentsline {subsubsection}{\nonumberline NonCollapsableRule}{65}{section*.52}%
-\contentsline {chapter}{\nonumberline List of Figures}{66}{chapter*.53}%
+\contentsline {subsubsection}{\nonumberline Collapsible Rule}{62}{section*.50}%
+\contentsline {subsubsection}{\nonumberline FlowerRule}{64}{section*.52}%
+\contentsline {subsubsection}{\nonumberline NonCollapsibleRule}{65}{section*.53}%
+\contentsline {chapter}{\nonumberline List of Figures}{66}{chapter*.54}%
