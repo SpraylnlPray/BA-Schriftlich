@@ -245,6 +245,7 @@ In addition to that the server will deliver a \emph{context} object to each rout
 \subsubsection{Example Resolver}
 A resolver to create a node might look like the following:
 
+\lstset{language=JavaScript}
 \begin{lstlisting}[caption={A Basic Resolver},label={ex241}]
 async CreateNode( _, args, ctx ) { 
 	const session = ctx.driver.session(); 
@@ -1306,7 +1307,7 @@ What must appear on the screen so the application can be used?
 
 The application should have a big canvas to display the graph and allow interaction with it. There needs to be space to show information about a selected link or node, as well as options to search/filter the view. A button to save data to the database and also to discard local changes should be apparent. So lets have a look at the app and at the components it consists of:
 \begin{figure}[H]
-\includegraphics[scale=.425]{Bilder/Layout.png}
+\includegraphics[width=\textwidth, height=210px]{Bilder/Layout.png}
 \captionof{figure}{The Components in the UI}
 \end{figure}
 The top level components in red are:
