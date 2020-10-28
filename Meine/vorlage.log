@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  24 SEP 2020 16:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.18)  8 OCT 2020 17:46
 entering extended mode
 **./vorlage.tex
 (vorlage.tex
@@ -1294,7 +1294,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 153.
 Here is how much of TeX's memory you used:
  17685 strings out of 480756
  332542 string characters out of 2893314
- 945778 words of memory out of 3000000
+ 945734 words of memory out of 3000000
  32415 multiletter control sequences out of 15000+200000
  587917 words of font info for 54 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
